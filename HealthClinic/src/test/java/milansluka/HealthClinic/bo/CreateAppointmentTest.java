@@ -30,9 +30,9 @@ public class CreateAppointmentTest extends TestCase {
 
 		sessionFactory = new Configuration().configure().buildSessionFactory();
 
-		createUser();
+	/*	createUser();
 		loginSuccessful();
-		loginFailed();
+		loginFailed();*/
 		createAppointment();
 	}
 
@@ -41,8 +41,12 @@ public class CreateAppointmentTest extends TestCase {
 		session.beginTransaction();
 
 		User user = new User();
-		user.setLogin("admin");
-		user.setPassword("12345");
+		user.setLogin("admin4");
+		
+		String psw = "12345";
+		String encryptedPsw = new Utils().cryptWithMD5(psw);
+		
+		user.setPassword(encryptedPsw);
 
 		UserValidation validation = new UserValidation(user, sessionFactory);
 
@@ -58,7 +62,7 @@ public class CreateAppointmentTest extends TestCase {
 			session.close();
 		}
 
-		assertTrue(user.getLogin().equals("admin") && user.getPassword().equals("12345"));
+		assertTrue(user.getLogin().equals("admin4") && user.getPassword().equals(encryptedPsw));
 	}
 
 	public void loginSuccessful() {
@@ -66,8 +70,12 @@ public class CreateAppointmentTest extends TestCase {
 		session.beginTransaction();
 
 		User user = new User();
-		user.setLogin("admin");
-		user.setPassword("12345");
+		user.setLogin("admin3");
+		
+		String psw = "12345";
+		String encryptedPsw = new Utils().cryptWithMD5(psw);
+		
+		user.setPassword(encryptedPsw);
 
 		Login login = new Login(session);
 

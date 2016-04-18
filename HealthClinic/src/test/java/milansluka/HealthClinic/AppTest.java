@@ -10,7 +10,7 @@ import org.hibernate.cfg.Configuration;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import milansluka.HealthClinic.bo.impl.PersonTest;
+
 
 /**
  * Unit test for simple App.

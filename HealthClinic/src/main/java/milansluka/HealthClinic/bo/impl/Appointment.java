@@ -70,7 +70,7 @@ public class Appointment {
 		this.person = person;
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "intervention_id")
 	public Intervention getIntervention() {
 		return intervention;

@@ -47,6 +47,7 @@ public class User {
 	}
 
 	@ManyToMany(cascade = CascadeType.ALL)
+/*	@ManyToMany*/
 	@JoinTable(name = "assigned_right", joinColumns = @JoinColumn(name = "user_id") , inverseJoinColumns = @JoinColumn(name = "right_id") )
 	public List<UserRight> getRights() {
 		return rights;

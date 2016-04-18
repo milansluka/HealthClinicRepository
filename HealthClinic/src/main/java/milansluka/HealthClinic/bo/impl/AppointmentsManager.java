@@ -34,7 +34,7 @@ public class AppointmentsManager {
 		session.beginTransaction();
 
 		if (existingPerson == null) {
-			session.save(appointment.getPerson());
+		/*	session.save(appointment.getPerson());*/
 			session.save(appointment);
 			
 

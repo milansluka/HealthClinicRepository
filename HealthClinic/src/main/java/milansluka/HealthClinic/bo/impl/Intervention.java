@@ -30,6 +30,7 @@ public class Intervention {
 		super();
 		appointments = new ArrayList<Appointment>();
 	}
+	
 	@OneToMany(mappedBy = "intervention")
 	public List<Appointment> getAppointments() {
 		return appointments;
