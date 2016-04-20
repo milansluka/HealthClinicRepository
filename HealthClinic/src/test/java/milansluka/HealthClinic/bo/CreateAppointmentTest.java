@@ -33,7 +33,8 @@ public class CreateAppointmentTest extends TestCase {
 	/*	createUser();
 		loginSuccessful();
 		loginFailed();*/
-		createAppointment();
+		/*createAppointment();*/
+		createAppointmentNewPerson();
 	}
 
 	public void createUser() {
@@ -97,6 +98,46 @@ public class CreateAppointmentTest extends TestCase {
 		assertTrue(!login.tryLogin(user));
 
 		session.close();
+	}
+	
+	public void createAppointmentNewPerson() {
+
+		Person person = new Person();
+		person.setFirstName("Milan2");
+		person.setLastName("Sluka2");
+		person.setPhone("0000011");
+		
+		Session session = new Utils().getSession();
+		session.beginTransaction();
+        session.save(person);
+		session.close();
+
+		Intervention intervention = new Intervention();
+		intervention.setName("some name");
+		intervention.setInfo("some info");
+
+		Appointment appointment = new Appointment();
+		String strFrom = "20.4.2016 10:00";
+		String strTo = "20.4.2016 10:30";
+
+		Utils utils = new Utils();
+		Date from = utils.toDate(strFrom);
+		Date to = utils.toDate(strTo);
+
+		if (from == null || to == null) {
+			assertTrue(false);
+			return;
+		}
+
+		appointment.setFrom(from);
+		appointment.setTo(to);
+
+		appointment.assignPerson(person);
+		appointment.assignIntervention(intervention);
+
+		AppointmentsManager manager = new AppointmentsManager(sessionFactory);
+		manager.createAppointment(appointment);
+
 	}
 
 	public void createAppointment() {
