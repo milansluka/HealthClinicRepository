@@ -30,10 +30,10 @@ public class CreateAppointmentTest extends TestCase {
 
 		sessionFactory = new Configuration().configure().buildSessionFactory();
 
-	/*	createUser();
+		createUser();
 		loginSuccessful();
-		loginFailed();*/
-		/*createAppointment();*/
+		loginFailed();
+		createAppointment();
 		createAppointmentNewPerson();
 	}
 
@@ -110,6 +110,8 @@ public class CreateAppointmentTest extends TestCase {
 		Session session = new Utils().getSession();
 		session.beginTransaction();
         session.save(person);
+        
+        session.getTransaction().commit();
 		session.close();
 
 		Intervention intervention = new Intervention();
