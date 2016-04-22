@@ -1,5 +1,8 @@
 package milansluka.testApp;
 
+import java.util.List;
+
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -44,9 +47,20 @@ public class AppTest
  
 		Person person = new Person("Milan", "Sluka");
 		
-		session.save(person);
+		long personId = (Long)session.save(person);
 		
 		session.getTransaction().commit();
+		
+		String hql = "FROM Person p WHERE p.id = :person_id";
+		Query query = session.createQuery(hql);
+		query.setParameter("person_id", personId);
+		List results = query.list();
+		
+		Person milan = (Person)results.get(0);
+		
 		session.close();
+		
+		assertTrue(milan.getFirstName().equals("Milan") && milan.getLastName().equals("Sluka"));
+		
     }
 }
