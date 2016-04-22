@@ -1,4 +1,4 @@
-package milansluka.HealthClinic;
+package ehc.util;
 
 /**
  * Hello world!

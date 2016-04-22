@@ -1,6 +1,5 @@
-package milansluka.HealthClinic.bo.impl;
+package ehc.bo.impl;
 
-import java.io.Console;
 import java.util.List;
 
 import org.hibernate.Hibernate;

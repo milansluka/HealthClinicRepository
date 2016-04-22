@@ -1,4 +1,4 @@
-package milansluka.HealthClinic.bo;
+package ehc.bo;
 
 public interface Company extends Party {
 

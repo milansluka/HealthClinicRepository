@@ -1,10 +1,8 @@
-package milansluka.HealthClinic.bo.impl;
+package ehc.bo.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

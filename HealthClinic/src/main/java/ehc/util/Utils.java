@@ -1,4 +1,4 @@
-package milansluka.HealthClinic;
+package ehc.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -6,7 +6,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

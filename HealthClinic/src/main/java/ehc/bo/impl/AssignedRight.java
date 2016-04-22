@@ -1,3 +1,4 @@
+package ehc.bo.impl;
 /*package milansluka.HealthClinic.bo.impl;
 
 import java.beans.Transient;

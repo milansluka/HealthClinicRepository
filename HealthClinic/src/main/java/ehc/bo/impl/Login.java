@@ -1,4 +1,4 @@
-package milansluka.HealthClinic.bo.impl;
+package ehc.bo.impl;
 
 import java.util.List;
 

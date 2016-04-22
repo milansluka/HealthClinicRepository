@@ -1,4 +1,4 @@
-package milansluka.HealthClinic.bo.impl;
+package ehc.bo.impl;
 
 public class Patient extends Person {
 

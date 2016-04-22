@@ -1,27 +1,22 @@
 package milansluka.HealthClinic.bo;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import ehc.bo.impl.Appointment;
+import ehc.bo.impl.AppointmentsManager;
+import ehc.bo.impl.Intervention;
+import ehc.bo.impl.Login;
+import ehc.bo.impl.Person;
+import ehc.bo.impl.User;
+import ehc.bo.impl.UserRight;
+import ehc.bo.impl.UserRightType;
+import ehc.bo.impl.UserValidation;
+import ehc.util.Utils;
 import junit.framework.TestCase;
-import milansluka.HealthClinic.Config;
-import milansluka.HealthClinic.Utils;
-import milansluka.HealthClinic.bo.impl.Appointment;
-import milansluka.HealthClinic.bo.impl.AppointmentsManager;
-import milansluka.HealthClinic.bo.impl.Intervention;
-import milansluka.HealthClinic.bo.impl.Login;
-import milansluka.HealthClinic.bo.impl.Person;
-import milansluka.HealthClinic.bo.impl.User;
-import milansluka.HealthClinic.bo.impl.UserRight;
-import milansluka.HealthClinic.bo.impl.UserRightType;
-import milansluka.HealthClinic.bo.impl.UserValidation;
 
 public class CreateAppointmentTest extends TestCase {
 	private SessionFactory sessionFactory;

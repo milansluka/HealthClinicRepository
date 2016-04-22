@@ -1,4 +1,4 @@
-package milansluka.HealthClinic.bo.impl;
+package ehc.bo.impl;
 
 public enum UserRightType {
 	CREATE_APPOINTMENT, CREATE_USER

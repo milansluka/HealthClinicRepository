@@ -39,11 +39,11 @@
 		<!-- List of XML mapping files -->
 		<!-- <mapping resource="Employee.hbm.xml"/> -->
 
-		<mapping class="milansluka.HealthClinic.bo.impl.User" />
-		<mapping class="milansluka.HealthClinic.bo.impl.UserRight" />
-		<mapping class="milansluka.HealthClinic.bo.impl.Person" />
-		<mapping class="milansluka.HealthClinic.bo.impl.Appointment" />
-		<mapping class="milansluka.HealthClinic.bo.impl.Intervention" />
+		<mapping class="ehc.bo.impl.User" />
+		<mapping class="ehc.bo.impl.UserRight" />
+		<mapping class="ehc.bo.impl.Person" />
+		<mapping class="ehc.bo.impl.Appointment" />
+		<mapping class="ehc.bo.impl.Intervention" />
 
 
 	</session-factory>
