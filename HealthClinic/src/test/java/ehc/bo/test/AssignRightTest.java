@@ -1,4 +1,4 @@
-package milansluka.HealthClinic.bo;
+package ehc.bo.test;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
