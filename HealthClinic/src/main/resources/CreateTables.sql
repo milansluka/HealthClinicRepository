@@ -26,7 +26,7 @@ ALTER TABLE dbo.assigned_right
   
 CREATE TABLE dbo.intervention
 (
-  intervention_id bigint NOT NULL,
+  intervention_id bigserial NOT NULL,
   name character varying(200) NOT NULL,
   info text,
   CONSTRAINT intervention_pkey PRIMARY KEY (intervention_id)
