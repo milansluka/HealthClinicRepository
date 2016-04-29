@@ -5,7 +5,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import ehc.bo.impl.User;
-import ehc.bo.impl.UserRight;
+import ehc.bo.impl.Permission;
 import ehc.bo.impl.UserRightType;
 import junit.framework.TestCase;
 
@@ -48,15 +48,15 @@ public class AssignRightTest extends TestCase {
 	}
 	
 	public void assignRightNewUser() {
-		sessionFactory = new Configuration().configure().buildSessionFactory();
+	/*	sessionFactory = new Configuration().configure().buildSessionFactory();
 		
 		User user = new User();
 		user.setLogin("someadmin");
 		user.setPassword("1232");
 		
-		UserRight createAppointment = new UserRight();
+		Permission createAppointment = new Permission();
 		createAppointment.setType(UserRightType.CREATE_APPOINTMENT);
-		UserRight createUser = new UserRight();
+		Permission createUser = new Permission();
 		createUser.setType(UserRightType.CREATE_USER);
 		
 		user.assignRight(createAppointment);
@@ -65,7 +65,7 @@ public class AssignRightTest extends TestCase {
 		Session session = sessionFactory.openSession();
 		session.save(user);
 		session.close();	
-		
+		*/
 	}
 
 }

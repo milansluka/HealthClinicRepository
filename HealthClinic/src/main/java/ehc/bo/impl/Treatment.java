@@ -13,8 +13,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "intervention")
-public class Intervention {
+@Table(name = "treatment")
+public class Treatment extends ModificableObject{
 	
 	long id;
 	
@@ -25,7 +25,7 @@ public class Intervention {
 	
 	
     
-	public Intervention() {
+	public Treatment() {
 		super();
 		appointments = new ArrayList<Appointment>();
 	}

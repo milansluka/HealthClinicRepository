@@ -13,8 +13,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "person")
-public class Person {
+@Table(name = "individual")
+public class Individual extends BaseObject{
 	
 	private long id;
 	
@@ -25,7 +25,7 @@ public class Person {
 	
 	private List<Appointment> appointments;
 	
-	public Person() {
+	public Individual() {
 		super();
 		appointments = new ArrayList<Appointment>();
 	}

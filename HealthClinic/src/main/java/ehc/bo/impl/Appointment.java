@@ -14,27 +14,15 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "appointment")
-public class Appointment {
-	
-	long id;
+public class Appointment extends BaseObject {
 	
 	Date from;
 	Date to;
 /*	Date when;*/
 	
-	Person person;
-	Intervention intervention;
+	Individual person;
+	Treatment treatment;
 	
-	@Id
-	@SequenceGenerator(allocationSize = 1, initialValue = 1, sequenceName = "appointment_id_seq", name = "appointment_id_seq")
-	@GeneratedValue(generator = "appointment_id_seq", strategy = GenerationType.SEQUENCE)
-	@Column(name = "appointment_id")
-	public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
 	
 	@Column(name = "\"from\"")
 	public Date getFrom() {
@@ -60,33 +48,33 @@ public class Appointment {
 	
 	@ManyToOne
 	@JoinColumn(name = "person_id")
-	public Person getPerson() {
+	public Individual getPerson() {
 		return person;
 	}
-	public void setPerson(Person person) {
+	public void setPerson(Individual person) {
 		this.person = person;
 	}
 	
 	@ManyToOne
 	@JoinColumn(name = "intervention_id")
-	public Intervention getIntervention() {
-		return intervention;
+	public Treatment getTreatment() {
+		return treatment;
 	}
-	public void setIntervention(Intervention intervention) {
-		this.intervention = intervention;
+	public void setTreatment(Treatment treatment) {
+		this.treatment = treatment;
 	}
 	
-	public void assignPerson(Person person) {
+	public void assignPerson(Individual person) {
 		if (person != null) {
 			setPerson(person);
 			person.addAppointment(this);
 		}	
 	}
 	
-	public void assignIntervention(Intervention intervention) {
-		if (intervention != null) {
-			setIntervention(intervention);
-			intervention.addAppointment(this);
+	public void assignTreatment(Treatment treatment) {
+		if (treatment != null) {
+			setTreatment(treatment);
+			treatment.addAppointment(this);
 		}
 		
 	}

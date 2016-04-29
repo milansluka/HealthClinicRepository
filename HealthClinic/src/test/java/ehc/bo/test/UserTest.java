@@ -8,24 +8,46 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import ehc.bo.impl.User;
-import ehc.bo.impl.UserRight;
+import ehc.bo.impl.UserManager;
+import ehc.bo.impl.Permission;
 import ehc.bo.impl.UserRightType;
-import ehc.util.Utils;
+import ehc.bo.impl.UserValidation;
+import ehc.util.Util;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 public class UserTest extends TestCase {
+	
+	private void addUser() {	
+		UserManager manager = new UserManager(null);
+		
+		User user = new User();
+		user.setLogin("milan5");
+		user.setPassword("12345");
+			
+		UserValidation validation = new UserValidation(user);
+
+		if (validation.loginIsValid() && validation.passwordIsValid()) {
+			manager.addUser(user);
+		
+		}
+		
+		User loggedUser = manager.login("milan5", "12345");
+		
+		assertNotNull(loggedUser);
+	}
 
 	public void testApp() {
-		Session session = new Utils().getSession();
+		addUser();
+/*		Session session = new Util().getSession();
 		session.beginTransaction();
 
 		User user = new User();
 		user.setLogin("milan");
 		user.setPassword("m12345");
 
-		UserRight right = new UserRight();
+		Permission right = new Permission();
 		right.setType(UserRightType.CREATE_APPOINTMENT);
 
 		user.assignRight(right);
@@ -43,12 +65,12 @@ public class UserTest extends TestCase {
 
 		session.close();
 
-		/* assertNotNull(milan); */
+		 assertNotNull(milan); 
 
 		if (milan == null) {
 			assertTrue(false);
 		}
 
-		assertTrue(milan.getRights().get(0).getType() == UserRightType.CREATE_APPOINTMENT);
+		assertTrue(milan.getRights().get(0).getType() == UserRightType.CREATE_APPOINTMENT);*/
 	}
 }

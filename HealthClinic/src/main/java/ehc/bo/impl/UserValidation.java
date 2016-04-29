@@ -6,22 +6,31 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import ehc.util.Util;
+
 public class UserValidation {
-	private SessionFactory sessionFactory;
+    private Session currentSession;
+    
 	private User user;
 
-	public UserValidation(User user, SessionFactory sessionFactory) {
+	public UserValidation(User user) {
 		super();
 		this.user = user;
-		this.sessionFactory = sessionFactory;
+	}
+	
+	private void openCurrentSession() {
+		SessionFactory sessionFactory = new Util().getSessionFactory();
+		currentSession = sessionFactory.openSession();
+	}
+	
+	private void closeCurrentSession() {
+		SessionFactory sessionFactory = new Util().getSessionFactory();
+		currentSession.close();
 	}
 
 	
 	//checks if login name is unique
 	public boolean loginIsValid() {
-		if (sessionFactory == null) {
-			return false;
-		}
 		if (user == null) {
 			return false;
 		}
@@ -30,14 +39,14 @@ public class UserValidation {
 
 		if (!login.isEmpty())
 		{
-			Session session = sessionFactory.openSession();
+			openCurrentSession();
 			
 			String hql = "FROM User u WHERE u.login = :login";
-			Query query = session.createQuery(hql);
+			Query query = currentSession.createQuery(hql);
 			query.setParameter("login", login);
 			List results = query.list();
 			
-			session.close();
+			closeCurrentSession();
 
 			return results.isEmpty();
 		}

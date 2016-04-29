@@ -12,47 +12,56 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "user")
-public class User {
+public class User extends ModificableObject {
 	
-	long id;
-	
-	List<UserRight> rights;
 
+	List<PermissionProfile> permissionProfiles;
+/*	List<BaseObject> createdObjects;
+	List<ModificableObject> modifiedObjects;*/
+	
 	String login;
 	String password;
 	
 	public User() {
 		super();
-		rights = new ArrayList<UserRight>();
-	}
-
-	@Id
-	@SequenceGenerator(allocationSize = 1, initialValue = 1, sequenceName = "user_id_seq", name = "user_id_seq")
-	@GeneratedValue(generator = "user_id_seq", strategy = GenerationType.SEQUENCE)
-	@Column(name = "user_id")
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
+		permissionProfiles = new ArrayList<PermissionProfile>();
 	}
 
 	@ManyToMany(cascade={CascadeType.PERSIST,CascadeType.MERGE})
-/*	@ManyToMany*/
-	@JoinTable(name = "assigned_right", joinColumns = @JoinColumn(name = "user_id") , inverseJoinColumns = @JoinColumn(name = "right_id") )
-	public List<UserRight> getRights() {
-		return rights;
+	@JoinTable(name = "assigned_permission_profile", joinColumns = @JoinColumn(name = "user_id") , inverseJoinColumns = @JoinColumn(name = "permission_profile_id") )
+	public List<PermissionProfile> getPermissionProfiles() {
+		return permissionProfiles;
 	}
 
-	public void setRights(List<UserRight> userRights) {
-		this.rights = userRights;
+	public void setPermissionProfiles(List<PermissionProfile> permissionProfiles) {
+		this.permissionProfiles = permissionProfiles;
 	}
+	
+	
+/*    @OneToMany(mappedBy = "createdBy")
+	public List<BaseObject> getCreatedObjects() {
+		return createdObjects;
+	}
+
+	public void setCreatedObjects(List<BaseObject> createdObjects) {
+		this.createdObjects = createdObjects;
+	}*/
+	
+	
+/*	@OneToMany(mappedBy = "modifiedBy")
+	public List<ModificableObject> getModifiedObjects() {
+		return modifiedObjects;
+	}
+
+	public void setModifiedObjects(List<ModificableObject> modifiedObjects) {
+		this.modifiedObjects = modifiedObjects;
+	}*/
 
 	public String getLogin() {
 		return login;
@@ -70,17 +79,26 @@ public class User {
 		this.password = password;
 	}
 	
-	public boolean hasRight(UserRight right) {
-		return rights.contains(right);
+	public boolean hasPermission(Permission permission) {
+	/*	return permissions.contains(right);*/
+		
+		return true;
 		
 	}
 	
-	public void assignRight(UserRight right) {
+	public void assignPermissionProfile(PermissionProfile permissionProfile) {
+		if (permissionProfile != null) {
+			permissionProfile.getUsers().add(this);
+			getPermissionProfiles().addAll(permissionProfiles);
+		}
+	}
+	
+/*	public void assignRight(Permission right) {
 		if (right != null) {
 			right.getUsers().add(this);
 			getRights().add(right);
 			
 		}
-	}
+	}*/
 	
 }
