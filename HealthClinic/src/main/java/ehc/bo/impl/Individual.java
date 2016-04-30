@@ -9,17 +9,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "individual")
-public class Individual extends BaseObject{
-	
-	private long id;
+@PrimaryKeyJoinColumn(name="party_id")  
+public class Individual extends Party{
 	
 	private String firstName;
-	private String lastName;
 	private String email;
 	private String phone;
 	
@@ -29,20 +28,8 @@ public class Individual extends BaseObject{
 		super();
 		appointments = new ArrayList<Appointment>();
 	}
-
-	@Id
-	@SequenceGenerator(allocationSize = 1, initialValue = 1, sequenceName = "person_id_seq", name = "person_id_seq")
-	@GeneratedValue(generator = "person_id_seq", strategy = GenerationType.SEQUENCE)
-	@Column(name = "person_id")
-	public long getId() {
-		return id;
-	}
 	
-	public void setId(long id) {
-		this.id = id;
-	}
-	
-	@OneToMany(mappedBy = "person")
+	@OneToMany(mappedBy = "individual")
 	public List<Appointment> getAppointments() {
 		return appointments;
 	}
@@ -50,23 +37,13 @@ public class Individual extends BaseObject{
 	public void setAppointments(List<Appointment> appointments) {
 		this.appointments = appointments;
 	}
-
+	
 	@Column(name = "first_name")
 	public String getFirstName() {
 		return firstName;
 	}
-
-
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
-	}
-	
-	@Column(name = "last_name")
-	public String getLastName() {
-		return lastName;
-	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
 	}
 	public String getEmail() {
 		return email;

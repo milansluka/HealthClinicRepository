@@ -29,8 +29,7 @@ public class UserTest extends TestCase {
 		UserValidation validation = new UserValidation(user);
 
 		if (validation.loginIsValid() && validation.passwordIsValid()) {
-			manager.addUser(user);
-		
+			manager.addUser(user);	    
 		}
 		
 		User loggedUser = manager.login("milan5", "12345");
@@ -40,37 +39,5 @@ public class UserTest extends TestCase {
 
 	public void testApp() {
 		addUser();
-/*		Session session = new Util().getSession();
-		session.beginTransaction();
-
-		User user = new User();
-		user.setLogin("milan");
-		user.setPassword("m12345");
-
-		Permission right = new Permission();
-		right.setType(UserRightType.CREATE_APPOINTMENT);
-
-		user.assignRight(right);
-
-		long userId = (Long) session.save(user);
-
-		session.getTransaction().commit();
-
-		String hql = "FROM User u WHERE u.id = :user_id";
-		Query query = session.createQuery(hql);
-		query.setParameter("user_id", userId);
-		List results = query.list();
-
-		User milan = (User) results.get(0);
-
-		session.close();
-
-		 assertNotNull(milan); 
-
-		if (milan == null) {
-			assertTrue(false);
-		}
-
-		assertTrue(milan.getRights().get(0).getType() == UserRightType.CREATE_APPOINTMENT);*/
 	}
 }

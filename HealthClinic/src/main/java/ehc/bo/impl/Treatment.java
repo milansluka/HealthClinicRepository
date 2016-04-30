@@ -22,15 +22,13 @@ public class Treatment extends ModificableObject{
 	String info;
 	
 	List<Appointment> appointments;
-	
-	
-    
+	    
 	public Treatment() {
 		super();
 		appointments = new ArrayList<Appointment>();
 	}
 	
-	@OneToMany(mappedBy = "intervention")
+	@OneToMany(mappedBy = "treatment")
 	public List<Appointment> getAppointments() {
 		return appointments;
 	}
@@ -38,17 +36,7 @@ public class Treatment extends ModificableObject{
 		this.appointments = appointments;
 	}
 	
-	@Id
-	@SequenceGenerator(allocationSize = 1, initialValue = 1, sequenceName = "intervention_id_seq", name = "intervention_id_seq")
-	@GeneratedValue(generator = "intervention_id_seq", strategy = GenerationType.SEQUENCE)
-	@Column(name = "intervention_id")
-	public long getId() {
-		return id;
-	}
-	
-	public void setId(long id) {
-		this.id = id;
-	}
+
 	public String getName() {
 		return name;
 	}

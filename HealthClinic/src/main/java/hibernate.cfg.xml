@@ -40,12 +40,15 @@
 		<!-- <mapping resource="Employee.hbm.xml"/> -->
 
 		<mapping class="ehc.bo.impl.User" />
-	    <mapping class="ehc.bo.impl.PermissionProfile" />
-	    <mapping class="ehc.bo.impl.Permission" />
-<!-- 		<mapping class="ehc.bo.impl.UserRight" />
-		<mapping class="ehc.bo.impl.Person" />
+		<mapping class="ehc.bo.impl.PermissionProfile" />
+		<mapping class="ehc.bo.impl.Permission" />
+		<mapping class="ehc.bo.impl.Party" />
+		<mapping class="ehc.bo.impl.Individual" />
 		<mapping class="ehc.bo.impl.Appointment" />
-		<mapping class="ehc.bo.impl.Intervention" /> -->
+		<mapping class="ehc.bo.impl.Treatment" />
+		<!-- <mapping class="ehc.bo.impl.UserRight" /> <mapping class="ehc.bo.impl.Person" 
+			/> <mapping class="ehc.bo.impl.Appointment" /> <mapping class="ehc.bo.impl.Intervention" 
+			/> -->
 
 
 	</session-factory>

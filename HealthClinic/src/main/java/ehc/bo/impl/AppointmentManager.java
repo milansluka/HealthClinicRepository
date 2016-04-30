@@ -24,14 +24,14 @@ public class AppointmentManager {
 		if (appointment == null) {
 			return;
 		}
-		if (appointment.getPerson() == null) {
+		if (appointment.getIndividual() == null) {
 			return;
 		}
 		if (appointment.getTreatment() == null) {
 			return;
 		}
 
-		Individual existingPerson = individualDao.findIndividual(appointment.getPerson());
+		Individual existingPerson = individualDao.findIndividual(appointment.getIndividual());
 		Treatment treatment = treatmentDao.findTreatment(appointment.getTreatment());
 
 		if (treatment == null) {

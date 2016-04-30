@@ -20,7 +20,7 @@ public class Appointment extends BaseObject {
 	Date to;
 /*	Date when;*/
 	
-	Individual person;
+	Individual individual;
 	Treatment treatment;
 	
 	
@@ -48,15 +48,15 @@ public class Appointment extends BaseObject {
 	
 	@ManyToOne
 	@JoinColumn(name = "person_id")
-	public Individual getPerson() {
-		return person;
+	public Individual getIndividual() {
+		return individual;
 	}
-	public void setPerson(Individual person) {
-		this.person = person;
+	public void setIndividual(Individual person) {
+		this.individual = person;
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "intervention_id")
+	@JoinColumn(name = "treatment_id")
 	public Treatment getTreatment() {
 		return treatment;
 	}
@@ -66,7 +66,7 @@ public class Appointment extends BaseObject {
 	
 	public void assignPerson(Individual person) {
 		if (person != null) {
-			setPerson(person);
+			setIndividual(person);
 			person.addAppointment(this);
 		}	
 	}

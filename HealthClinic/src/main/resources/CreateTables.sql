@@ -5,7 +5,7 @@ Create table dbo."user"
 	"created_by" Bigint,
 	"login" Varchar(64) NOT NULL UNIQUE,
 	"password" Varchar(128) NOT NULL,
-	"assigned_permission_profile" Bigint,
+	"party_role_id" Bigint,
 	"created_on" Timestamp NOT NULL,
 	"modified_on" Timestamp,
  primary key ("id")
@@ -206,7 +206,7 @@ Alter table dbo."nurse" add  foreign key ("party_role_id") references dbo."party
 
 Alter table dbo."receptionist" add  foreign key ("party_role_id") references dbo."party_role" ("id") on update restrict on delete restrict;
 
-Alter table dbo."user" add  foreign key ("assigned_permission_profile") references dbo."party_role" ("id") on update restrict on delete restrict;
+Alter table dbo."user" add foreign key ("party_role_id") references dbo."party_role" ("id") on update restrict on delete restrict; 
 
 Alter table dbo."assigned_permission_profile" add  foreign key ("permission_profile_id") references dbo."permission_profile" ("id") on update restrict on delete restrict;
 
