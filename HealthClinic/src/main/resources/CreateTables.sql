@@ -123,6 +123,18 @@ Create table dbo."company"
 
 
 Create table dbo."party"
+  intervention_id bigserial NOT NULL,
+  name character varying(200) NOT NULL,
+  info text,
+  CONSTRAINT intervention_pkey PRIMARY KEY (intervention_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE dbo.intervention
+  OWNER TO postgres;
+  
+CREATE TABLE dbo.person
 (
 	"id" BigSerial NOT NULL,
 	"modified_by" Bigint,
