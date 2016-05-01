@@ -1,5 +1,5 @@
 package ehc.bo.impl;
 
-public class Patient extends Individual {
+public class Patient extends PartyRole {
 
 }

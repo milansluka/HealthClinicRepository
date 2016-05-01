@@ -11,8 +11,8 @@ public class IndividualTest extends TestCase {
 	public void testApp() {
 		Individual person = new Individual();
 		
-		person.setName("Milan");
-		person.setFirstName("Sluka");
+		person.setName("Sluka");
+		person.setFirstName("Milan");
 		person.setPhone("0910333084");
 		person.setCreatedOn(new Date());
 		
@@ -20,8 +20,8 @@ public class IndividualTest extends TestCase {
 		iDao.addIndividual(person);
 		
 		person = new Individual();
-		person.setName("Milan");
-		person.setFirstName("Sluka");
+		person.setName("Sluka");
+		person.setFirstName("Milan");
 		person.setPhone("0910333084");
 		person.setCreatedOn(new Date());
 		

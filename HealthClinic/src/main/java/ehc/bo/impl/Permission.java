@@ -35,17 +35,6 @@ public class Permission {
 	public void setId(long id) {
 		this.id = id;
 	}
-	
-	
-	
-/*    @ManyToMany(mappedBy = "rights")  
-	public List<User> getUsers() {
-		return users;
-	}
-*/
-/*	public void setUsers(List<User> users) {
-		this.users = users;
-	}*/
 
 	@Enumerated(EnumType.STRING)
 	public UserRightType getType() {
@@ -65,9 +54,4 @@ public class Permission {
 	public void setPermissionProfile(PermissionProfile permissionProfile) {
 		this.permissionProfile = permissionProfile;
 	}
-	
-	
-	
-	
-
 }

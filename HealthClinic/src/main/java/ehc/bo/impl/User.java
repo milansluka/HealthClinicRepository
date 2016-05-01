@@ -13,12 +13,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "user")
-public class User extends ModificableObject {
+@PrimaryKeyJoinColumn(name="party_role_id") 
+public class User extends PartyRole {
 	
 
 	List<PermissionProfile> permissionProfiles;

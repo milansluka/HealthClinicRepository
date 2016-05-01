@@ -9,6 +9,7 @@ import org.hibernate.cfg.Configuration;
 
 import ehc.bo.impl.User;
 import ehc.bo.impl.UserManager;
+import ehc.bo.impl.PartyManager;
 import ehc.bo.impl.Permission;
 import ehc.bo.impl.UserRightType;
 import ehc.bo.impl.UserValidation;
@@ -19,8 +20,15 @@ import junit.framework.TestSuite;
 
 public class UserTest extends TestCase {
 	
-	private void addUser() {	
-		UserManager manager = new UserManager(null);
+	private void addUser() {
+		User user = new User();
+		user.setLogin("milan5");
+		user.setPassword("12345");
+		
+		PartyManager manager = new PartyManager();
+		manager.addPartyRole(3, 3, user);
+		
+	/*	UserManager manager = new UserManager(null);
 		
 		User user = new User();
 		user.setLogin("milan5");
@@ -34,7 +42,7 @@ public class UserTest extends TestCase {
 		
 		User loggedUser = manager.login("milan5", "12345");
 		
-		assertNotNull(loggedUser);
+		assertNotNull(loggedUser);*/
 	}
 
 	public void testApp() {

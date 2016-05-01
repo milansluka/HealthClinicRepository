@@ -6,7 +6,7 @@ import javax.persistence.InheritanceType;
 
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)  
-public class Party extends BaseObject {
+public class Party extends ModificableObject {
 	String name;
 
 	public String getName() {

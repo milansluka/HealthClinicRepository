@@ -1,17 +1,16 @@
-Create table dbo."user"
+set schema 'dbo';
+
+Create table "user"
 (
 	"id" BigSerial NOT NULL,
-	"modified_by" Bigint NOT NULL,
-	"created_by" Bigint,
 	"login" Varchar(64) NOT NULL UNIQUE,
 	"password" Varchar(128) NOT NULL,
-	"party_role_id" Bigint,
-	"created_on" Timestamp NOT NULL,
-	"modified_on" Timestamp,
+	"party_role_id" Bigint NOT NULL,
  primary key ("id")
 ) Without Oids;
 
-Create table dbo."permission"
+
+Create table "permission"
 (
 	"id" BigSerial NOT NULL,
 	"permission_profile_id" Bigint NOT NULL,
@@ -20,31 +19,34 @@ Create table dbo."permission"
 ) Without Oids;
 
 
-Create table dbo."appointment"
+Create table "appointment"
 (
 	"id" BigSerial NOT NULL,
+	"physician_id" Bigint NOT NULL,
 	"treatment_id" Bigint NOT NULL,
 	"from" Timestamp NOT NULL,
 	"to" Timestamp NOT NULL,
 	"individual_id" Bigint NOT NULL,
 	"created_by" Bigint NOT NULL,
 	"created_on" Timestamp NOT NULL,
-	"actual" Boolean NOT NULL
+	"actual" Boolean NOT NULL,
+ primary key ("id")
 ) Without Oids;
 
 
-Create table dbo."individual"
+Create table "individual"
 (
 	"id" BigSerial NOT NULL,
 	"first_name" Char(128) NOT NULL,
 	"phone" Char(32) NOT NULL,
 	"email" Char(128),
 	"party_id" Bigint NOT NULL,
+	"birthdate" Timestamp,
  primary key ("id")
 ) Without Oids;
 
 
-Create table dbo."assigned_permission_profile"
+Create table "assigned_permission_profile"
 (
 	"user_id" Bigint NOT NULL,
 	"permission_profile_id" Bigint NOT NULL,
@@ -52,7 +54,7 @@ Create table dbo."assigned_permission_profile"
 ) Without Oids;
 
 
-Create table dbo."treatment"
+Create table "treatment_type"
 (
 	"id" BigSerial NOT NULL,
 	"modified_by" Bigint,
@@ -66,55 +68,39 @@ Create table dbo."treatment"
 ) Without Oids;
 
 
-Create table dbo."patient"
+Create table "patient"
 (
 	"id" BigSerial NOT NULL,
-	"modified_by" Bigint,
-	"created_by" Bigint NOT NULL,
 	"party_role_id" Bigint NOT NULL,
-	"created_on" Timestamp NOT NULL,
-	"modified_on" Timestamp,
  primary key ("id")
 ) Without Oids;
 
 
-Create table dbo."physician"
+Create table "physician"
 (
 	"party_role_id" Bigint NOT NULL,
-	"modified_by" Bigint,
-	"created_by" Bigint NOT NULL,
 	"id" BigSerial NOT NULL,
-	"created_on" Timestamp NOT NULL,
-	"modified_on" Timestamp,
  primary key ("id")
 ) Without Oids;
 
 
-Create table dbo."nurse"
+Create table "nurse"
 (
 	"party_role_id" Bigint NOT NULL,
-	"modified_by" Bigint,
-	"created_by" Bigint NOT NULL,
 	"id" BigSerial NOT NULL,
-	"created_on" Timestamp NOT NULL,
-	"modified_on" Timestamp,
  primary key ("id")
 ) Without Oids;
 
 
-Create table dbo."receptionist"
+Create table "receptionist"
 (
 	"party_role_id" Bigint NOT NULL,
-	"modified_by" Bigint,
-	"created_by" Bigint NOT NULL,
 	"id" BigSerial NOT NULL,
-	"created_on" Timestamp NOT NULL,
-	"modified_on" Timestamp,
  primary key ("id")
 ) Without Oids;
 
 
-Create table dbo."company"
+Create table "company"
 (
 	"id" BigSerial NOT NULL,
 	"party_id" Bigint NOT NULL,
@@ -122,105 +108,81 @@ Create table dbo."company"
 ) Without Oids;
 
 
-Create table dbo."party"
-  intervention_id bigserial NOT NULL,
-  name character varying(200) NOT NULL,
-  info text,
-  CONSTRAINT intervention_pkey PRIMARY KEY (intervention_id)
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE dbo.intervention
-  OWNER TO postgres;
-  
-CREATE TABLE dbo.person
+Create table "party"
 (
 	"id" BigSerial NOT NULL,
 	"modified_by" Bigint,
 	"created_by" Bigint NOT NULL,
-	"name" Varchar(256),
+	"name" Varchar(256) NOT NULL,
 	"created_on" Timestamp NOT NULL,
 	"modified_on" Timestamp,
  primary key ("id")
 ) Without Oids;
 
 
-Create table dbo."party_role"
+Create table "party_role"
 (
 	"id" BigSerial NOT NULL,
+	"modified_by" Bigint,
 	"target" Bigint NOT NULL,
 	"source" Bigint NOT NULL,
+	"created_by" Bigint,
+	"created_on" Timestamp,
+	"modified_on" Timestamp,
  primary key ("id")
 ) Without Oids;
 
 
-Create table dbo."permission_profile"
+Create table "permission_profile"
 (
 	"id" BigSerial NOT NULL,
 	"name" Varchar(256) NOT NULL,
  primary key ("id")
 ) Without Oids;
 
+
 /* Create Foreign Keys */
 
+Alter table "assigned_permission_profile" add  foreign key ("user_id") references "user" ("id") on update restrict on delete restrict;
 
+Alter table "appointment" add  foreign key ("created_by") references "user" ("id") on update restrict on delete restrict;
 
-Alter table dbo."assigned_permission_profile" add  foreign key ("user_id") references dbo."user" ("id") on update restrict on delete restrict;
+Alter table "treatment_type" add  foreign key ("created_by") references "user" ("id") on update restrict on delete restrict;
 
-Alter table dbo."appointment" add  foreign key ("created_by") references dbo."user" ("id") on update restrict on delete restrict;
+Alter table "treatment_type" add  foreign key ("modified_by") references "user" ("id") on update restrict on delete restrict;
 
-Alter table dbo."treatment" add  foreign key ("created_by") references dbo."user" ("id") on update restrict on delete restrict;
+Alter table "party" add  foreign key ("created_by") references "user" ("id") on update restrict on delete restrict;
 
-Alter table dbo."patient" add  foreign key ("created_by") references dbo."user" ("id") on update restrict on delete restrict;
+Alter table "party" add  foreign key ("modified_by") references "user" ("id") on update restrict on delete restrict;
 
-Alter table dbo."receptionist" add  foreign key ("created_by") references dbo."user" ("id") on update restrict on delete restrict;
+Alter table "party_role" add  foreign key ("created_by") references "user" ("id") on update restrict on delete restrict;
 
-Alter table dbo."nurse" add  foreign key ("created_by") references dbo."user" ("id") on update restrict on delete restrict;
+Alter table "party_role" add  foreign key ("modified_by") references "user" ("id") on update restrict on delete restrict;
 
-Alter table dbo."physician" add  foreign key ("created_by") references dbo."user" ("id") on update restrict on delete restrict;
+Alter table "appointment" add  foreign key ("treatment_id") references "individual" ("id") on update restrict on delete restrict;
 
-Alter table dbo."treatment" add  foreign key ("modified_by") references dbo."user" ("id") on update restrict on delete restrict;
+Alter table "appointment" add  foreign key ("individual_id") references "treatment_type" ("id") on update restrict on delete restrict;
 
-Alter table dbo."user" add  foreign key ("created_by") references dbo."user" ("id") on update restrict on delete restrict;
+Alter table "appointment" add  foreign key ("physician_id") references "physician" ("id") on update restrict on delete restrict;
 
-Alter table dbo."user" add  foreign key ("modified_by") references dbo."user" ("id") on update restrict on delete restrict;
+Alter table "party_role" add  foreign key ("source") references "party" ("id") on update restrict on delete restrict;
 
-Alter table dbo."party" add  foreign key ("created_by") references dbo."user" ("id") on update restrict on delete restrict;
+Alter table "party_role" add  foreign key ("target") references "party" ("id") on update restrict on delete restrict;
 
-Alter table dbo."physician" add  foreign key ("modified_by") references dbo."user" ("id") on update restrict on delete restrict;
+Alter table "company" add  foreign key ("party_id") references "party" ("id") on update restrict on delete restrict;
 
-Alter table dbo."nurse" add  foreign key ("modified_by") references dbo."user" ("id") on update restrict on delete restrict;
+Alter table "individual" add  foreign key ("party_id") references "party" ("id") on update restrict on delete restrict;
 
-Alter table dbo."receptionist" add  foreign key ("modified_by") references dbo."user" ("id") on update restrict on delete restrict;
+Alter table "patient" add  foreign key ("party_role_id") references "party_role" ("id") on update restrict on delete restrict;
 
-Alter table dbo."patient" add  foreign key ("modified_by") references dbo."user" ("id") on update restrict on delete restrict;
+Alter table "physician" add  foreign key ("party_role_id") references "party_role" ("id") on update restrict on delete restrict;
 
-Alter table dbo."party" add  foreign key ("modified_by") references dbo."user" ("id") on update restrict on delete restrict;
+Alter table "nurse" add  foreign key ("party_role_id") references "party_role" ("id") on update restrict on delete restrict;
 
-Alter table dbo."appointment" add  foreign key ("treatment_id") references dbo."individual" ("id") on update restrict on delete restrict;
+Alter table "receptionist" add  foreign key ("party_role_id") references "party_role" ("id") on update restrict on delete restrict;
 
-Alter table dbo."appointment" add  foreign key ("individual_id") references dbo."treatment" ("id") on update restrict on delete restrict;
+Alter table "user" add  foreign key ("party_role_id") references "party_role" ("id") on update restrict on delete restrict;
 
-Alter table dbo."party_role" add  foreign key ("source") references dbo."party" ("id") on update restrict on delete restrict;
+Alter table "assigned_permission_profile" add  foreign key ("permission_profile_id") references "permission_profile" ("id") on update restrict on delete restrict;
 
-Alter table dbo."party_role" add  foreign key ("target") references dbo."party" ("id") on update restrict on delete restrict;
-
-Alter table dbo."company" add  foreign key ("party_id") references dbo."party" ("id") on update restrict on delete restrict;
-
-Alter table dbo."individual" add  foreign key ("party_id") references dbo."party" ("id") on update restrict on delete restrict;
-
-Alter table dbo."patient" add  foreign key ("party_role_id") references dbo."party_role" ("id") on update restrict on delete restrict;
-
-Alter table dbo."physician" add  foreign key ("party_role_id") references dbo."party_role" ("id") on update restrict on delete restrict;
-
-Alter table dbo."nurse" add  foreign key ("party_role_id") references dbo."party_role" ("id") on update restrict on delete restrict;
-
-Alter table dbo."receptionist" add  foreign key ("party_role_id") references dbo."party_role" ("id") on update restrict on delete restrict;
-
-Alter table dbo."user" add foreign key ("party_role_id") references dbo."party_role" ("id") on update restrict on delete restrict; 
-
-Alter table dbo."assigned_permission_profile" add  foreign key ("permission_profile_id") references dbo."permission_profile" ("id") on update restrict on delete restrict;
-
-Alter table dbo."permission" add  foreign key ("permission_profile_id") references dbo."permission_profile" ("id") on update restrict on delete restrict;
-
+Alter table "permission" add  foreign key ("permission_profile_id") references "permission_profile" ("id") on update restrict on delete restrict;
