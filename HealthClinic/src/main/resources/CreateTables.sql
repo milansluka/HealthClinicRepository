@@ -23,26 +23,25 @@ Create table "appointment"
 (
 	"id" BigSerial NOT NULL,
 	"physician_id" Bigint NOT NULL,
-	"treatment_id" Bigint NOT NULL,
 	"from" Timestamp NOT NULL,
 	"to" Timestamp NOT NULL,
-	"individual_id" Bigint NOT NULL,
+	"treatment_id" Bigint NOT NULL,
 	"created_by" Bigint NOT NULL,
 	"created_on" Timestamp NOT NULL,
 	"actual" Boolean NOT NULL,
+	"individual_id" Bigint NOT NULL,
  primary key ("id")
 ) Without Oids;
 
 
 Create table "individual"
 (
-	"id" BigSerial NOT NULL,
 	"first_name" Char(128) NOT NULL,
 	"phone" Char(32) NOT NULL,
 	"email" Char(128),
 	"party_id" Bigint NOT NULL,
 	"birthdate" Timestamp,
- primary key ("id")
+ primary key ("party_id")
 ) Without Oids;
 
 
@@ -159,9 +158,9 @@ Alter table "party_role" add  foreign key ("created_by") references "user" ("id"
 
 Alter table "party_role" add  foreign key ("modified_by") references "user" ("id") on update restrict on delete restrict;
 
-Alter table "appointment" add  foreign key ("treatment_id") references "treatment_type" ("id") on update restrict on delete restrict;
+Alter table "appointment" add  foreign key ("individual_id") references "individual" ("party_id") on update restrict on delete restrict;
 
-Alter table "appointment" add  foreign key ("individual_id") references "individual" ("id") on update restrict on delete restrict;
+Alter table "appointment" add  foreign key ("treatment_id") references "treatment_type" ("id") on update restrict on delete restrict;
 
 Alter table "appointment" add  foreign key ("physician_id") references "physician" ("id") on update restrict on delete restrict;
 
