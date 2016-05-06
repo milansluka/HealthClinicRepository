@@ -1,5 +1,6 @@
 package ehc.bo.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -9,8 +10,9 @@ import ehc.bo.PartyDao;
 public class PartyDaoImpl extends Dao implements PartyDao {
 
 	public void AddParty(Party party) {
+		party.setCreatedOn(new Date());
 		openCurrentSessionWithTransaction();
-
+		
 		currentSession.save(party);
 
 		closeCurrentSessionWithTransaction();

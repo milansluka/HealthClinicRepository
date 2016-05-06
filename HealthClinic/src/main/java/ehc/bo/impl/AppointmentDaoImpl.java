@@ -1,5 +1,6 @@
 package ehc.bo.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import ehc.bo.AppointmentDao;
@@ -9,6 +10,7 @@ public class AppointmentDaoImpl extends Dao implements AppointmentDao {
 	public void addAppointment(Appointment appointment) {
 		openCurrentSessionWithTransaction();
 	
+		appointment.setCreatedOn(new Date());
 		currentSession.save(appointment);
 		
 		closeCurrentSessionWithTransaction();

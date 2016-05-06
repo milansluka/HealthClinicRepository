@@ -1,5 +1,6 @@
 package ehc.bo.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Hibernate;
@@ -10,14 +11,18 @@ import org.hibernate.SessionFactory;
 import ehc.bo.AppointmentDao;
 import ehc.bo.IndividualDao;
 import ehc.bo.TreatmentDao;
+import ehc.bo.TreatmentTypeDao;
 
 public class AppointmentManager {
 	private AppointmentDao appointmentDao;
 	private IndividualDao individualDao;
-	private TreatmentDao treatmentDao;
+	private TreatmentTypeDao treatmentTypeDao;
 
 	public AppointmentManager() {
 		super();
+		appointmentDao = new AppointmentDaoImpl();
+		individualDao = new IndividualDaoImpl();
+		treatmentTypeDao = new TreatmentTypeDaoImpl();
 	}
 
 	public void createAppointment(Appointment appointment) {
@@ -27,21 +32,23 @@ public class AppointmentManager {
 		if (appointment.getIndividual() == null) {
 			return;
 		}
-		if (appointment.getTreatment() == null) {
+		if (appointment.getTreatmentType() == null) {
 			return;
 		}
 
 		Individual existingPerson = individualDao.findIndividual(appointment.getIndividual());
-		Treatment treatment = treatmentDao.findTreatment(appointment.getTreatment());
+		TreatmentType treatmentType = treatmentTypeDao.find(appointment.getTreatmentType());
 
-		if (treatment == null) {
+		if (treatmentType == null) {
 			return;
 		}
-
-		appointment.assignTreatment(treatment);
+	
+		appointment.assignTreatmentType(treatmentType);
 
 		if (existingPerson == null) {
 			System.out.println("Creating appointment for new person");
+		
+			individualDao.addIndividual(appointment.getIndividual());
 			appointmentDao.addAppointment(appointment);
 
 		} else {
@@ -50,30 +57,4 @@ public class AppointmentManager {
 			appointmentDao.addAppointment(appointment);
 		}
 	}
-
-/*	private Individual findPerson(Individual person) {
-
-		return foundPerson;
-	}*/
-
-/*	private Treatment findIntervention(Treatment intervention) {
-		Session session = sessionFactory.openSession();
-
-		String hql = "FROM Intervention i WHERE i.name = :name";
-		Query query = session.createQuery(hql);
-		query.setParameter("name", intervention.getName());
-		List results = query.list();
-
-		Treatment foundIntervention = null;
-
-		if (!results.isEmpty()) {
-			foundIntervention = (Treatment) results.get(0);
-			Hibernate.initialize(foundIntervention.getAppointments());
-		}
-
-		session.close();
-
-		return foundIntervention;
-	}*/
-
 }

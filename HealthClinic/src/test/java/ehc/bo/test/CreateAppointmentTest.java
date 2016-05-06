@@ -6,15 +6,19 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import ehc.bo.TreatmentDao;
+import ehc.bo.TreatmentTypeDao;
 import ehc.bo.impl.Appointment;
 import ehc.bo.impl.AppointmentManager;
-import ehc.bo.impl.Treatment;
+import ehc.bo.impl.TreatmentType;
+import ehc.bo.impl.TreatmentTypeDaoImpl;
 import ehc.bo.impl.Login;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.User;
 import ehc.bo.impl.Permission;
-import ehc.bo.impl.UserRightType;
+import ehc.bo.impl.UserPermissionType;
 import ehc.bo.impl.UserValidation;
+import ehc.util.DateTimeUtil;
 import ehc.util.Util;
 import junit.framework.TestCase;
 
@@ -101,27 +105,27 @@ public class CreateAppointmentTest extends TestCase {
 	
 	public void createAppointmentNewPerson() {
 
-/*		Individual person = new Individual();
+		Individual person = new Individual();
 		person.setName("Milan2");
 		person.setFirstName("Sluka2");
 		person.setPhone("0000011");
 		
-		Session session = new Util().getSession();
-		session.beginTransaction();
-        session.save(person);
-        
-        session.getTransaction().commit();
-		session.close();
-
-		Treatment intervention = new Treatment();
-		intervention.setName("some name");
-		intervention.setInfo("some info");
-
+		TreatmentType treatmentType = new TreatmentType();
+		treatmentType.setName("some name");
+		treatmentType.setInfo("some info");
+		treatmentType.setType("some type");
+		treatmentType.setCreatedOn(new Date());
+		
+		TreatmentTypeDao trDao = new TreatmentTypeDaoImpl();
+		if (trDao.find(treatmentType) == null) {
+			trDao.add(treatmentType);		
+		}
+		
 		Appointment appointment = new Appointment();
 		String strFrom = "20.4.2016 10:00";
 		String strTo = "20.4.2016 10:30";
 
-		Util utils = new Util();
+		DateTimeUtil utils = new DateTimeUtil();
 		Date from = utils.toDate(strFrom);
 		Date to = utils.toDate(strTo);
 
@@ -134,10 +138,10 @@ public class CreateAppointmentTest extends TestCase {
 		appointment.setTo(to);
 
 		appointment.assignPerson(person);
-		appointment.assignTreatment(intervention);
+		appointment.assignTreatmentType(treatmentType);
 
 		AppointmentManager manager = new AppointmentManager();
-		manager.createAppointment(appointment);*/
+		manager.createAppointment(appointment);
 
 	}
 

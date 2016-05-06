@@ -1,8 +1,8 @@
 package ehc.bo;
 
 import ehc.bo.impl.Individual;
-import ehc.bo.impl.Treatment;
+import ehc.bo.impl.TreatmentType;
 
 public interface TreatmentDao {
-	Treatment findTreatment(Treatment treatment);
+	TreatmentType findTreatment(TreatmentType treatment);
 }

@@ -20,7 +20,7 @@ public class Permission {
 	long id;
 	
 /*	List<User> users;*/
-	UserRightType type;
+	UserPermissionType type;
 	PermissionProfile permissionProfile;
 	
 	public Permission() {
@@ -37,11 +37,11 @@ public class Permission {
 	}
 
 	@Enumerated(EnumType.STRING)
-	public UserRightType getType() {
+	public UserPermissionType getType() {
 		return type;
 	}
 
-	public void setType(UserRightType type) {
+	public void setType(UserPermissionType type) {
 		this.type = type;
 	}
 

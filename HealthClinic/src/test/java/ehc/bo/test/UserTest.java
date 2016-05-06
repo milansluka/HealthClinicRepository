@@ -11,7 +11,7 @@ import ehc.bo.impl.User;
 import ehc.bo.impl.UserManager;
 import ehc.bo.impl.PartyManager;
 import ehc.bo.impl.Permission;
-import ehc.bo.impl.UserRightType;
+import ehc.bo.impl.UserPermissionType;
 import ehc.bo.impl.UserValidation;
 import ehc.util.Util;
 import junit.framework.Test;

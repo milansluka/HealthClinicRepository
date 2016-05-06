@@ -6,7 +6,7 @@ import org.hibernate.cfg.Configuration;
 
 import ehc.bo.impl.User;
 import ehc.bo.impl.Permission;
-import ehc.bo.impl.UserRightType;
+import ehc.bo.impl.UserPermissionType;
 import junit.framework.TestCase;
 
 public class AssignRightTest extends TestCase {

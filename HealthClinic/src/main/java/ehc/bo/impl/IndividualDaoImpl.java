@@ -1,7 +1,9 @@
 package ehc.bo.impl;
 
+import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 
 import ehc.bo.IndividualDao;
@@ -11,6 +13,7 @@ public class IndividualDaoImpl extends Dao implements IndividualDao {
 	public void addIndividual(Individual individual) {
 		openCurrentSessionWithTransaction();
 		
+		individual.setCreatedOn(new Date());
 		currentSession.save(individual);
 
 		closeCurrentSessionWithTransaction();
@@ -39,17 +42,24 @@ public class IndividualDaoImpl extends Dao implements IndividualDao {
 		query.setParameter("phone", phone);
 		
 		List results = query.list();
-		
-		closeCurrentSessionWithTransaction();
+		Individual i = null;
 		
 		if (results.size() > 1) {
 			System.out.println("More individuals with the same first name, last name and phone number");
-			return (Individual)results.get(0);
+			i = (Individual)results.get(0);
 		} else if (results.size() == 1) {
-			return (Individual)results.get(0);			
+			i = (Individual)results.get(0);			
 		}
+		
+		if (i != null) {
+			Hibernate.initialize(i.getAppointments());
+		}
+		
+		closeCurrentSessionWithTransaction();
+		
+		
 		System.out.println("No individual with given first name, last name and phone number");
-		return null;
+		return i;
 	}
 
 	public void updateIndividual(Individual individual) {

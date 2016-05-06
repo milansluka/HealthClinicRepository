@@ -13,22 +13,29 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "treatment")
-public class Treatment extends ModificableObject{
-	
-	long id;
+@Table(name = "treatment_type")
+public class TreatmentType extends ModificableObject{
 	
 	String name;
 	String info;
+	String type;
 	
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	List<Appointment> appointments;
 	    
-	public Treatment() {
+	public TreatmentType() {
 		super();
 		appointments = new ArrayList<Appointment>();
 	}
 	
-	@OneToMany(mappedBy = "treatment")
+	@OneToMany(mappedBy = "treatmentType")
 	public List<Appointment> getAppointments() {
 		return appointments;
 	}

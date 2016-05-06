@@ -159,9 +159,9 @@ Alter table "party_role" add  foreign key ("created_by") references "user" ("id"
 
 Alter table "party_role" add  foreign key ("modified_by") references "user" ("id") on update restrict on delete restrict;
 
-Alter table "appointment" add  foreign key ("treatment_id") references "individual" ("id") on update restrict on delete restrict;
+Alter table "appointment" add  foreign key ("treatment_id") references "treatment_type" ("id") on update restrict on delete restrict;
 
-Alter table "appointment" add  foreign key ("individual_id") references "treatment_type" ("id") on update restrict on delete restrict;
+Alter table "appointment" add  foreign key ("individual_id") references "individual" ("id") on update restrict on delete restrict;
 
 Alter table "appointment" add  foreign key ("physician_id") references "physician" ("id") on update restrict on delete restrict;
 

@@ -2,6 +2,7 @@ package ehc.bo.impl;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,10 +19,9 @@ public class Appointment extends BaseObject {
 	
 	Date from;
 	Date to;
-/*	Date when;*/
 	
 	Individual individual;
-	Treatment treatment;
+	TreatmentType treatmentType;
 	
 	
 	@Column(name = "\"from\"")
@@ -39,15 +39,10 @@ public class Appointment extends BaseObject {
 	public void setTo(Date to) {
 		this.to = to;
 	}
-/*	public Date getWhen() {
-		return when;
-	}
-	public void setWhen(Date when) {
-		this.when = when;
-	}*/
+
 	
 	@ManyToOne
-	@JoinColumn(name = "person_id")
+	@JoinColumn(name = "individual_id")
 	public Individual getIndividual() {
 		return individual;
 	}
@@ -57,11 +52,11 @@ public class Appointment extends BaseObject {
 	
 	@ManyToOne
 	@JoinColumn(name = "treatment_id")
-	public Treatment getTreatment() {
-		return treatment;
+	public TreatmentType getTreatmentType() {
+		return treatmentType;
 	}
-	public void setTreatment(Treatment treatment) {
-		this.treatment = treatment;
+	public void setTreatmentType(TreatmentType treatmentType) {
+		this.treatmentType = treatmentType;
 	}
 	
 	public void assignPerson(Individual person) {
@@ -71,10 +66,10 @@ public class Appointment extends BaseObject {
 		}	
 	}
 	
-	public void assignTreatment(Treatment treatment) {
-		if (treatment != null) {
-			setTreatment(treatment);
-			treatment.addAppointment(this);
+	public void assignTreatmentType(TreatmentType treatmentType) {
+		if (treatmentType != null) {
+			setTreatmentType(treatmentType);
+			treatmentType.addAppointment(this);
 		}
 		
 	}

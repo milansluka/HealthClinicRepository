@@ -12,7 +12,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 public class Util {
-	public Date toDate(String str) {
+/*	public Date toDate(String str) {
 		DateFormat format = new SimpleDateFormat(Config.DATETIME_FORMAT);
 		Date date = null;
 
@@ -23,7 +23,7 @@ public class Util {
 		}
 
 		return date;
-	}
+	}*/
 
 	public String cryptWithMD5(String pass) {
 		MessageDigest md = null;

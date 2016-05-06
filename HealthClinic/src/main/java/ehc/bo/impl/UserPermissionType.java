@@ -1,6 +1,6 @@
 package ehc.bo.impl;
 
-public enum UserRightType {
+public enum UserPermissionType {
 	CREATE_APPOINTMENT, CREATE_USER
 
 }
