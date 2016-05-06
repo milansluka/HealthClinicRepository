@@ -3,7 +3,6 @@ package ehc.bo;
 import java.util.List;
 
 import ehc.bo.impl.Appointment;
-import ehc.bo.impl.User;
 
 public interface AppointmentDao {
 	void addAppointment(Appointment appointment);

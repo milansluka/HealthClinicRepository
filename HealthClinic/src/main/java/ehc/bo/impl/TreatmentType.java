@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "treatment_type")
-public class TreatmentType extends ModificableObject{
+public class TreatmentType extends BaseObject{
 	
 	String name;
 	String info;

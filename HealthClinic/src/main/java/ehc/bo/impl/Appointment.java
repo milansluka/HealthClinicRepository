@@ -2,20 +2,25 @@ package ehc.bo.impl;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import ehc.bo.impl.User;
 
 @Entity
 @Table(name = "appointment")
 public class Appointment extends BaseObject {
+	
+	protected Appointment() {
+		super();
+	}
+
+	public Appointment(User executor) {
+		super(executor);
+	}
 	
 	Date from;
 	Date to;

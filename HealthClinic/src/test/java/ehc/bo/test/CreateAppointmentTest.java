@@ -2,25 +2,20 @@ package ehc.bo.test;
 
 import java.util.Date;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import ehc.bo.TreatmentDao;
 import ehc.bo.TreatmentTypeDao;
 import ehc.bo.impl.Appointment;
 import ehc.bo.impl.AppointmentManager;
+import ehc.bo.impl.Individual;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDaoImpl;
-import ehc.bo.impl.Login;
-import ehc.bo.impl.Individual;
 import ehc.bo.impl.User;
-import ehc.bo.impl.Permission;
-import ehc.bo.impl.UserPermissionType;
-import ehc.bo.impl.UserValidation;
-import ehc.util.DateTimeUtil;
-import ehc.util.Util;
+import ehc.hibernate.HibernateUtil;
+import ehc.util.DateUtil;
 import junit.framework.TestCase;
+
 
 public class CreateAppointmentTest extends TestCase {
 	private SessionFactory sessionFactory;
@@ -29,105 +24,104 @@ public class CreateAppointmentTest extends TestCase {
 
 		sessionFactory = new Configuration().configure().buildSessionFactory();
 
-	/*	createUser();*/
+		/* createUser(); */
 		loginSuccessful();
 		loginFailed();
 		createAppointment();
 		createAppointmentNewPerson();
 	}
-	
+
 	public void createUser2() {
-		
+
 	}
 
-/*	public void createUser() {
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
-
-		User user = new User();
-		user.setLogin("admin4");
-		
-		String psw = "12345";
-		String encryptedPsw = new Util().cryptWithMD5(psw);
-		
-		user.setPassword(encryptedPsw);
-
-		UserValidation validation = new UserValidation(user, sessionFactory);
-
-		if (validation.loginIsValid() && validation.passwordIsValid()) {
-			Permission right = new Permission();
-			right.setType(UserRightType.CREATE_APPOINTMENT);
-
-			user.assignRight(right);
-
-			long userId = (Long) session.save(user);
-
-			session.getTransaction().commit();
-			session.close();
-		}
-
-		assertTrue(user.getLogin().equals("admin4") && user.getPassword().equals(encryptedPsw));
-	}*/
+	/*
+	 * public void createUser() { Session session =
+	 * sessionFactory.openSession(); session.beginTransaction();
+	 * 
+	 * User user = new User(); user.setLogin("admin4");
+	 * 
+	 * String psw = "12345"; String encryptedPsw = new Util().cryptWithMD5(psw);
+	 * 
+	 * user.setPassword(encryptedPsw);
+	 * 
+	 * UserValidation validation = new UserValidation(user, sessionFactory);
+	 * 
+	 * if (validation.loginIsValid() && validation.passwordIsValid()) {
+	 * Permission right = new Permission();
+	 * right.setType(UserRightType.CREATE_APPOINTMENT);
+	 * 
+	 * user.assignRight(right);
+	 * 
+	 * long userId = (Long) session.save(user);
+	 * 
+	 * session.getTransaction().commit(); session.close(); }
+	 * 
+	 * assertTrue(user.getLogin().equals("admin4") &&
+	 * user.getPassword().equals(encryptedPsw)); }
+	 */
 
 	public void loginSuccessful() {
-/*		Session session = new Util().getSession();
-		session.beginTransaction();
-
-		User user = new User();
-		user.setLogin("admin3");
-		
-		String psw = "12345";
-		String encryptedPsw = new Util().cryptWithMD5(psw);
-		
-		user.setPassword(encryptedPsw);
-
-		Login login = new Login(session);
-
-		assertTrue(login.tryLogin(user));
-
-		session.close();*/
+		/*
+		 * Session session = new Util().getSession();
+		 * session.beginTransaction();
+		 * 
+		 * User user = new User(); user.setLogin("admin3");
+		 * 
+		 * String psw = "12345"; String encryptedPsw = new
+		 * Util().cryptWithMD5(psw);
+		 * 
+		 * user.setPassword(encryptedPsw);
+		 * 
+		 * Login login = new Login(session);
+		 * 
+		 * assertTrue(login.tryLogin(user));
+		 * 
+		 * session.close();
+		 */
 	}
 
 	public void loginFailed() {
-/*		Session session = new Util().getSession();
-		session.beginTransaction();
-
-		User user = new User();
-		user.setLogin("aaaaa");
-		user.setPassword("222");
-
-		Login login = new Login(session);
-
-		assertTrue(!login.tryLogin(user));
-
-		session.close();*/
+		/*
+		 * Session session = new Util().getSession();
+		 * session.beginTransaction();
+		 * 
+		 * User user = new User(); user.setLogin("aaaaa");
+		 * user.setPassword("222");
+		 * 
+		 * Login login = new Login(session);
+		 * 
+		 * assertTrue(!login.tryLogin(user));
+		 * 
+		 * session.close();
+		 */
 	}
-	
+
 	public void createAppointmentNewPerson() {
+		
+		User executor = new User();
+
 
 		Individual person = new Individual();
 		person.setName("Milan2");
 		person.setFirstName("Sluka2");
 		person.setPhone("0000011");
-		
+
 		TreatmentType treatmentType = new TreatmentType();
 		treatmentType.setName("some name");
 		treatmentType.setInfo("some info");
 		treatmentType.setType("some type");
 		treatmentType.setCreatedOn(new Date());
-		
+
 		TreatmentTypeDao trDao = new TreatmentTypeDaoImpl();
 		if (trDao.find(treatmentType) == null) {
-			trDao.add(treatmentType);		
+			trDao.add(treatmentType);
 		}
-		
-		Appointment appointment = new Appointment();
-		String strFrom = "20.4.2016 10:00";
-		String strTo = "20.4.2016 10:30";
 
-		DateTimeUtil utils = new DateTimeUtil();
-		Date from = utils.toDate(strFrom);
-		Date to = utils.toDate(strTo);
+		Appointment appointment = new Appointment(executor);
+
+		Date from = DateUtil.date(2016, 4, 20, 10, 0, 0);
+		Date to = DateUtil.date(2016, 4, 20, 10, 30, 0);
 
 		if (from == null || to == null) {
 			assertTrue(false);
@@ -147,36 +141,13 @@ public class CreateAppointmentTest extends TestCase {
 
 	public void createAppointment() {
 
-/*		Individual person = new Individual();
-		person.setName("Milan");
-		person.setFirstName("Sluka");
-		person.setPhone("012345");
+		HibernateUtil.beginTransaction();
+		User executor = new User();
+		Appointment appointent = new Appointment(executor);
+		HibernateUtil.save(appointent);
 
-		Treatment intervention = new Treatment();
-		intervention.setName("some name");
-		intervention.setInfo("some info");
+		HibernateUtil.commitTransaction();
 
-		Appointment appointment = new Appointment();
-		String strFrom = "17.4.2016 10:00";
-		String strTo = "17.4.2016 10:30";
-
-		Util utils = new Util();
-		Date from = utils.toDate(strFrom);
-		Date to = utils.toDate(strTo);
-
-		if (from == null || to == null) {
-			assertTrue(false);
-			return;
-		}
-
-		appointment.setFrom(from);
-		appointment.setTo(to);
-
-		appointment.assignPerson(person);
-		appointment.assignTreatment(intervention);
-
-		AppointmentManager manager = new AppointmentManager();
-		manager.createAppointment(appointment);*/
 
 	}
 
