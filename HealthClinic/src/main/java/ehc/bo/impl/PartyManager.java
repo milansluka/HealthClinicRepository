@@ -1,16 +1,17 @@
 package ehc.bo.impl;
 
 import ehc.bo.PartyDao;
-import ehc.bo.PartyRoleDao;
+// TODO Milian !!!!commit and push all classes which are required
+// import ehc.bo.PartyRoleDao;
 
 public class PartyManager {
 	PartyDao partyDao;
-	PartyRoleDao partyRoleDao;
+//	PartyRoleDao partyRoleDao;
 	
 	public PartyManager() {
 		super();
 		partyDao = new PartyDaoImpl();
-		partyRoleDao = new PartyRoleDaoImpl();
+//		partyRoleDao = new PartyRoleDaoImpl();
 	}
 
 	public void addPartyRole(long source, long target, PartyRole partyRole) {
@@ -24,7 +25,7 @@ public class PartyManager {
 		partyRole.setSource(sourceParty);
 		partyRole.setTarget(targetParty);
 		
-		partyRoleDao.addPartyRole(partyRole);
+//		partyRoleDao.addPartyRole(partyRole);
 	}
 	
 	public void addUserRole(long partyId, User user) {
