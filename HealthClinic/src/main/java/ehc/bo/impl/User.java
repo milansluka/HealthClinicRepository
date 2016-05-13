@@ -4,17 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -24,16 +18,21 @@ public class User extends PartyRole {
 	
 
 	List<PermissionProfile> permissionProfiles;
-/*	List<BaseObject> createdObjects;
-	List<ModificableObject> modifiedObjects;*/
 	
 	String login;
 	String password;
 	
-	public User() {
+	protected User() {
 		super();
 		permissionProfiles = new ArrayList<PermissionProfile>();
 	}
+	
+	public User(User executor, String login, String password) {
+		super(executor);
+		this.login = login;
+		this.password = password;
+	}
+	
 
 	@ManyToMany(cascade={CascadeType.PERSIST,CascadeType.MERGE})
 	@JoinTable(name = "assigned_permission_profile", joinColumns = @JoinColumn(name = "user_id") , inverseJoinColumns = @JoinColumn(name = "permission_profile_id") )
@@ -45,25 +44,6 @@ public class User extends PartyRole {
 		this.permissionProfiles = permissionProfiles;
 	}
 	
-	
-/*    @OneToMany(mappedBy = "createdBy")
-	public List<BaseObject> getCreatedObjects() {
-		return createdObjects;
-	}
-
-	public void setCreatedObjects(List<BaseObject> createdObjects) {
-		this.createdObjects = createdObjects;
-	}*/
-	
-	
-/*	@OneToMany(mappedBy = "modifiedBy")
-	public List<ModificableObject> getModifiedObjects() {
-		return modifiedObjects;
-	}
-
-	public void setModifiedObjects(List<ModificableObject> modifiedObjects) {
-		this.modifiedObjects = modifiedObjects;
-	}*/
 
 	public String getLogin() {
 		return login;
@@ -94,13 +74,5 @@ public class User extends PartyRole {
 			getPermissionProfiles().addAll(permissionProfiles);
 		}
 	}
-	
-/*	public void assignRight(Permission right) {
-		if (right != null) {
-			right.getUsers().add(this);
-			getRights().add(right);
-			
-		}
-	}*/
 	
 }

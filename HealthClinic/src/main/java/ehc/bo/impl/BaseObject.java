@@ -72,6 +72,7 @@ public class BaseObject {
 		this.modifiedBy = modifiedBy;
 	}
 
+	@Column(name = "modified_on")
 	public Date getModifiedOn() {
 		return modifiedOn;
 	}

@@ -30,7 +30,7 @@ public class UserValidation {
 
 	
 	//checks if login name is unique
-	public boolean loginIsValid() {
+	public boolean loginIsValid(Session session) {
 		if (user == null) {
 			return false;
 		}
@@ -39,14 +39,14 @@ public class UserValidation {
 
 		if (!login.isEmpty())
 		{
-			openCurrentSession();
+		
 			
 			String hql = "FROM User u WHERE u.login = :login";
-			Query query = currentSession.createQuery(hql);
+			Query query = session.createQuery(hql);
 			query.setParameter("login", login);
 			List results = query.list();
 			
-			closeCurrentSession();
+		
 
 			return results.isEmpty();
 		}

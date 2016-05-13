@@ -1,9 +1,6 @@
 package ehc.bo.impl;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
@@ -17,6 +14,14 @@ public class PartyRole extends BaseObject {
 	Party source;
 	Party target;
 	
+	protected PartyRole() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public PartyRole(User executor) {
+		super(executor);
+		// TODO Auto-generated constructor stub
+	}
 	@ManyToOne
 	@JoinColumn(name = "source")
 	public Party getSource() {

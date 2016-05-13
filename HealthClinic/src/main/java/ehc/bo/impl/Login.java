@@ -15,6 +15,18 @@ public class Login {
 		this.session = session;
 		loginSuccess = false;
 	}
+	
+	public User login(String login, String password) {
+		if (session == null) return null;
+		
+		String hql = "FROM User u WHERE u.login = :login and u.password = :password";
+		Query query = session.createQuery(hql);
+		query.setParameter("login", login);
+		query.setParameter("password", password);
+		List results = query.list();
+		
+		return (User)results.get(0);
+	}
 
 	public boolean tryLogin(User user) {
 		if (session != null && user != null) {
