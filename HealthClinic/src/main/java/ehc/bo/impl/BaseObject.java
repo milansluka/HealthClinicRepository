@@ -18,18 +18,14 @@ public class BaseObject {
 	private long id;
 	private User createdBy;
 	private Date createdOn;
-	private User modifiedBy;
-	private Date modifiedOn;
-
+	
 	protected BaseObject() {
 		this.createdOn = DateUtil.now();
-		this.setModifiedOn(createdOn);
 	}
 
 	public BaseObject(User executor) {
 		this();
 		this.createdBy = executor;
-		this.setModifiedBy(executor);
 	}
 
 	@Id
@@ -60,25 +56,6 @@ public class BaseObject {
 
 	public void setCreatedOn(Date createdOn) {
 		this.createdOn = createdOn;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "modified_by")
-	public User getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(User modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	@Column(name = "modified_on")
-	public Date getModifiedOn() {
-		return modifiedOn;
-	}
-
-	public void setModifiedOn(Date modifiedOn) {
-		this.modifiedOn = modifiedOn;
 	}
 
 }

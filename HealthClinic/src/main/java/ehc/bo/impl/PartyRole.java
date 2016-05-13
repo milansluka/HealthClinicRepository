@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "party_role")
 @Inheritance(strategy=InheritanceType.JOINED)  
-public class PartyRole extends BaseObject {
+public class PartyRole extends ModifiableObject {
 	Party source;
 	Party target;
 	

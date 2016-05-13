@@ -11,7 +11,7 @@ import javax.persistence.OneToMany;
 
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)  
-public class Party extends BaseObject {
+public class Party extends ModifiableObject {
 	String name;
 	List<PartyRole> sourceRoles;
 	List<PartyRole> targetRoles;

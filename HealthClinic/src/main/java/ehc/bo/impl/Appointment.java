@@ -11,7 +11,6 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "appointment")
-@AttributeOverride(name = "modifiedBy", column = @Column(name = "modified_by", insertable = false, updatable = false))
 public class Appointment extends BaseObject {
 	
 	protected Appointment() {
