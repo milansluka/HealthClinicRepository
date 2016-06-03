@@ -2,6 +2,7 @@ package ehc.bo.impl;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -39,8 +40,9 @@ public class BaseObject {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name = "created_by")
+/*	@JoinColumn(name = "created_by",nullable = false, updatable = false, insertable = true)*/
 	public User getCreatedBy() {
 		return createdBy;
 	}

@@ -12,13 +12,10 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "user")
+@Table(name = "`user`")
 @PrimaryKeyJoinColumn(name="party_role_id") 
 public class User extends PartyRole {
-	
-
 	List<PermissionProfile> permissionProfiles;
-	
 	String login;
 	String password;
 	
@@ -26,13 +23,13 @@ public class User extends PartyRole {
 		super();
 		permissionProfiles = new ArrayList<PermissionProfile>();
 	}
-	
+
 	public User(User executor, String login, String password) {
 		super(executor);
+		permissionProfiles = new ArrayList<PermissionProfile>();
 		this.login = login;
 		this.password = password;
 	}
-	
 
 	@ManyToMany(cascade={CascadeType.PERSIST,CascadeType.MERGE})
 	@JoinTable(name = "assigned_permission_profile", joinColumns = @JoinColumn(name = "user_id") , inverseJoinColumns = @JoinColumn(name = "permission_profile_id") )

@@ -14,7 +14,7 @@ Create table "permission"
 (
 	"id" BigSerial NOT NULL,
 	"permission_profile_id" Bigint NOT NULL,
-	"type" Varchar(200) NOT NULL UNIQUE,
+	"type" Varchar(256) NOT NULL UNIQUE,
  primary key ("id")
 ) Without Oids;
 
@@ -28,7 +28,7 @@ Create table "appointment"
 	"treatment_id" Bigint NOT NULL,
 	"created_by" Bigint NOT NULL,
 	"created_on" Timestamp NOT NULL,
-	"actual" Boolean NOT NULL,
+	"state" Varchar(128) NOT NULL,
 	"individual_id" Bigint NOT NULL,
  primary key ("id")
 ) Without Oids;
@@ -36,9 +36,9 @@ Create table "appointment"
 
 Create table "individual"
 (
-	"first_name" Char(128) NOT NULL,
-	"phone" Char(32) NOT NULL,
-	"email" Char(128),
+	"first_name" Varchar(128) NOT NULL,
+	"phone" Varchar(32) NOT NULL,
+	"email" Varchar(128),
 	"party_id" Bigint NOT NULL,
 	"birthdate" Timestamp,
  primary key ("party_id")
@@ -125,8 +125,8 @@ Create table "party_role"
 	"modified_by" Bigint,
 	"target" Bigint NOT NULL,
 	"source" Bigint NOT NULL,
-	"created_by" Bigint,
-	"created_on" Timestamp,
+	"created_by" Bigint NOT NULL,
+	"created_on" Timestamp NOT NULL,
 	"modified_on" Timestamp,
  primary key ("id")
 ) Without Oids;

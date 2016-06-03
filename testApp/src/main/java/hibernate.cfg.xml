@@ -29,12 +29,13 @@
 		<property name="show_sql">true</property>
 
 		<!-- Drop and re-create all database on startup -->
-		<property name="hibernate.hbm2ddl.auto">create-drop</property>
+		<!-- <property name="hibernate.hbm2ddl.auto">create-drop</property> -->
 
 		<!-- List of XML mapping files -->
 		<!-- <mapping resource="Employee.hbm.xml"/> -->
 
 		<mapping class="milansluka.testApp.Person" />
+		<mapping class="milansluka.testApp.MyUser" />
 
 	</session-factory>
 </hibernate-configuration>

@@ -1,92 +1,123 @@
 package ehc.bo.test;
 
-import org.hibernate.Session;
-
+import ehc.bo.impl.Company;
+import ehc.bo.impl.CompanyDao;
+import ehc.bo.impl.HealthPoint;
 import ehc.bo.impl.Individual;
+import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
 import ehc.bo.impl.User;
-import ehc.bo.impl.UserValidation;
+import ehc.bo.impl.UserDao;
 import ehc.hibernate.HibernateUtil;
 import junit.framework.TestCase;
 
 public class UserTest extends TestCase {
-	
-	private void addSuperUser() {
-		Session session = HibernateUtil.getSessionFactory().openSession();
-		Login login = new Login(session);
-		User loggedUser = login.login("superuser", "12345");
-		HibernateUtil.closeCurrentSession();
+
+	private void createDefaultUser() {	
+		String login = "admin";
+		String password = "admin123";
 		
+		UserDao userDao = UserDao.getInstance();	
+		User user = userDao.findByLogin(login);
 		
-		if (loggedUser == null) {
-			Individual individual = new Individual(null, "Super user", "Super user", "000");
+		if (user == null) {
+			user = new User(null, login, password);	
+			user.setCreatedBy(user);	
+
+			CompanyDao companyDao = CompanyDao.getInstance();			
+			Company company = companyDao.findByName(HealthPoint.OWNER_COMPANY_NAME);
 			
-			User user = new User(null, "superuser", "12345");
-			
-			individual.AddTargetRole(user);
-			individual.AddSourceRole(user);
-			
-	        HibernateUtil.beginTransaction();       
-	        HibernateUtil.save(individual);       
-	        HibernateUtil.commitTransaction();			
-		}	
-		
-		session = HibernateUtil.getSessionFactory().openSession();
-		
-		login = new Login(session);
-		loggedUser = login.login("superuser", "12345");
-		
-		assertNotNull(loggedUser);
-		
-		HibernateUtil.closeCurrentSession();
-		
-		
-	}
-	
-	//add admin
-	private void addUser() {
-		Session session = HibernateUtil.getSessionFactory().openSession();
-		Login login = new Login(session);
-		User loggedUser = login.login("superuser", "12345");
-		HibernateUtil.closeCurrentSession();
-		
-		if (loggedUser != null) {
-			Individual individual = new Individual(loggedUser, "Milan", "Sluka", "1111");
-			User user = new User(loggedUser, "admin2", "admin123");
-			
-			session = HibernateUtil.getSessionFactory().openSession();
-			
-			UserValidation validation = new UserValidation(user);
-		
-			if (validation.loginIsValid(session)) {
-				individual.AddTargetRole(user);
-				individual.AddSourceRole(user);
-				
-				HibernateUtil.beginTransaction();
-				HibernateUtil.save(individual);
-				HibernateUtil.commitTransaction();
-				
+			if (company == null) {
+				company = new Company(user, HealthPoint.OWNER_COMPANY_NAME);		
 			}
 			
-			HibernateUtil.closeCurrentSession();					
-		
+			company.AddSourceRole(user);
+			company.AddTargetRole(user);
+			
+			HibernateUtil.beginTransaction();	
+			HibernateUtil.saveOrUpdate(company);
+			HibernateUtil.commitTransaction();	
 		}
+
+		user = userDao.findByLogin(login);
 		
-		session = HibernateUtil.getSessionFactory().openSession();
-		login = new Login(session);
-		loggedUser = login.login("admin", "admin123");
-		HibernateUtil.closeCurrentSession();
+		assertTrue(user.getLogin().equals(login) && user.getPassword().equals(password));	
+	}
+
+	private void addUserRoleToIndividual() {
+		String userLogin = "admin";
+		String password = "admin123";
 		
-		assertNotNull(loggedUser);
+		String newUserLogin = "milan";
+		String newUserPassword = "mmm123";
 		
-		if (loggedUser != null) {
-			assertTrue(loggedUser.getLogin().equals("admin") && loggedUser.getPassword().equals("admin123"));
-		}
+		String individualFirstName = "Milan";
+		String individualLastName  = "Sluka";
+		
+		Login login = new Login();
+		User user = login.login(userLogin, password);
+		
+		assertNotNull(user);
+				
+		if (user != null) {
+			IndividualDao individualDao = IndividualDao.getInstance();
+			
+			Individual individual = individualDao.findByFirstAndLastName(individualFirstName, individualLastName);
+			
+			if (individual == null) {
+				individual = createIndividual(individualFirstName, individualLastName);
+			}
+			
+			if (individual != null) {
+				
+				UserDao userDao = UserDao.getInstance();
+				User oldUser = userDao.findByLogin(newUserLogin);
+				
+				if (oldUser != null) {
+					HibernateUtil.beginTransaction();	
+					HibernateUtil.delete(oldUser);
+					HibernateUtil.commitTransaction();				
+				}
+							
+				User newUser = new User(user, "milan", "mmm123");
+				individual.AddSourceRole(newUser);
+				individual.AddTargetRole(newUser);
+				
+				HibernateUtil.beginTransaction();	
+				HibernateUtil.saveOrUpdate(individual);
+				HibernateUtil.commitTransaction();			
+			}
+			
+		} 
+	}
 	
+	public Individual createIndividual(String individualFirstName, String individualLastName) {
+		String userLogin = "admin";
+		String password = "admin123";
+		
+		Login login = new Login();
+		User user = login.login(userLogin, password);
+		
+		assertNotNull(user);
+		
+		//if login was successful
+		if (user != null) {
+			Individual person = new Individual(user, individualFirstName, individualLastName, "101010");
+			
+			HibernateUtil.beginTransaction();	
+			HibernateUtil.save(person);
+			HibernateUtil.commitTransaction();
+			
+			return person;
+			
+		} 
+		
+		return null;
+		
 	}
 
 	public void testApp() {
-		addSuperUser();
-		addUser();
+		createDefaultUser();
+		addUserRoleToIndividual();
 	}
 }

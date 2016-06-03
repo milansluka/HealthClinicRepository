@@ -46,6 +46,7 @@
 		<mapping class="ehc.bo.impl.Permission" />
 		<mapping class="ehc.bo.impl.Party" />
 		<mapping class="ehc.bo.impl.Individual" />
+		<mapping class="ehc.bo.impl.Company" />
 		<mapping class="ehc.bo.impl.Appointment" />
 		<mapping class="ehc.bo.impl.TreatmentType" />
 		<!-- <mapping class="ehc.bo.impl.UserRight" /> <mapping class="ehc.bo.impl.Person" 

@@ -1,5 +1,6 @@
 package milansluka.testApp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -44,8 +45,20 @@ public class AppTest
 				.buildSessionFactory();
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
- 
+		
 		Person person = new Person("Milan", "Sluka");
+		MyUser user = new MyUser("milan", "m12345");
+		
+		List<MyUser> sources = new ArrayList<MyUser>();
+		sources.add(user);		
+		person.setSources(sources);
+		user.setSource(person);
+		person.setCreatedBy(user);
+		
+		long personId = (Long)session.save(person);	
+	/*	long userId = (Long)session.save(user);	*/
+ 
+/*		Person person = new Person("Milan", "Sluka");
 		
 		long personId = (Long)session.save(person);
 		
@@ -56,11 +69,11 @@ public class AppTest
 		query.setParameter("person_id", personId);
 		List results = query.list();
 		
-		Person milan = (Person)results.get(0);
+		Person milan = (Person)results.get(0);*/
 		
 		session.close();
 		
-		assertTrue(milan.getFirstName().equals("Milan") && milan.getLastName().equals("Sluka"));
+	/*	assertTrue(milan.getFirstName().equals("Milan") && milan.getLastName().equals("Sluka"));*/
 		
     }
 }

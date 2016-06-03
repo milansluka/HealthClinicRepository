@@ -22,6 +22,7 @@ public class PartyRole extends ModifiableObject {
 		super(executor);
 		// TODO Auto-generated constructor stub
 	}
+	
 	@ManyToOne
 	@JoinColumn(name = "source")
 	public Party getSource() {
