@@ -40,8 +40,8 @@ public class BaseObject {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-	@JoinColumn(name = "created_by")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "created_by", nullable = false)
 /*	@JoinColumn(name = "created_by",nullable = false, updatable = false, insertable = true)*/
 	public User getCreatedBy() {
 		return createdBy;

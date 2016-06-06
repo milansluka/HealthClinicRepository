@@ -4,14 +4,13 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 @Entity
 public class PermissionProfile {
 	int id;
 	List<Permission> permissions;
-	List<User> users;
+/*	List<User> users;*/
 	String name;
 	
 	@Id
@@ -22,13 +21,13 @@ public class PermissionProfile {
 		this.id = id;
 	}
 	
-	@ManyToMany(mappedBy = "permissionProfiles") 
+/*	@ManyToMany(mappedBy = "permissionProfiles") 
 	public List<User> getUsers() {
 		return users;
 	}
 	public void setUsers(List<User> users) {
 		this.users = users;
-	}
+	}*/
 	
 	@OneToMany(mappedBy = "permissionProfile")
 	public List<Permission> getPermissions() {

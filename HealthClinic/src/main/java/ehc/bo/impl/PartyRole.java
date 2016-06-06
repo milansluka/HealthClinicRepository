@@ -18,13 +18,19 @@ public class PartyRole extends ModifiableObject {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public PartyRole(User executor) {
+	public PartyRole(User executor, Party source, Party target) {
 		super(executor);
-		// TODO Auto-generated constructor stub
+		this.source = source;
+		this.target = target;
+		
+		if (source != null && target != null) {
+			source.AddSourceRole(this);
+			target.AddTargetRole(this);
+		}
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "source")
+	@JoinColumn(name = "source", nullable = false)
 	public Party getSource() {
 		return source;
 	}
@@ -33,7 +39,7 @@ public class PartyRole extends ModifiableObject {
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "target")
+	@JoinColumn(name = "target", nullable = false)
 	public Party getTarget() {
 		return target;
 	}

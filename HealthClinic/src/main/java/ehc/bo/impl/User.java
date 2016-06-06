@@ -1,37 +1,30 @@
 package ehc.bo.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "`user`")
-@PrimaryKeyJoinColumn(name="party_role_id") 
+@PrimaryKeyJoinColumn(name="id") 
 public class User extends PartyRole {
-	List<PermissionProfile> permissionProfiles;
+/*	List<PermissionProfile> permissionProfiles;*/
 	String login;
 	String password;
 	
 	protected User() {
 		super();
-		permissionProfiles = new ArrayList<PermissionProfile>();
+	/*	permissionProfiles = new ArrayList<PermissionProfile>();*/
 	}
 
-	public User(User executor, String login, String password) {
-		super(executor);
-		permissionProfiles = new ArrayList<PermissionProfile>();
+	public User(User executor, String login, String password, Party source, Party target) {
+		super(executor, source, target);
+		/*permissionProfiles = new ArrayList<PermissionProfile>();*/
 		this.login = login;
 		this.password = password;
 	}
 
-	@ManyToMany(cascade={CascadeType.PERSIST,CascadeType.MERGE})
+/*	@ManyToMany
 	@JoinTable(name = "assigned_permission_profile", joinColumns = @JoinColumn(name = "user_id") , inverseJoinColumns = @JoinColumn(name = "permission_profile_id") )
 	public List<PermissionProfile> getPermissionProfiles() {
 		return permissionProfiles;
@@ -39,7 +32,7 @@ public class User extends PartyRole {
 
 	public void setPermissionProfiles(List<PermissionProfile> permissionProfiles) {
 		this.permissionProfiles = permissionProfiles;
-	}
+	}*/
 	
 
 	public String getLogin() {
@@ -65,11 +58,11 @@ public class User extends PartyRole {
 		
 	}
 	
-	public void assignPermissionProfile(PermissionProfile permissionProfile) {
+/*	public void assignPermissionProfile(PermissionProfile permissionProfile) {
 		if (permissionProfile != null) {
 			permissionProfile.getUsers().add(this);
 			getPermissionProfiles().addAll(permissionProfiles);
 		}
-	}
+	}*/
 	
 }

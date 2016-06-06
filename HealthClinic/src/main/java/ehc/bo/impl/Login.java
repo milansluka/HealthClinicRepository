@@ -10,16 +10,12 @@ import ehc.hibernate.HibernateUtil;
 public class Login {
 	 private boolean loginSuccess; 
 
-
-
 	public Login() {
 		super();
-
 		loginSuccess = false;
 	}
 	
 	public User login(String login, String password) {
-		HibernateUtil.beginTransaction();
 		Session session = HibernateUtil.getCurrentSession();
 		
 		String hql = "FROM User u WHERE u.login = :login and u.password = :password";
@@ -28,7 +24,6 @@ public class Login {
 		query.setParameter("password", password);
 		List results = query.list();
 		
-		HibernateUtil.commitTransaction();
 		
 		if (results.isEmpty()) {
 			return null;
@@ -39,7 +34,7 @@ public class Login {
 
 	public boolean tryLogin(User user) {
 		if (user != null) {
-			HibernateUtil.beginTransaction();
+
 			Session session = HibernateUtil.getCurrentSession();
 			
 			String hql = "FROM User u WHERE u.login = :login and u.password = :password";
@@ -48,7 +43,7 @@ public class Login {
 			query.setParameter("password", user.getPassword());
 			List results = query.list();
 			
-			HibernateUtil.commitTransaction();
+		
 			
 			loginSuccess = true;
 			

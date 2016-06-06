@@ -19,8 +19,6 @@ public class CompanyDao {
 	}
 	
 	public Company findByName(String name) {
-		HibernateUtil.beginTransaction();
-
 		Session session = HibernateUtil.getCurrentSession();
 
 		String hql = "FROM Company u WHERE u.name = :name";
@@ -36,10 +34,7 @@ public class CompanyDao {
 		
 		Hibernate.initialize(company.getSourceRoles());	
 		Hibernate.initialize(company.getTargetRoles());	
-		
-		HibernateUtil.commitTransaction();	
-		
-		
+				
 		return company;
 	}
 }

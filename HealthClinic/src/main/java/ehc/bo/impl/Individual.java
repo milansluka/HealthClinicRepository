@@ -14,12 +14,10 @@ import org.hibernate.Session;
 
 @Entity
 @Table(name = "individual")
-@PrimaryKeyJoinColumn(name = "party_id")
+@PrimaryKeyJoinColumn(name = "id")
 public class Individual extends Party {
 
 	private String firstName;
-	private String email;
-	private String phone;
 
 	private List<Appointment> appointments;
 
@@ -28,10 +26,10 @@ public class Individual extends Party {
 		appointments = new ArrayList<Appointment>();
 	}
 
-	public Individual(User executor, String firstName, String lastName, String phone) {
+	public Individual(User executor, String firstName, String lastName) {
 		super(executor, lastName);
 		this.firstName = firstName;
-		this.phone = phone;
+	
 	}
 
 	@OneToMany(mappedBy = "individual")
@@ -52,21 +50,6 @@ public class Individual extends Party {
 		this.firstName = firstName;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
 
 	public void addAppointment(Appointment appointment) {
 		getAppointments().add(appointment);

@@ -3,7 +3,6 @@ package ehc.bo.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -30,7 +29,7 @@ public class Party extends ModifiableObject {
 		// TODO Auto-generated constructor stub
 	}
 		
-    @OneToMany(mappedBy = "source", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "source", orphanRemoval = true)
 	public List<PartyRole> getSourceRoles() {
 		return sourceRoles;
 	}
@@ -39,7 +38,7 @@ public class Party extends ModifiableObject {
 		this.sourceRoles = roles;
 	}
 	
-    @OneToMany(mappedBy = "target", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "target", orphanRemoval = true)
 	public List<PartyRole> getTargetRoles() {
 		return targetRoles;
 	}
@@ -52,14 +51,14 @@ public class Party extends ModifiableObject {
 		if (role == null) return;
 		
 		targetRoles.add(role);
-		role.setTarget(this);
+		/*role.setTarget(this);*/
 	}
 	
 	public void AddSourceRole(PartyRole role) {
 		if (role == null) return;
 		
 		sourceRoles.add(role);
-		role.setSource(this);
+	/*	role.setSource(this);*/
 	}
 
 	public String getName() {

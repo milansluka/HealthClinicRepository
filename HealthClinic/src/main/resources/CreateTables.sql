@@ -1,11 +1,11 @@
 set schema 'dbo';
 
+/* Create Tables */
 Create table "user"
 (
-	"id" BigSerial NOT NULL,
 	"login" Varchar(64) NOT NULL UNIQUE,
 	"password" Varchar(128) NOT NULL,
-	"party_role_id" Bigint NOT NULL,
+	"id" Bigint NOT NULL,
  primary key ("id")
 ) Without Oids;
 
@@ -22,11 +22,10 @@ Create table "permission"
 Create table "appointment"
 (
 	"id" BigSerial NOT NULL,
-	"physician_id" Bigint NOT NULL,
+	"created_by" Bigint NOT NULL,
 	"from" Timestamp NOT NULL,
 	"to" Timestamp NOT NULL,
 	"treatment_id" Bigint NOT NULL,
-	"created_by" Bigint NOT NULL,
 	"created_on" Timestamp NOT NULL,
 	"state" Varchar(128) NOT NULL,
 	"individual_id" Bigint NOT NULL,
@@ -37,72 +36,66 @@ Create table "appointment"
 Create table "individual"
 (
 	"first_name" Varchar(128) NOT NULL,
-	"phone" Varchar(32) NOT NULL,
-	"email" Varchar(128),
-	"party_id" Bigint NOT NULL,
+	"id" Bigint NOT NULL,
 	"birthdate" Timestamp,
- primary key ("party_id")
+ primary key ("id")
 ) Without Oids;
 
 
 Create table "assigned_permission_profile"
 (
-	"user_id" Bigint NOT NULL,
 	"permission_profile_id" Bigint NOT NULL,
- primary key ("user_id","permission_profile_id")
+	"id" Bigint NOT NULL,
+ primary key ("permission_profile_id","id")
 ) Without Oids;
 
 
 Create table "treatment_type"
 (
 	"id" BigSerial NOT NULL,
-	"modified_by" Bigint,
-	"created_by" Bigint NOT NULL,
 	"name" Varchar(200) NOT NULL,
 	"info" Text,
 	"type" Varchar(1024) NOT NULL,
 	"created_on" Timestamp NOT NULL,
 	"modified_on" Timestamp,
+	"created_by" Bigint NOT NULL,
+	"modified_by" Bigint,
  primary key ("id")
 ) Without Oids;
 
 
 Create table "patient"
 (
-	"id" BigSerial NOT NULL,
-	"party_role_id" Bigint NOT NULL,
+	"id" Bigint NOT NULL,
  primary key ("id")
 ) Without Oids;
 
 
 Create table "physician"
 (
-	"party_role_id" Bigint NOT NULL,
-	"id" BigSerial NOT NULL,
+	"id" Bigint NOT NULL,
  primary key ("id")
 ) Without Oids;
 
 
 Create table "nurse"
 (
-	"party_role_id" Bigint NOT NULL,
-	"id" BigSerial NOT NULL,
+	"id" Bigint NOT NULL,
  primary key ("id")
 ) Without Oids;
 
 
 Create table "receptionist"
 (
-	"party_role_id" Bigint NOT NULL,
-	"id" BigSerial NOT NULL,
+	"id" Bigint NOT NULL,
  primary key ("id")
 ) Without Oids;
 
 
 Create table "company"
 (
-	"id" BigSerial NOT NULL,
-	"party_id" Bigint NOT NULL,
+	"id" Bigint NOT NULL,
+	"registration_number" Varchar(256) NOT NULL,
  primary key ("id")
 ) Without Oids;
 
@@ -110,11 +103,11 @@ Create table "company"
 Create table "party"
 (
 	"id" BigSerial NOT NULL,
-	"modified_by" Bigint,
-	"created_by" Bigint NOT NULL,
 	"name" Varchar(256) NOT NULL,
 	"created_on" Timestamp NOT NULL,
 	"modified_on" Timestamp,
+	"created_by" Bigint NOT NULL,
+	"modified_by" Bigint,
  primary key ("id")
 ) Without Oids;
 
@@ -122,12 +115,12 @@ Create table "party"
 Create table "party_role"
 (
 	"id" BigSerial NOT NULL,
-	"modified_by" Bigint,
 	"target" Bigint NOT NULL,
 	"source" Bigint NOT NULL,
-	"created_by" Bigint NOT NULL,
-	"created_on" Timestamp NOT NULL,
+	"created_on" Timestamp NOT NULL Default CURRENT_DATE,
 	"modified_on" Timestamp,
+	"created_by" Bigint NOT NULL,
+	"modified_by" Bigint,
  primary key ("id")
 ) Without Oids;
 
@@ -140,9 +133,62 @@ Create table "permission_profile"
 ) Without Oids;
 
 
+Create table "communication_channel"
+(
+	"id" BigSerial NOT NULL,
+	"value" Varchar(256) NOT NULL,
+	"discriminator" Integer NOT NULL UNIQUE,
+ primary key ("id")
+) Without Oids;
+
+
+Create table "config"
+(
+	"name" Varchar(256) NOT NULL,
+	"value" Varchar(256),
+ primary key ("name")
+) Without Oids;
+
+-- inserting default settings
+insert into config (name, value) values ('default_company_name', 'Company name');
+insert into config (name, value) values ('default_individual_name', 'admin');
+insert into config (name, value) values ('default_user_login', 'admin');
+insert into config (name, value) values ('default_user_password', 'admin');
+
+-- init
+DO $$
+DECLARE 
+  user_id bigint;
+  company_id bigint;
+  individual_id bigint;
+	
+BEGIN
+  -- inserting admin (default user)
+  insert into party_role (created_on, created_by, source, target) values(CURRENT_DATE, -1, -1, -1)
+  RETURNING id INTO user_id;
+  insert into "user" (login, "password", id) 
+  values ((select "value" from config where name = 'default_user_login'), (select "value" from config where name = 'default_user_password'), user_id);
+  update party_role set created_by = user_id where id = user_id;
+  
+  -- inserting owner company
+  insert into party (name, created_on, created_by) values ((select "value" from config where name = 'default_company_name'), CURRENT_DATE, user_id)
+  RETURNING id INTO company_id;
+  insert into company (registration_number, id) values ('00000000', company_id);
+
+  -- inserting individual representing admin user
+  insert into party (name, created_on, created_by) values ((select "value" from config where name = 'default_user_login'), CURRENT_DATE, user_id)
+  RETURNING id INTO individual_id;
+  insert into individual (first_name, id) values ((select "value" from config where name = 'default_user_login'), individual_id); 
+
+  -- update target and source for party_role (default user)
+  update party_role set target = company_id, source = individual_id where id = user_id;
+  
+END $$;
+
+
 /* Create Foreign Keys */
 
-Alter table "assigned_permission_profile" add  foreign key ("user_id") references "user" ("id") on update restrict on delete restrict;
+Alter table "assigned_permission_profile" add  foreign key ("id") references "user" ("id") on update restrict on delete restrict;
 
 Alter table "appointment" add  foreign key ("created_by") references "user" ("id") on update restrict on delete restrict;
 
@@ -158,30 +204,30 @@ Alter table "party_role" add  foreign key ("created_by") references "user" ("id"
 
 Alter table "party_role" add  foreign key ("modified_by") references "user" ("id") on update restrict on delete restrict;
 
-Alter table "appointment" add  foreign key ("individual_id") references "individual" ("party_id") on update restrict on delete restrict;
+Alter table "appointment" add  foreign key ("individual_id") references "individual" ("id") on update restrict on delete restrict;
 
 Alter table "appointment" add  foreign key ("treatment_id") references "treatment_type" ("id") on update restrict on delete restrict;
-
-Alter table "appointment" add  foreign key ("physician_id") references "physician" ("id") on update restrict on delete restrict;
 
 Alter table "party_role" add  foreign key ("source") references "party" ("id") on update restrict on delete restrict;
 
 Alter table "party_role" add  foreign key ("target") references "party" ("id") on update restrict on delete restrict;
 
-Alter table "company" add  foreign key ("party_id") references "party" ("id") on update restrict on delete restrict;
+Alter table "individual" add  foreign key ("id") references "party" ("id") on update restrict on delete restrict;
 
-Alter table "individual" add  foreign key ("party_id") references "party" ("id") on update restrict on delete restrict;
+Alter table "company" add  foreign key ("id") references "party" ("id") on update restrict on delete restrict;
 
-Alter table "patient" add  foreign key ("party_role_id") references "party_role" ("id") on update restrict on delete restrict;
+Alter table "physician" add  foreign key ("id") references "party_role" ("id") on update restrict on delete restrict;
 
-Alter table "physician" add  foreign key ("party_role_id") references "party_role" ("id") on update restrict on delete restrict;
+Alter table "nurse" add  foreign key ("id") references "party_role" ("id") on update restrict on delete restrict;
 
-Alter table "nurse" add  foreign key ("party_role_id") references "party_role" ("id") on update restrict on delete restrict;
+Alter table "receptionist" add  foreign key ("id") references "party_role" ("id") on update restrict on delete restrict;
 
-Alter table "receptionist" add  foreign key ("party_role_id") references "party_role" ("id") on update restrict on delete restrict;
+Alter table "patient" add  foreign key ("id") references "party_role" ("id") on update restrict on delete restrict;
 
-Alter table "user" add  foreign key ("party_role_id") references "party_role" ("id") on update restrict on delete restrict;
+Alter table "user" add  foreign key ("id") references "party_role" ("id") on update restrict on delete restrict;
 
 Alter table "assigned_permission_profile" add  foreign key ("permission_profile_id") references "permission_profile" ("id") on update restrict on delete restrict;
 
 Alter table "permission" add  foreign key ("permission_profile_id") references "permission_profile" ("id") on update restrict on delete restrict;
+
+

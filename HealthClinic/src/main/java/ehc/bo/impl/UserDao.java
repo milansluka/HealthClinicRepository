@@ -18,7 +18,7 @@ public class UserDao {
 	}
 	
 	public User findByLogin(String login) {
-		HibernateUtil.beginTransaction();
+	/*	HibernateUtil.beginTransaction();*/
 
 		Session session = HibernateUtil.getCurrentSession();
 
@@ -27,7 +27,7 @@ public class UserDao {
 		query.setParameter("login", login);
 		List results = query.list();
 		
-		HibernateUtil.commitTransaction();	
+	/*	HibernateUtil.commitTransaction();	*/
 		
 		if (results.isEmpty()) {
 			return null;
