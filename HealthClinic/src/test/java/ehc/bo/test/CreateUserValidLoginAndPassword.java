@@ -9,6 +9,7 @@ import ehc.bo.impl.User;
 import ehc.bo.impl.UserDao;
 import ehc.bo.impl.UserLoginAndPasswordValidation;
 import ehc.hibernate.HibernateUtil;
+import ehc.util.Util;
 import junit.framework.TestCase;
 
 public class CreateUserValidLoginAndPassword extends TestCase {
@@ -54,7 +55,8 @@ public class CreateUserValidLoginAndPassword extends TestCase {
 		UserLoginAndPasswordValidation validation = new UserLoginAndPasswordValidation(newUserLogin, newUserPassword);
 		
 		if (validation.loginIsValid() && validation.passwordIsValid()) {
-			User newUser = new User(executor, newUserLogin, newUserPassword, individual, company);
+			String newUserPasswordCrypted = (new Util()).cryptWithMD5(newUserPassword);
+			User newUser = new User(executor, newUserLogin, newUserPasswordCrypted, individual, company);
 			HibernateUtil.saveOrUpdate(newUser);		
 		}
 		
@@ -63,11 +65,13 @@ public class CreateUserValidLoginAndPassword extends TestCase {
 		
 		//New user is trying log in
 		
+		
 		HibernateUtil.beginTransaction();
-		User newUserLogged = login.login(newUserLogin, newUserPassword);
+		String newUserPasswordCrypted = (new Util()).cryptWithMD5(newUserPassword);
+		User newUserLogged = login.login(newUserLogin, newUserPasswordCrypted);
 		HibernateUtil.commitTransaction();
 		
-		assertTrue(newUserLogged.getLogin().equals(newUserLogin) && newUserLogged.getPassword().equals(newUserPassword));	
+		assertTrue(newUserLogged.getLogin().equals(newUserLogin) && newUserLogged.getPassword().equals(newUserPasswordCrypted));	
 	}
 
 	protected void tearDown() throws Exception {
