@@ -2,8 +2,11 @@ package ehc.bo.impl;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -22,15 +25,26 @@ public class Appointment extends BaseObject {
 		this.to = to;
 		this.treatmentType = treatmentType;
 		this.individual = individual;
+		this.state = AppointmentState.PROPOSED;
 	}
 	
 	Date from;
 	Date to;
 	
+	AppointmentState state;
+	
 	Individual individual;
 	TreatmentType treatmentType;
 	
-	
+	@Enumerated(EnumType.STRING)
+	public AppointmentState getState() {
+		return state;
+	}
+
+	public void setState(AppointmentState state) {
+		this.state = state;
+	}
+
 	@Column(name = "\"from\"")
 	public Date getFrom() {
 		return from;
@@ -48,8 +62,8 @@ public class Appointment extends BaseObject {
 	}
 	
 
-	@ManyToOne
-	@JoinColumn(name = "individual_id")
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "individual_id", nullable = false)
 	public Individual getIndividual() {
 		return individual;
 	}
