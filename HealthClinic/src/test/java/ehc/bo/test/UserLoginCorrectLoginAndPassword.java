@@ -31,7 +31,7 @@ public class UserLoginCorrectLoginAndPassword extends TestCase {
 		
 		HibernateUtil.commitTransaction();
 		
-		assertTrue(loggedUser.getLogin().equals(userLogin) && 
+		assertTrue(loggedUser.getName().equals(userLogin) && 
 				loggedUser.getPassword().equals(userPasswordMaybeCrypted));
 		
 	}

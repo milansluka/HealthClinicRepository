@@ -21,7 +21,7 @@ public class UserLoginAndPasswordValidation {
 			query.setParameter("login", login);
 			List results = query.list();*/
 			
-			User existingUser = userDao.findByLogin(login);
+			User existingUser = userDao.findByName(login);
 
 			return existingUser == null;
 		}

@@ -36,6 +36,7 @@ public class Appointment extends BaseObject {
 	Individual individual;
 	TreatmentType treatmentType;
 	
+	
 	@Enumerated(EnumType.STRING)
 	public AppointmentState getState() {
 		return state;

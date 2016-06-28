@@ -32,7 +32,7 @@ public class CreateUserValidLoginAndPassword extends TestCase {
 		HibernateUtil.beginTransaction();
 
 		Individual individual = individualDao.findByFirstAndLastName(personFirstName, personLastName);
-		User executor = userDao.findByLogin("admin");
+		User executor = userDao.findByName("admin");
 
 		if (individual == null) {
 			individual = new Individual(executor, personFirstName, personLastName);
@@ -71,7 +71,7 @@ public class CreateUserValidLoginAndPassword extends TestCase {
 		User newUserLogged = login.login(newUserLogin, newUserPasswordCrypted);
 		HibernateUtil.commitTransaction();
 		
-		assertTrue(newUserLogged.getLogin().equals(newUserLogin) && newUserLogged.getPassword().equals(newUserPasswordCrypted));	
+		assertTrue(newUserLogged.getName().equals(newUserLogin) && newUserLogged.getPassword().equals(newUserPasswordCrypted));	
 	}
 
 	protected void tearDown() throws Exception {
@@ -81,7 +81,7 @@ public class CreateUserValidLoginAndPassword extends TestCase {
 
 		Company company = companyDao.findByName("Company name");
 		Individual individual = individualDao.findByFirstAndLastName(personFirstName, personLastName);
-		User user = userDao.findByLogin(newUserLogin);
+		User user = userDao.findByName(newUserLogin);
 
 		company.getTargetRoles().remove(user);
 		individual.getSourceRoles().remove(user);

@@ -16,22 +16,38 @@ public class UserDao {
 	public static UserDao getInstance() {
 		return instance;
 	}
-	
-	public User findByLogin(String login) {
-	/*	HibernateUtil.beginTransaction();*/
 
+	public User findByNameAndPassword(String name, String password) {
 		Session session = HibernateUtil.getCurrentSession();
 
-		String hql = "FROM User u WHERE u.login = :login";
+		String hql = "FROM User u WHERE u.name = :name and u.password = :password";
 		Query query = session.createQuery(hql);
-		query.setParameter("login", login);
+		query.setParameter("name", name);
+		query.setParameter("password", password);
 		List results = query.list();
-		
-	/*	HibernateUtil.commitTransaction();	*/
-		
+
 		if (results.isEmpty()) {
 			return null;
 		}
-		return (User)results.get(0);
+
+		return (User) results.get(0);
+	}
+
+	public User findByName(String name) {
+		/* HibernateUtil.beginTransaction(); */
+
+		Session session = HibernateUtil.getCurrentSession();
+
+		String hql = "FROM User u WHERE u.name = :name";
+		Query query = session.createQuery(hql);
+		query.setParameter("name", name);
+		List results = query.list();
+
+		/* HibernateUtil.commitTransaction(); */
+
+		if (results.isEmpty()) {
+			return null;
+		}
+		return (User) results.get(0);
 	}
 }

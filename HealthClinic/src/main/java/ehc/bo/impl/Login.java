@@ -1,58 +1,38 @@
 package ehc.bo.impl;
 
-import java.util.List;
-
-import org.hibernate.Query;
-import org.hibernate.Session;
-
-import ehc.hibernate.HibernateUtil;
-
 public class Login {
-	 private boolean loginSuccess; 
+/*	 private boolean loginSuccess; */
+	 private UserDao userDao;
 
 	public Login() {
 		super();
-		loginSuccess = false;
+/*		loginSuccess = false;*/
+		userDao = UserDao.getInstance();
 	}
 	
-	public User login(String login, String password) {
-		Session session = HibernateUtil.getCurrentSession();
-		
-		String hql = "FROM User u WHERE u.login = :login and u.password = :password";
-		Query query = session.createQuery(hql);
-		query.setParameter("login", login);
-		query.setParameter("password", password);
-		List results = query.list();
-		
-		
-		if (results.isEmpty()) {
-			return null;
-		}
-
-		return (User)results.get(0);
+	public User login(String name, String password) {
+		return userDao.findByNameAndPassword(name, password);
 	}
 
-	public boolean tryLogin(User user) {
+/*	public boolean tryLogin(User user) {
 		if (user != null) {
 
 			Session session = HibernateUtil.getCurrentSession();
 			
 			String hql = "FROM User u WHERE u.login = :login and u.password = :password";
 			Query query = session.createQuery(hql);
-			query.setParameter("login", user.getLogin());
+			query.setParameter("login", user.getName());
 			query.setParameter("password", user.getPassword());
 			List results = query.list();
-			
-		
 			
 			loginSuccess = true;
 			
 			return !results.isEmpty();
 		}
 		return false;
-	}
+	}*/
 
-	public boolean isLoginSuccess() {
+/*	public boolean isLoginSuccess() {
 		return loginSuccess;
-	}	
+	}*/	
 }

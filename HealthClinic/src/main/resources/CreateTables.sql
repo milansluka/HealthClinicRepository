@@ -1,9 +1,9 @@
 set schema 'dbo';
 
 /* Create Tables */
-Create table "user"
+Create table "system_user"
 (
-	"login" Varchar(64) NOT NULL UNIQUE,
+	"name" Varchar(64) NOT NULL UNIQUE,
 	"password" Varchar(128) NOT NULL,
 	"id" Bigint NOT NULL,
  primary key ("id")
@@ -55,11 +55,13 @@ Create table "treatment_type"
 	"id" BigSerial NOT NULL,
 	"name" Varchar(200) NOT NULL,
 	"info" Text,
-	"type" Varchar(1024) NOT NULL,
+	"category" Varchar(1024) NOT NULL,
 	"created_on" Timestamp NOT NULL,
 	"modified_on" Timestamp,
 	"created_by" Bigint NOT NULL,
 	"modified_by" Bigint,
+	"physician_type_id" Bigint NOT NULL,
+	"price" Double precision NOT NULL,
  primary key ("id")
 ) Without Oids;
 
@@ -74,6 +76,37 @@ Create table "patient"
 Create table "physician"
 (
 	"id" Bigint NOT NULL,
+    "physician_type_id" Bigint NOT NULL,
+ primary key ("id")
+) Without Oids;
+
+Create table "physician_type"
+(
+	"id" BigSerial NOT NULL,
+	"modified_by" Bigint,
+	"created_by" Bigint NOT NULL,
+	"created_on" Timestamp NOT NULL,
+	"modified_on" Timestamp,
+ primary key ("id")
+) Without Oids;
+
+Create table "skill"
+(
+	"id" BigSerial NOT NULL,
+	"created_by" Bigint NOT NULL,
+	"name" Varchar(256) NOT NULL,
+	"created_on" Timestamp NOT NULL Default CURRENT_DATE,
+ primary key ("id")
+) Without Oids;
+
+
+Create table "skill_assignment"
+(
+	"id" BigSerial NOT NULL,
+	"created_by" Bigint NOT NULL,
+	"physician_type_id" Bigint NOT NULL,
+	"skill_id" Bigint NOT NULL,
+	"created_on" Timestamp NOT NULL Default CURRENT_DATE,
  primary key ("id")
 ) Without Oids;
 
@@ -132,6 +165,36 @@ Create table "permission_profile"
  primary key ("id")
 ) Without Oids;
 
+Create table "room"
+(
+	"id" BigSerial NOT NULL,
+	"modified_by" Bigint,
+	"created_by" Bigint NOT NULL,
+	"name" Varchar(256) NOT NULL,
+	"created_on" Timestamp NOT NULL,
+	"modified_on" Timestamp,
+ primary key ("id")
+) Without Oids;
+
+
+Create table "device"
+(
+	"id" BigSerial NOT NULL,
+	"name" Varchar(512) NOT NULL,
+ primary key ("id")
+) Without Oids;
+
+
+Create table "room_assignment"
+(
+	"id" BigSerial NOT NULL,
+	"treatment_type_id" Bigint NOT NULL,
+	"room_id" Bigint NOT NULL,
+	"created_by" Bigint NOT NULL,
+	"created_on" Timestamp NOT NULL,
+ primary key ("id")
+) Without Oids;
+
 
 Create table "communication_channel"
 (
@@ -166,7 +229,7 @@ BEGIN
   -- inserting admin (default user)
   insert into party_role (created_on, created_by, source, target) values(CURRENT_DATE, -1, -1, -1)
   RETURNING id INTO user_id;
-  insert into "user" (login, "password", id) 
+  insert into system_user (name, "password", id) 
   values ((select "value" from config where name = 'default_user_login'), (select "value" from config where name = 'default_user_password'), user_id);
   update party_role set created_by = user_id where id = user_id;
   
@@ -188,21 +251,21 @@ END $$;
 
 /* Create Foreign Keys */
 
-Alter table "assigned_permission_profile" add  foreign key ("id") references "user" ("id") on update restrict on delete restrict;
+Alter table "assigned_permission_profile" add  foreign key ("id") references "system_user" ("id") on update restrict on delete restrict;
 
-Alter table "appointment" add  foreign key ("created_by") references "user" ("id") on update restrict on delete restrict;
+Alter table "appointment" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
 
-Alter table "treatment_type" add  foreign key ("created_by") references "user" ("id") on update restrict on delete restrict;
+Alter table "treatment_type" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
 
-Alter table "treatment_type" add  foreign key ("modified_by") references "user" ("id") on update restrict on delete restrict;
+Alter table "treatment_type" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
 
-Alter table "party" add  foreign key ("created_by") references "user" ("id") on update restrict on delete restrict;
+Alter table "party" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
 
-Alter table "party" add  foreign key ("modified_by") references "user" ("id") on update restrict on delete restrict;
+Alter table "party" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
 
-Alter table "party_role" add  foreign key ("created_by") references "user" ("id") on update restrict on delete restrict;
+Alter table "party_role" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
 
-Alter table "party_role" add  foreign key ("modified_by") references "user" ("id") on update restrict on delete restrict;
+Alter table "party_role" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
 
 Alter table "appointment" add  foreign key ("individual_id") references "individual" ("id") on update restrict on delete restrict;
 
@@ -224,10 +287,27 @@ Alter table "receptionist" add  foreign key ("id") references "party_role" ("id"
 
 Alter table "patient" add  foreign key ("id") references "party_role" ("id") on update restrict on delete restrict;
 
-Alter table "user" add  foreign key ("id") references "party_role" ("id") on update restrict on delete restrict;
+Alter table "system_user" add  foreign key ("id") references "party_role" ("id") on update restrict on delete restrict;
 
 Alter table "assigned_permission_profile" add  foreign key ("permission_profile_id") references "permission_profile" ("id") on update restrict on delete restrict;
 
 Alter table "permission" add  foreign key ("permission_profile_id") references "permission_profile" ("id") on update restrict on delete restrict;
 
+Alter table "skill_assignment" add  foreign key ("skill_id") references "skill" ("id") on update restrict on delete restrict;
+
+Alter table "physician" add  foreign key ("physician_type_id") references "physician_type" ("id") on update restrict on delete restrict;
+
+Alter table "skill_assignment" add  foreign key ("physician_type_id") references "physician_type" ("id") on update restrict on delete restrict;
+
+Alter table "treatment_type" add  foreign key ("physician_type_id") references "physician_type" ("id") on update restrict on delete restrict;
+
+Alter table "room_assignment" add  foreign key ("treatment_type_id") references "treatment_type" ("id") on update restrict on delete restrict;
+
+Alter table "room_assignment" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "room" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "room" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "room_assignment" add  foreign key ("room_id") references "room" ("id") on update restrict on delete restrict;
 

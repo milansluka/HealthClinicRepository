@@ -10,18 +10,24 @@ import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;
 import ehc.bo.impl.User;
 import ehc.hibernate.HibernateUtil;
+import ehc.hibernate.ISessionInitializer;
 import ehc.util.DateUtil;
 import junit.framework.TestCase;
 
-public class CreateAppointmentForExistingPerson extends TestCase {
+public class CreateAppointmentForExistingPerson extends RootTestCase {
 	private IndividualDao individualDao = IndividualDao.getInstance();
 	private TreatmentTypeDao treatmentTypeDao = TreatmentTypeDao.getInstance();
 	private String personFirstName = "Jan";
 	private String personLastName = "Novak";
-	private String treatmentName = "some treatment";
+	private String treatmentName = "Odstraňovanie pigmentov chrbát";
 
 	protected void setUp() throws Exception {
 		super.setUp();
+		
+		if (!isSystemSet()) {
+			setUpSystem();		
+		}
+			
 		HibernateUtil.beginTransaction();
 		Individual existingPerson = individualDao.findByFirstAndLastName(personFirstName, personLastName);
 		HibernateUtil.commitTransaction();
@@ -38,9 +44,7 @@ public class CreateAppointmentForExistingPerson extends TestCase {
 		
 	}
 	
-	public void testApp() {
-		
-			
+	public void testApp() {		
 		Login login = new Login();
 
 		HibernateUtil.beginTransaction();

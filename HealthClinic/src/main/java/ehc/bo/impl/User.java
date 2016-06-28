@@ -5,11 +5,11 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "`user`")
+@Table(name = "system_user")
 @PrimaryKeyJoinColumn(name="id") 
 public class User extends PartyRole {
 /*	List<PermissionProfile> permissionProfiles;*/
-	String login;
+	String name;
 	String password;
 	
 	protected User() {
@@ -17,10 +17,10 @@ public class User extends PartyRole {
 	/*	permissionProfiles = new ArrayList<PermissionProfile>();*/
 	}
 
-	public User(User executor, String login, String password, Party source, Party target) {
+	public User(User executor, String name, String password, Party source, Party target) {
 		super(executor, source, target);
 		/*permissionProfiles = new ArrayList<PermissionProfile>();*/
-		this.login = login;
+		this.name = name;
 		this.password = password;
 	}
 
@@ -35,12 +35,12 @@ public class User extends PartyRole {
 	}*/
 	
 
-	public String getLogin() {
-		return login;
+	public String getName() {
+		return name;
 	}
 
-	public void setLogin(String login) {
-		this.login = login;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getPassword() {
