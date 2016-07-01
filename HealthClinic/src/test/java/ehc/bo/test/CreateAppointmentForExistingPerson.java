@@ -6,6 +6,10 @@ import ehc.bo.impl.Appointment;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
+import ehc.bo.impl.Nurse;
+import ehc.bo.impl.Physician;
+import ehc.bo.impl.ResourcesUtil;
+import ehc.bo.impl.Room;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;
 import ehc.bo.impl.User;
@@ -54,7 +58,13 @@ public class CreateAppointmentForExistingPerson extends RootTestCase {
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
 		Date from = DateUtil.date(2016, 4, 20, 10, 0, 0);
 		Date to = DateUtil.date(2016, 4, 20, 10, 30, 0);
-		Appointment appointment = new Appointment(executor, from, to, treatmentType, person);
+		
+		ResourcesUtil allocator = new ResourcesUtil();
+		Physician physician = allocator.findPhysician(from, to, treatmentType);
+		Nurse nurse = allocator.findNurse();
+		Room room = allocator.findRoom();
+		
+		Appointment appointment = new Appointment(executor, from, to, treatmentType, physician, nurse, room, person);
 		
 		HibernateUtil.save(appointment);
 		

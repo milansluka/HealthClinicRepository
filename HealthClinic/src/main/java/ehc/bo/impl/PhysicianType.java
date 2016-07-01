@@ -5,14 +5,15 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "physician_type")
-@Inheritance(strategy=InheritanceType.JOINED)  
-public class PhysicianType extends ModifiableObject {
-	List<SkillAssignment> skillAssignments;
+@PrimaryKeyJoinColumn(name = "id")
+public class PhysicianType extends ResourceType {
+/*	List<Skill> skills;*/
 	
 	protected PhysicianType() {
 		super();
@@ -21,24 +22,21 @@ public class PhysicianType extends ModifiableObject {
 	public PhysicianType(User executor) {
 		super(executor);
 	}
-
-	@OneToMany(mappedBy = "physicianType")
-	public List<SkillAssignment> getSkillAssignments() {
-		return skillAssignments;
-	}
-
-	public void setSkillAssignments(List<SkillAssignment> skillAssignments) {
-		this.skillAssignments = skillAssignments;
-	}
 	
-	public void addSkillAssignment(SkillAssignment skillAssignment) {
-		if (skillAssignment == null) {
+
+/*	@ManyToMany
+	public List<Skill> getSkills() {
+		return skills;
+	}
+
+	public void setSkills(List<Skill> skills) {
+		this.skills = skills;
+	}
+
+
+	public void addSkill(Skill skill) {
+		if (skill == null) {
 			return;
 		}
-		
-		getSkillAssignments().add(skillAssignment);
-		skillAssignment.setPhysicianType(this);
-	}
-	
-		
+	}	*/	
 }

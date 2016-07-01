@@ -18,6 +18,27 @@ public class IndividualDao {
 		return instance;
 	}
 	
+	public Individual findById(long id) {
+		Session session = HibernateUtil.getCurrentSession();
+
+		String hql = "FROM Individual i WHERE i.id = :id";
+		Query query = session.createQuery(hql).setParameter("id", id);
+		List results = query.list();
+		
+		if (results.isEmpty()) {
+			return null;
+		}
+		
+		Individual individual = (Individual)results.get(0);
+		
+		Hibernate.initialize(individual.getSourceRoles());	
+		Hibernate.initialize(individual.getTargetRoles());	
+		
+	/*	HibernateUtil.commitTransaction();	*/	
+		return individual;
+		
+	}
+	
 	public Individual findByFirstAndLastName(String firstName, String lastName) {
 	/*	HibernateUtil.beginTransaction();*/
 

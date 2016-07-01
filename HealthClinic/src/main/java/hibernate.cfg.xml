@@ -52,9 +52,11 @@
 		<mapping class="ehc.bo.impl.Physician" />
 		<mapping class="ehc.bo.impl.PhysicianType" />
 		<mapping class="ehc.bo.impl.Skill" />
-		<mapping class="ehc.bo.impl.SkillAssignment" />
 		<mapping class="ehc.bo.impl.Room" />
-		<mapping class="ehc.bo.impl.RoomAssignment" />
+		<mapping class="ehc.bo.impl.RoomType" />
+		<mapping class="ehc.bo.impl.Nurse" />
+		<mapping class="ehc.bo.impl.NurseType" />
+		<mapping class="ehc.bo.impl.ResourceType" />
 	<!-- 	<mapping class="ehc.bo.impl.Device" /> -->
 		<!-- <mapping class="ehc.bo.impl.UserRight" /> <mapping class="ehc.bo.impl.Person" 
 			/> <mapping class="ehc.bo.impl.Appointment" /> <mapping class="ehc.bo.impl.Intervention" 

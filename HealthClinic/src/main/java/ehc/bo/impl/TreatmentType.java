@@ -5,7 +5,10 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -19,16 +22,14 @@ public class TreatmentType extends BaseObject{
 	
 	String name;
 	String info;
-	String category;
-	
-	double price;
-	
-	List<RoomAssignment> possibleRoomAssignments;
-	List<Device> requiredDevices;
+	String category;	
+	double price;	
+	List<ResourceType> resourceTypes;
+/*	List<Device> requiredDevices;*/
 	List<Appointment> appointments;
 /*	List<Skill> requiredPhysicianSkills;
 	int requiredCountOfNurses;*/
-	PhysicianType physicianType;
+	/*PhysicianType physicianType;*/
 /*	NurseType nurseType;*/
 	
 	protected TreatmentType() {
@@ -36,15 +37,26 @@ public class TreatmentType extends BaseObject{
 		appointments = new ArrayList<Appointment>();
 	}
 	
-	public TreatmentType(User executor, String name, String category, double price, PhysicianType physicianType) {
+	public TreatmentType(User executor, String name, String category, double price) {
 		super(executor);
 		appointments = new ArrayList<Appointment>();
+		resourceTypes = new ArrayList<>();
 		this.name = name;
 		this.category = category;
-		this.physicianType = physicianType;
 		this.price = price;
 	}
 	
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "resource_type_assignment", joinColumns = {@JoinColumn(name = "treatment_type_id")},
+	inverseJoinColumns = {@JoinColumn(name = "resource_type_id")})
+	public List<ResourceType> getResourceTypes() {
+		return resourceTypes;
+	}
+
+	public void setResourceTypes(List<ResourceType> resourceTypes) {
+		this.resourceTypes = resourceTypes;
+	}
+
 	public String getCategory() {
 		return category;
 	}
@@ -68,25 +80,6 @@ public class TreatmentType extends BaseObject{
 	public void setAppointments(List<Appointment> appointments) {
 		this.appointments = appointments;
 	}
-	
-    @OneToMany(mappedBy = "treatmentType")
-	public List<RoomAssignment> getPossibleRoomAssignments() {
-		return possibleRoomAssignments;
-	}
-
-	public void setPossibleRoomAssignments(List<RoomAssignment> possibleRoomAssignments) {
-		this.possibleRoomAssignments = possibleRoomAssignments;
-	}
-
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "physician_type_id")
-	public PhysicianType getPhysicianType() {
-		return physicianType;
-	}
-
-	public void setPhysicianType(PhysicianType physicianType) {
-		this.physicianType = physicianType;
-	}
 
 	public String getName() {
 		return name;
@@ -103,6 +96,14 @@ public class TreatmentType extends BaseObject{
 	
 	public void addAppointment(Appointment appointment) {
 		getAppointments().add(appointment);
+	}
+	
+	public void addResourceType(ResourceType resourceType) {
+		if (resourceType == null) {
+			return;
+		}
+		getResourceTypes().add(resourceType);
+		resourceType.addTreatmentType(this);
 	}
 	
 	public static TreatmentType getTreatmentType(long id, Session session) {

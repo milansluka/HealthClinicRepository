@@ -7,24 +7,22 @@ import org.hibernate.Session;
 
 import ehc.hibernate.HibernateUtil;
 
-public class PhysicianDao {
-	private static PhysicianDao instance = new PhysicianDao();
+public class NurseDao {
+	private static NurseDao instance = new NurseDao();
 	
-	private PhysicianDao() {
+	private NurseDao() {
 	}
 
-	public static PhysicianDao getInstance() {
+	public static NurseDao getInstance() {
 		return instance;
 	}
 	
-	public List<Physician> getAll() {
+	public List<Nurse> getAll() {
 		Session session = HibernateUtil.getCurrentSession();
-		String hql = "FROM Physician";
+		String hql = "FROM Nurse";
 		Query query = session.createQuery(hql);
 		List results = query.list();	
 		return results;
 	}
-	
-	
 
 }

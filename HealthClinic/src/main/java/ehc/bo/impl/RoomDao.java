@@ -18,6 +18,22 @@ public class RoomDao {
 		return instance;
 	}
 	
+	
+	public Room findById(long id) {
+		Session session = HibernateUtil.getCurrentSession();
+
+		String hql = "FROM Room r WHERE r.id = :id";
+		Query query = session.createQuery(hql).setParameter("id", id);		
+		List results = query.list();
+		
+		if (results.isEmpty()) {
+			return null;
+		}
+		
+		Room room = (Room)results.get(0);	
+		return room;
+	} 
+	
 	public Room findByName(String name) {
 	/*	HibernateUtil.beginTransaction();*/
 
@@ -37,5 +53,13 @@ public class RoomDao {
 	/*	HibernateUtil.commitTransaction();	*/	
 		return room;
 	} 
+	
+	public List<Room> getAll() {
+		Session session = HibernateUtil.getCurrentSession();
+		String hql = "FROM Room";
+		Query query = session.createQuery(hql);
+		List results = query.list();	
+		return results;
+	}
 
 }

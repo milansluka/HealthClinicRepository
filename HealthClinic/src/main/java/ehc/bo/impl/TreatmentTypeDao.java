@@ -18,6 +18,21 @@ public class TreatmentTypeDao {
 		return instance;
 	}
 	
+	public TreatmentType findById(long id) {
+		Session session = HibernateUtil.getCurrentSession();
+
+		String hql = "FROM TreatmentType t WHERE t.id = :id";
+		Query query = session.createQuery(hql).setParameter("id", id);		
+		List results = query.list();
+		
+		if (results.isEmpty()) {
+			return null;
+		}
+		
+		TreatmentType treatmentType = (TreatmentType)results.get(0);	
+		return treatmentType;
+	} 
+	
 	public TreatmentType findByName(String name) {
 		Session session = HibernateUtil.getCurrentSession();
 
