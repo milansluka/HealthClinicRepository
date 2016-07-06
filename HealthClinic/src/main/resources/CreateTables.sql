@@ -152,6 +152,10 @@ Create table "party"
 (
 	"id" BigSerial NOT NULL,
 	"name" Varchar(256) NOT NULL,
+    "modified_by" Bigint,
+	"created_by" Bigint NOT NULL,
+    "created_on" Timestamp NOT NULL,
+	"modified_on" Timestamp,
  primary key ("id")
 ) Without Oids;
 
@@ -168,6 +172,13 @@ Create table "party_role"
  primary key ("id")
 ) Without Oids;
 
+Create table "resource_party_role"
+(
+	"id" Bigint NOT NULL,
+	"target" Bigint NOT NULL,
+	"source" Bigint NOT NULL,
+ primary key ("id")
+) Without Oids;
 
 Create table "permission_profile"
 (
@@ -258,7 +269,6 @@ insert into config (name, value) values ('default_user_password', 'admin');
 -- init
 DO $$
 DECLARE 
-  resource_id bigint;
   user_id bigint;
   company_id bigint;
   individual_id bigint;
@@ -272,22 +282,19 @@ BEGIN
   update party_role set created_by = user_id where id = user_id;
   
   -- inserting owner company
-  insert into resource (created_on, created_by) values (CURRENT_DATE, user_id) RETURNING id INTO resource_id;
-  insert into party (name, id) values ((select "value" from config where name = 'default_company_name'), resource_id)
+  insert into party (name, created_on, created_by) values ((select "value" from config where name = 'default_company_name'), CURRENT_DATE, user_id)
   RETURNING id INTO company_id;
   insert into company (registration_number, id) values ('00000000', company_id);
 
   -- inserting individual representing admin user
-  insert into resource (created_on, created_by) values (CURRENT_DATE, user_id) RETURNING id INTO resource_id;
-  insert into party (name, id) values ((select "value" from config where name = 'default_user_login'), resource_id)
+  insert into party (name, created_on, created_by) values ((select "value" from config where name = 'default_user_login'), CURRENT_DATE, user_id)
   RETURNING id INTO individual_id;
-  insert into individual (first_name, id) values ((select "value" from config where name = 'default_user_login'), individual_id); 
+  insert into individual (first_name, id) values ((select "value" from config where name = 'default_user_login'), individual_id);  
 
   -- update target and source for party_role (default user)
   update party_role set target = company_id, source = individual_id where id = user_id;
   
 END $$;
-
 
 /* Create Foreign Keys */
 
@@ -303,11 +310,15 @@ Alter table "resource" add  foreign key ("created_by") references "system_user" 
 
 Alter table "resource" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
 
-Alter table "party" add  foreign key ("id") references "resource" ("id") on update restrict on delete restrict;
-
 Alter table "party_role" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
 
 Alter table "party_role" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "resource_party_role" add  foreign key ("id") references "resource" ("id") on update restrict on delete restrict;
+
+Alter table "resource_party_role" add  foreign key ("source") references "party" ("id") on update restrict on delete restrict;
+
+Alter table "resource_party_role" add  foreign key ("target") references "party" ("id") on update restrict on delete restrict;
 
 Alter table "appointment" add  foreign key ("individual_id") references "individual" ("id") on update restrict on delete restrict;
 
@@ -321,11 +332,11 @@ Alter table "individual" add  foreign key ("id") references "party" ("id") on up
 
 Alter table "company" add  foreign key ("id") references "party" ("id") on update restrict on delete restrict;
 
-Alter table "physician" add  foreign key ("id") references "party_role" ("id") on update restrict on delete restrict;
+Alter table "physician" add  foreign key ("id") references "resource_party_role" ("id") on update restrict on delete restrict;
 
 Alter table "physician" add  foreign key ("physician_type_id") references "physician_type" ("id") on update restrict on delete restrict;
 
-Alter table "nurse" add  foreign key ("id") references "party_role" ("id") on update restrict on delete restrict;
+Alter table "nurse" add  foreign key ("id") references "resource_party_role" ("id") on update restrict on delete restrict;
 
 Alter table "nurse" add  foreign key ("nurse_type_id") references "nurse_type" ("id") on update restrict on delete restrict;
 
@@ -376,3 +387,7 @@ Alter table "appointment_resource" add  foreign key ("appointment_id") reference
 Alter table "appointment_resource" add  foreign key ("resource_id") references "resource" ("id") on update restrict on delete restrict;
 
 Alter table "room" add  foreign key ("id") references "resource" ("id") on update restrict on delete restrict;
+
+Alter table "party" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "party" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;

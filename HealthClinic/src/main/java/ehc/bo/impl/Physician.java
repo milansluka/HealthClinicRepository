@@ -10,7 +10,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "id")
-public class Physician extends PartyRole {
+public class Physician extends ResourcePartyRole {
 	PhysicianType type;
 
 	protected Physician() {
@@ -37,33 +37,6 @@ public class Physician extends PartyRole {
 	public void setType(PhysicianType type) {
 		this.type = type;
 	}
-
-	/* @OneToMany(mappedBy = "physician") */
-	/*
-	 * @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	 * 
-	 * @JoinTable(name = "appointment_physician", joinColumns =
-	 * {@JoinColumn(name = "physician_id")}, inverseJoinColumns =
-	 * {@JoinColumn(name = "appointment_id")}) public List<Appointment>
-	 * getAppointments() { return appointments; }
-	 * 
-	 * public void setAppointments(List<Appointment> appointments) {
-	 * this.appointments = appointments; }
-	 */
-
-/*	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "resource_id")
-	public ResourceImpl getResourceRole() {
-		return resourceRole;
-	}
-
-	public void setResourceRole(ResourceImpl resourceRole) {
-		this.resourceRole = resourceRole;
-	}*/
-
-/*	public void addAppointment(Appointment appointment) {
-		getResourceRole().addAppointment(appointment);
-	}*/
 
 	public boolean isCompetent(PhysicianType type) {
 		return true;

@@ -1,31 +1,28 @@
 package ehc.bo.impl;
 
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "party_role")
-@Inheritance(strategy=InheritanceType.JOINED)  
-public class PartyRole extends ModifiableObject {
+@Table(name = "resource_party_role")
+public class ResourcePartyRole extends ResourceImpl {
 	Party source;
 	Party target;
 	
-	protected PartyRole() {
+	protected ResourcePartyRole() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public PartyRole(User executor, Party source, Party target) {
+	public ResourcePartyRole(User executor, Party source, Party target) {
 		super(executor);
 		this.source = source;
 		this.target = target;
 		
 		if (source != null && target != null) {
-			source.addSourceRole(this);
-			target.addTargetRole(this);
+			source.addReservableSourceRole(this);
+			target.addReservableTargetRole(this);
 		}
 	}
 	
@@ -46,4 +43,6 @@ public class PartyRole extends ModifiableObject {
 	public void setTarget(Party target) {
 		this.target = target;
 	}
+	
+	
 }

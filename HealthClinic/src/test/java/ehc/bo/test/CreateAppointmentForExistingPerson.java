@@ -12,6 +12,7 @@ import ehc.bo.impl.Login;
 import ehc.bo.impl.PartyRole;
 import ehc.bo.impl.Physician;
 import ehc.bo.impl.PhysicianDao;
+import ehc.bo.impl.ResourcePartyRole;
 import ehc.bo.impl.Room;
 import ehc.bo.impl.RoomDao;
 import ehc.bo.impl.TreatmentType;
@@ -81,7 +82,7 @@ public class CreateAppointmentForExistingPerson extends RootTestCase {
 		String physicianLastName = physicianPerson.getName();
 		Room room = rooms.get(0);
 		
-		appointment.addResource(physicianPerson);
+		appointment.addResource(physician);
 		appointment.addResource(room);
 		
 		long appointmentId = (long)HibernateUtil.save(appointment);
@@ -96,15 +97,11 @@ public class CreateAppointmentForExistingPerson extends RootTestCase {
 		String appointmentPhysicianLastName = null;
 		
 		for (Resource resource : persistedAppointment.getResources()) {
-			if (resource instanceof Individual) {
-				Individual individual = (Individual) resource;
-				
-				for (PartyRole role : individual.getSourceRoles()) {
-					if (role instanceof Physician) {
-						appointmentPhysicianFirstName = individual.getFirstName();	
-					    appointmentPhysicianLastName = individual.getName();
-					}				
-				}			
+			if (resource instanceof Physician) {
+				Physician physicianRole = (Physician) resource;
+				Individual individual = (Individual)physicianRole.getSource();
+				appointmentPhysicianFirstName = individual.getFirstName();
+				appointmentPhysicianLastName = individual.getName();		
 			}		
 		}
 		

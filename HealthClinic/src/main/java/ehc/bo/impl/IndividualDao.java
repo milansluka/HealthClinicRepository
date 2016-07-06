@@ -40,8 +40,6 @@ public class IndividualDao {
 	}
 	
 	public Individual findByFirstAndLastName(String firstName, String lastName) {
-	/*	HibernateUtil.beginTransaction();*/
-
 		Session session = HibernateUtil.getCurrentSession();
 
 		String hql = "FROM Individual u WHERE u.firstName = :firstName and u.name = :lastName";
@@ -55,11 +53,7 @@ public class IndividualDao {
 		}
 		
 		Individual individual = (Individual)results.get(0);
-		
-		Hibernate.initialize(individual.getSourceRoles());	
-		Hibernate.initialize(individual.getTargetRoles());	
-		
-	/*	HibernateUtil.commitTransaction();	*/	
+				
 		return individual;
 	}
 

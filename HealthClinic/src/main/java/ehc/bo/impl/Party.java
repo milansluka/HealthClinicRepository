@@ -4,17 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
 
-@Entity 
-@PrimaryKeyJoinColumn(name = "id")
-public class Party extends ResourceImpl {
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public class Party extends ModifiableObject {
 	String name;
-	List<PartyRole> sourceRoles = new ArrayList<PartyRole>();
-	List<PartyRole> targetRoles = new ArrayList<PartyRole>();
-	
-	
+	List<PartyRole> sourceRoles = new ArrayList<>();
+	List<PartyRole> targetRoles = new ArrayList<>();
+	List<ResourcePartyRole> reservableSourceRoles = new ArrayList<>();
+	List<ResourcePartyRole> reservableTargetRoles = new ArrayList<>();
+
 	protected Party() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -22,10 +24,10 @@ public class Party extends ResourceImpl {
 
 	public Party(User executor, String name) {
 		super(executor);
-	    this.name = name;
+		this.name = name;
 	}
-		
-    @OneToMany(mappedBy = "source", orphanRemoval = true)
+
+	@OneToMany(mappedBy = "source", orphanRemoval = true)
 	public List<PartyRole> getSourceRoles() {
 		return sourceRoles;
 	}
@@ -33,8 +35,8 @@ public class Party extends ResourceImpl {
 	public void setSourceRoles(List<PartyRole> roles) {
 		this.sourceRoles = roles;
 	}
-	
-    @OneToMany(mappedBy = "target", orphanRemoval = true)
+
+	@OneToMany(mappedBy = "target", orphanRemoval = true)
 	public List<PartyRole> getTargetRoles() {
 		return targetRoles;
 	}
@@ -42,19 +44,51 @@ public class Party extends ResourceImpl {
 	public void setTargetRoles(List<PartyRole> roles) {
 		this.targetRoles = roles;
 	}
-	
-	public void AddTargetRole(PartyRole role) {
-		if (role == null) return;
-		
-		targetRoles.add(role);
-		/*role.setTarget(this);*/
+
+	@OneToMany(mappedBy = "source", orphanRemoval = true)
+	public List<ResourcePartyRole> getReservableSourceRoles() {
+		return reservableSourceRoles;
 	}
-	
-	public void AddSourceRole(PartyRole role) {
-		if (role == null) return;
-		
+
+	public void setReservableSourceRoles(List<ResourcePartyRole> reservableSourceRoles) {
+		this.reservableSourceRoles = reservableSourceRoles;
+	}
+
+	@OneToMany(mappedBy = "target", orphanRemoval = true)
+	public List<ResourcePartyRole> getReservableTargetRoles() {
+		return reservableTargetRoles;
+	}
+
+	public void setReservableTargetRoles(List<ResourcePartyRole> reservableTargetRoles) {
+		this.reservableTargetRoles = reservableTargetRoles;
+	}
+
+	public void addTargetRole(PartyRole role) {
+		if (role == null)
+			return;
+
+		targetRoles.add(role);
+		/* role.setTarget(this); */
+	}
+
+	public void addSourceRole(PartyRole role) {
+		if (role == null)
+			return;
+
 		sourceRoles.add(role);
-	/*	role.setSource(this);*/
+		/* role.setSource(this); */
+	}
+
+	public void addReservableTargetRole(ResourcePartyRole role) {
+		if (role == null)
+			return;
+		reservableTargetRoles.add(role);
+	}
+
+	public void addReservableSourceRole(ResourcePartyRole role) {
+		if (role == null)
+			return;
+		reservableSourceRoles.add(role);
 	}
 
 	public String getName() {
@@ -63,6 +97,6 @@ public class Party extends ResourceImpl {
 
 	public void setName(String name) {
 		this.name = name;
-	}	
+	}
 
 }

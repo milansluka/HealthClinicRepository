@@ -3,6 +3,8 @@ package ehc.bo.test;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Hibernate;
+
 import ehc.bo.impl.Company;
 import ehc.bo.impl.CompanyDao;
 import ehc.bo.impl.Individual;
@@ -11,6 +13,7 @@ import ehc.bo.impl.Login;
 import ehc.bo.impl.Nurse;
 import ehc.bo.impl.NurseType;
 import ehc.bo.impl.PartyRole;
+import ehc.bo.impl.ResourcePartyRole;
 import ehc.bo.impl.User;
 import ehc.hibernate.HibernateUtil;
 
@@ -42,10 +45,11 @@ public class AddNurseRoleToIndividual extends RootTestCase {
 
 		HibernateUtil.beginTransaction();
 		Individual individual = individualDao.findById(individualIds.get(0));
+		Hibernate.initialize(individual.getReservableSourceRoles());
 		HibernateUtil.commitTransaction();
-
-		PartyRole persistedRole = individual.getSourceRoles().get(0);
-
+		
+		ResourcePartyRole persistedRole = individual.getReservableSourceRoles().get(0);	
+	
 		assertTrue(persistedRole instanceof Nurse);
 
 	}
