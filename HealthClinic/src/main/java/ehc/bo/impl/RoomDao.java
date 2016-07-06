@@ -2,7 +2,6 @@ package ehc.bo.impl;
 
 import java.util.List;
 
-import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -20,17 +19,8 @@ public class RoomDao {
 	
 	
 	public Room findById(long id) {
-		Session session = HibernateUtil.getCurrentSession();
-
-		String hql = "FROM Room r WHERE r.id = :id";
-		Query query = session.createQuery(hql).setParameter("id", id);		
-		List results = query.list();
-		
-		if (results.isEmpty()) {
-			return null;
-		}
-		
-		Room room = (Room)results.get(0);	
+		Session session = HibernateUtil.getCurrentSession();	
+		Room room = session.get(Room.class, id);	
 		return room;
 	} 
 	

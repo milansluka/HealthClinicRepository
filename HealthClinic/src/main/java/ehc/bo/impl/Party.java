@@ -4,16 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
+import javax.persistence.PrimaryKeyJoinColumn;
 
-@Entity
-@Inheritance(strategy=InheritanceType.JOINED)  
-public class Party extends ModifiableObject {
+@Entity 
+@PrimaryKeyJoinColumn(name = "id")
+public class Party extends ResourceImpl {
 	String name;
-	List<PartyRole> sourceRoles;
-	List<PartyRole> targetRoles;
+	List<PartyRole> sourceRoles = new ArrayList<PartyRole>();
+	List<PartyRole> targetRoles = new ArrayList<PartyRole>();
 	
 	
 	protected Party() {
@@ -24,9 +23,6 @@ public class Party extends ModifiableObject {
 	public Party(User executor, String name) {
 		super(executor);
 	    this.name = name;
-	    sourceRoles = new ArrayList<PartyRole>();
-	    targetRoles = new ArrayList<PartyRole>();
-		// TODO Auto-generated constructor stub
 	}
 		
     @OneToMany(mappedBy = "source", orphanRemoval = true)

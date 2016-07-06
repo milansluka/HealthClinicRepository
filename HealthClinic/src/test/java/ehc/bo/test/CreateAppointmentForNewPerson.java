@@ -1,76 +1,94 @@
 package ehc.bo.test;
 
 import java.util.Date;
+import java.util.List;
 
+import ehc.bo.Resource;
 import ehc.bo.impl.Appointment;
+import ehc.bo.impl.AppointmentDao;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.Login;
-import ehc.bo.impl.Nurse;
+import ehc.bo.impl.PartyRole;
 import ehc.bo.impl.Physician;
-import ehc.bo.impl.PhysicianType;
-import ehc.bo.impl.ResourcesUtil;
+import ehc.bo.impl.PhysicianDao;
 import ehc.bo.impl.Room;
+import ehc.bo.impl.RoomDao;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;
 import ehc.bo.impl.User;
 import ehc.hibernate.HibernateUtil;
 import ehc.util.DateUtil;
-import ehc.util.Util;
-import junit.framework.TestCase;
 
 public class CreateAppointmentForNewPerson extends RootTestCase {
 	private String treatmentName = "Odstraňovanie pigmentov chrbát";
 	private TreatmentTypeDao treatmentTypeDao = TreatmentTypeDao.getInstance();
+	private PhysicianDao physicianDao = PhysicianDao.getInstance();
+	private RoomDao roomDao = RoomDao.getInstance();
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		
+
 		if (isSystemSet()) {
-			setUpSystem();		
+			setUpSystem();
 		}
-
-/*		HibernateUtil.beginTransaction();
-		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
-		HibernateUtil.commitTransaction();*/
-
-/*		if (treatmentType == null) {
-			HibernateUtil.beginTransaction();
-			Login login = new Login();
-			User executor = login.login("admin", "admin");
-			PhysicianType physicianType = new PhysicianType(executor);
-			treatmentType = new TreatmentType(executor, treatmentName, "some treatment type", 80, physicianType);
-			HibernateUtil.save(treatmentType);
-			HibernateUtil.commitTransaction();
-		}*/
-
 	}
 
 	public void testApp() {
 		String personFirstName = "Jan";
 		String personLastName = "Novak";
-			
+
 		Login login = new Login();
 
 		HibernateUtil.beginTransaction();
-	
+
 		User executor = login.login("admin", "admin");
 		Individual person = new Individual(executor, personFirstName, personLastName);
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
 		Date from = DateUtil.date(2016, 4, 20, 10, 0, 0);
 		Date to = DateUtil.date(2016, 4, 20, 10, 30, 0);
+
+		Appointment appointment = new Appointment(executor, from, to, treatmentType, person);
 		
-		ResourcesUtil allocator = new ResourcesUtil();
-		Physician physician = allocator.findPhysician(from, to, treatmentType);
-		Nurse nurse = allocator.findNurse();
-		Room room = allocator.findRoom();
+		List<Physician> physicians = physicianDao.getAll();
+		List<Room> rooms = roomDao.getAll();
 		
-		Appointment appointment = new Appointment(executor, from, to, treatmentType, physician, nurse, room, person);
+		Physician physician = physicians.get(0);
+		Individual physicianPerson = (Individual)physician.getSource();
+		String physicianFirstName = physicianPerson.getFirstName();
+		String physicianLastName = physicianPerson.getName();
+		Room room = rooms.get(0);
 		
-		HibernateUtil.save(appointment);
+		appointment.addResource(physicianPerson);
+		appointment.addResource(room);
+
+		long appointmentId = (long)HibernateUtil.save(appointment);
+		HibernateUtil.commitTransaction();
+		
+		HibernateUtil.beginTransaction();
+		
+		AppointmentDao appointmentDao = AppointmentDao.getInstance();
+		Appointment persistedAppointment = appointmentDao.findById(appointmentId);
+		
+		String appointmentPhysicianFirstName = null;
+		String appointmentPhysicianLastName = null;
+		
+		for (Resource resource : persistedAppointment.getResources()) {
+			if (resource instanceof Individual) {
+				Individual individual = (Individual) resource;
+				
+				for (PartyRole role : individual.getSourceRoles()) {
+					if (role instanceof Physician) {
+						appointmentPhysicianFirstName = individual.getFirstName();	
+					    appointmentPhysicianLastName = individual.getName();
+					}				
+				}			
+			}		
+		}
 		
 		HibernateUtil.commitTransaction();
 		
-	
+		assertTrue(appointmentPhysicianFirstName.equals(physicianFirstName) && 
+				appointmentPhysicianLastName.equals(physicianLastName));     
 	}
 
 	protected void tearDown() throws Exception {

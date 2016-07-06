@@ -3,9 +3,6 @@ package ehc.bo.test;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Hibernate;
-
-import ehc.bo.impl.Appointment;
 import ehc.bo.impl.Company;
 import ehc.bo.impl.CompanyDao;
 import ehc.bo.impl.Individual;
@@ -15,7 +12,6 @@ import ehc.bo.impl.Nurse;
 import ehc.bo.impl.NurseType;
 import ehc.bo.impl.Physician;
 import ehc.bo.impl.PhysicianType;
-import ehc.bo.impl.ResourceType;
 import ehc.bo.impl.Room;
 import ehc.bo.impl.RoomDao;
 import ehc.bo.impl.RoomType;
@@ -27,10 +23,22 @@ import junit.framework.TestCase;
 
 public class RootTestCase extends TestCase {
 	private List<Long> roomIds = new ArrayList<Long>();
-	private List<Long> physicianIds = new ArrayList<Long>();
+/*	private List<Long> physicianIds = new ArrayList<Long>();*/
 	private List<Long> nurseIds = new ArrayList<Long>();
 	private List<Long> treatmentTypeIds = new ArrayList<Long>();
 	private List<Long> individualIds = new ArrayList<Long>();
+	
+	protected long addIndividual(String firstName, String lastName) {
+		HibernateUtil.beginTransaction();
+		Login login = new Login();
+		User executor = login.login("admin", "admin");
+
+		Individual person = new Individual(executor, firstName, lastName);
+		long id = (long)HibernateUtil.save(person);
+		HibernateUtil.commitTransaction();
+		
+		return id;
+	}
 
 	private void addPhysician(String firstName, String lastName) {
 
@@ -105,12 +113,24 @@ public class RootTestCase extends TestCase {
 
 	}
 
-	private void removeRoom(long id) {
+	protected void removeRoom(long id) {
 		RoomDao roomDao = RoomDao.getInstance();
 		HibernateUtil.beginTransaction();
 		Room room = roomDao.findById(id);
 		HibernateUtil.delete(room);
 		HibernateUtil.commitTransaction();
+	}
+	
+	protected void removeIndividual(long id) {
+		IndividualDao individualDao = IndividualDao.getInstance();
+
+		HibernateUtil.beginTransaction();
+		Individual individual = individualDao.findById(id);
+
+		HibernateUtil.delete(individual);
+
+		HibernateUtil.commitTransaction();
+		
 	}
 
 	private void removePhysician(long id) {
@@ -148,9 +168,9 @@ public class RootTestCase extends TestCase {
 	}
 
 	private void addRooms() {
-		addRoom("1");
-		addRoom("2");
-		addRoom("3");
+		addRoom("test room 1");
+		addRoom("test room 2");
+		addRoom("test room 3");
 	}
 
 	private void addNurses() {

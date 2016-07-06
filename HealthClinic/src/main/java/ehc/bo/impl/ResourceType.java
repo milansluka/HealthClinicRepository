@@ -38,5 +38,4 @@ public class ResourceType extends ModifiableObject {
 		getTreatmentTypes().add(treatmentType);
 	}
 	
-	
 }

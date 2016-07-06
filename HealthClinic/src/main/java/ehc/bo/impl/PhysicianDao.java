@@ -24,7 +24,4 @@ public class PhysicianDao {
 		List results = query.list();	
 		return results;
 	}
-	
-	
-
 }

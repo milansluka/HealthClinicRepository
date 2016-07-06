@@ -1,17 +1,16 @@
 package ehc.bo.impl;
 
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Nurse extends PartyRole{
+public class Nurse extends PartyRole {
 	NurseType type;
-	List<Appointment> appointments;
+	/*List<Appointment> appointments;*/
+	
+	/*ResourceImpl resourceRole = new ResourceImpl();*/
 	
 	protected Nurse() {
 		super();
@@ -32,15 +31,37 @@ public class Nurse extends PartyRole{
 		this.type = type;
 	}
 	
-	@OneToMany(mappedBy = "nurse")
+/*	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "resource_id")
+	public ResourceImpl getResourceRole() {
+		return resourceRole;
+	}
+
+	public void setResourceRole(ResourceImpl resourceRole) {
+		this.resourceRole = resourceRole;
+	}*/
+	
+/*	@OneToMany(mappedBy = "nurse")
 	public List<Appointment> getAppointments() {
 		return appointments;
 	}
 	public void setAppointments(List<Appointment> appointments) {
 		this.appointments = appointments;
-	}
+	}*/
 	
 	public void addAppointment(Appointment appointment) {
-		getAppointments().add(appointment);
+	/*	getAppointments().add(appointment);*/
 	}
+
+/*	@Override
+	public boolean isAvailable(Date from, Date to) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isSuitable(ResourceType resourceType) {
+		// TODO Auto-generated method stub
+		return false;
+	}*/
 }

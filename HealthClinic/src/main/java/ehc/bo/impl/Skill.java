@@ -3,7 +3,6 @@ package ehc.bo.impl;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 
 @Entity
 public class Skill extends ModifiableObject {

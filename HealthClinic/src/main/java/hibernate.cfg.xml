@@ -32,8 +32,8 @@
 		</property>
 
 		<property name="show_sql">true</property>
-		
-		  <property name="hibernate.current_session_context_class">thread</property>
+
+		<property name="hibernate.current_session_context_class">thread</property>
 
 		<!-- Drop and re-create all database on startup -->
 		<!-- <property name="hibernate.hbm2ddl.auto">create-drop</property> -->
@@ -57,7 +57,8 @@
 		<mapping class="ehc.bo.impl.Nurse" />
 		<mapping class="ehc.bo.impl.NurseType" />
 		<mapping class="ehc.bo.impl.ResourceType" />
-	<!-- 	<mapping class="ehc.bo.impl.Device" /> -->
+		<mapping class="ehc.bo.impl.ResourceImpl" />
+		<!-- <mapping class="ehc.bo.impl.Device" /> -->
 		<!-- <mapping class="ehc.bo.impl.UserRight" /> <mapping class="ehc.bo.impl.Person" 
 			/> <mapping class="ehc.bo.impl.Appointment" /> <mapping class="ehc.bo.impl.Intervention" 
 			/> -->

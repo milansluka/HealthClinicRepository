@@ -30,7 +30,7 @@ public class PartyRole extends ModifiableObject {
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "source", nullable = false)
+	@JoinColumn(name = "source")
 	public Party getSource() {
 		return source;
 	}
@@ -39,7 +39,7 @@ public class PartyRole extends ModifiableObject {
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "target", nullable = false)
+	@JoinColumn(name = "target")
 	public Party getTarget() {
 		return target;
 	}

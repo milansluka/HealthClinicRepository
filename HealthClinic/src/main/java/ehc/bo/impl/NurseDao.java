@@ -17,6 +17,12 @@ public class NurseDao {
 		return instance;
 	}
 	
+	public Nurse findById(long id) {
+		Session session = HibernateUtil.getCurrentSession();	
+		Nurse nurse = session.get(Nurse.class, id);	
+		return nurse;
+	} 
+	
 	public List<Nurse> getAll() {
 		Session session = HibernateUtil.getCurrentSession();
 		String hql = "FROM Nurse";

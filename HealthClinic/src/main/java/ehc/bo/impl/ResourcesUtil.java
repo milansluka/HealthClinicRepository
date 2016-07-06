@@ -1,17 +1,15 @@
 package ehc.bo.impl;
 
-import java.util.Date;
-import java.util.List;
-
 public class ResourcesUtil {
 	
-	public Physician findPhysician(Date from, Date to, TreatmentType treatmentType) {
+	
+/*	public Physician findPhysician(Date from, Date to, TreatmentType treatmentType) {
 		PhysicianDao physicianDao = PhysicianDao.getInstance();
 		List<Physician> physicians = physicianDao.getAll();
 		
-		PhysicianType requiredPhysicianType = null;
+		PhysicianType requiredPhysicianType = null;*/
 		
-		for (ResourceType resourceType : treatmentType.resourceTypes) {
+/*		for (ResourceType resourceType : treatmentType.resourceTypes) {
 			if (resourceType instanceof PhysicianType) {
 				requiredPhysicianType  = (PhysicianType)resourceType;		
 			}
@@ -46,6 +44,6 @@ public class ResourcesUtil {
 			return rooms.get(0);			
 		}    
 		return null;
-	}
+	}*/
 
 }

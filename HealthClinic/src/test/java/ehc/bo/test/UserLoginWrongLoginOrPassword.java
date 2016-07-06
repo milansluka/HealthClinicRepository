@@ -17,7 +17,7 @@ public class UserLoginWrongLoginOrPassword extends TestCase {
 		HibernateUtil.beginTransaction();
 	
 		User loggedUser;
-		String userPasswordMaybeCrypted;
+		String userPasswordMaybeCrypted = null;
 		
 		//default user password is not crypted	
 		if (userPassword.equals("admin")) {

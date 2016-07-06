@@ -1,43 +1,54 @@
 package ehc.bo.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import ehc.bo.Resource;
 
 @Entity
 @Table(name = "appointment")
 public class Appointment extends BaseObject {
 	Date from;
 	Date to;
-	AppointmentState state;
+	AppointmentState state = AppointmentState.PROPOSED;
 	Individual individual;
 	TreatmentType treatmentType;
-	Physician physician;
-	Nurse nurse;
-	Room room;
+	List<Resource> resources = new ArrayList<Resource>();
 
 	protected Appointment() {
 		super();
 	}
 
-	public Appointment(User executor, Date from, Date to, TreatmentType treatmentType, Physician physician, Nurse nurse,
-			Room room, Individual individual) {
+	public Appointment(User executor, Date from, Date to, TreatmentType treatmentType, Individual individual) {
 		super(executor);
 		this.from = from;
 		this.to = to;
 		assignTreatmentType(treatmentType);
-		assignPhysician(physician);
-		assignNurse(nurse);
-		assignRoom(room);
 		this.individual = individual;
-		this.state = AppointmentState.PROPOSED;
+	}
+	
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = ResourceImpl.class)
+	@JoinTable(name = "appointment_resource", joinColumns = {@JoinColumn(name = "appointment_id")},
+	inverseJoinColumns = {@JoinColumn(name = "resource_id")})
+	public List<Resource> getResources() {
+		return resources;
+	}
+
+	public void setResources(List<Resource> resources) {
+		this.resources = resources;
 	}
 
 	@Enumerated(EnumType.STRING)
@@ -67,36 +78,6 @@ public class Appointment extends BaseObject {
 		this.to = to;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "physician_id")
-	public Physician getPhysician() {
-		return physician;
-	}
-
-	public void setPhysician(Physician physician) {
-		this.physician = physician;
-	}
-
-	@ManyToOne
-	@JoinColumn(name = "nurse_id")
-	public Nurse getNurse() {
-		return nurse;
-	}
-
-	public void setNurse(Nurse nurse) {
-		this.nurse = nurse;
-	}
-
-	@ManyToOne
-	@JoinColumn(name = "room_id")
-	public Room getRoom() {
-		return room;
-	}
-
-	public void setRoom(Room room) {
-		this.room = room;
-	}
-
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "individual_id", nullable = false)
 	public Individual getIndividual() {
@@ -123,36 +104,19 @@ public class Appointment extends BaseObject {
 			person.addAppointment(this);
 		}
 	}
-	
-	public void assignPhysician(Physician physician) {
-		if (physician == null) {
-			return;
-		}	
-		setPhysician(physician);
-		physician.addAppointment(this);
-	}
-	
-	public void assignNurse(Nurse nurse) {
-		if (nurse == null) {
-			return;
-		}	
-		setNurse(nurse);
-		nurse.addAppointment(this);
-	}
-	
-	public void assignRoom(Room room) {
-		if (room == null) {
-			return;
-		}	
-		setRoom(room);
-		room.addAppointment(this);
-	}
 
 	public void assignTreatmentType(TreatmentType treatmentType) {
 		if (treatmentType != null) {
 			setTreatmentType(treatmentType);
 			treatmentType.addAppointment(this);
 		}
-
+	}
+	
+	public void addResource(Resource resource) {
+		if (resource == null) {
+			return;
+		}
+		getResources().add(resource);
+		resource.addAppointment(this);
 	}
 }
