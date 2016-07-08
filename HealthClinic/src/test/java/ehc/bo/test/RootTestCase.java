@@ -9,8 +9,10 @@ import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
 import ehc.bo.impl.Nurse;
+import ehc.bo.impl.NurseDao;
 import ehc.bo.impl.NurseType;
 import ehc.bo.impl.Physician;
+import ehc.bo.impl.PhysicianDao;
 import ehc.bo.impl.PhysicianType;
 import ehc.bo.impl.Room;
 import ehc.bo.impl.RoomDao;
@@ -38,6 +40,17 @@ public class RootTestCase extends TestCase {
 		HibernateUtil.commitTransaction();
 		
 		return id;
+	}
+	
+	public int getCountOfResources() {
+		RoomDao roomDao = RoomDao.getInstance();
+		PhysicianDao physicianDao = PhysicianDao.getInstance();
+		NurseDao nurseDao = NurseDao.getInstance();
+		List<Room> rooms = roomDao.getAll();
+		List<Physician> physicians = physicianDao.getAll();
+		List<Nurse> nurses = nurseDao.getAll();
+		
+		return rooms.size() + nurses.size() + physicians.size();
 	}
 
 	private void addPhysician(String firstName, String lastName) {
@@ -231,8 +244,12 @@ public class RootTestCase extends TestCase {
 		User executor = login.login("admin", "admin");
 
 		PhysicianType physicianType = new PhysicianType(executor);
+		NurseType nurseType = new NurseType(executor);
+		RoomType roomType = new RoomType(executor);
 		TreatmentType treatmentType = new TreatmentType(executor, name, category, price);
 		treatmentType.addResourceType(physicianType);
+		treatmentType.addResourceType(nurseType);
+		treatmentType.addResourceType(roomType);
 
 		long id = (long)HibernateUtil.save(treatmentType);
 		

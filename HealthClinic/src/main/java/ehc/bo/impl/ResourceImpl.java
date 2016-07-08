@@ -46,14 +46,23 @@ public class ResourceImpl extends ModifiableObject implements Resource {
 
 	@Override
 	public boolean isAvailable(Date from, Date to) {
-		// TODO Auto-generated method stub
-		return false;
+		for (Appointment appointment : getResourceAppointments()) {
+			if (isCollision(from, to, appointment.getFrom(), appointment.getTo())) {
+				return false;
+			}
+		}	
+		return true;
 	}
 
 	@Override
 	public boolean isSuitable(ResourceType resourceType) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
+	}
+	
+	private boolean isCollision(Date from1, Date to1, Date from2, Date to2) {
+
+		return from1.after(from2) && from1.before(to2) || to1.after(from2) && to1.before(to2);
 	}
 	
 

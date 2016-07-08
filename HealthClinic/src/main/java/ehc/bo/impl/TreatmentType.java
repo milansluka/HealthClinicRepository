@@ -23,13 +23,10 @@ public class TreatmentType extends BaseObject{
 	String info;
 	String category;	
 	double price;	
+/*	int duration;*/
 	List<ResourceType> resourceTypes;
 /*	List<Device> requiredDevices;*/
 	List<Appointment> appointments;
-/*	List<Skill> requiredPhysicianSkills;
-	int requiredCountOfNurses;*/
-	/*PhysicianType physicianType;*/
-/*	NurseType nurseType;*/
 	
 	protected TreatmentType() {
 		super();
@@ -105,7 +102,7 @@ public class TreatmentType extends BaseObject{
 		resourceType.addTreatmentType(this);
 	}
 	
-	public static TreatmentType getTreatmentType(long id, Session session) {
+/*	public static TreatmentType getTreatmentType(long id, Session session) {
 		String hql = "FROM TreatmentType t WHERE t.id = :id";
 		Query query = session.createQuery(hql);
 		query.setParameter("id", id);
@@ -113,9 +110,9 @@ public class TreatmentType extends BaseObject{
 		List results = query.list();
 		
 		return (TreatmentType) results.get(0);		
-	}
+	}*/
 	
-	public static TreatmentType getTreatmentType(String type, Session session) {
+/*	public static TreatmentType getTreatmentType(String type, Session session) {
 		String hql = "FROM TreatmentType t WHERE t.type = :type";
 		Query query = session.createQuery(hql);
 		query.setParameter("type", type);
@@ -123,5 +120,5 @@ public class TreatmentType extends BaseObject{
 		List results = query.list();
 		
 		return (TreatmentType) results.get(0);		
-	}
+	}*/
 }
