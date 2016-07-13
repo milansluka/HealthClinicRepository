@@ -40,7 +40,7 @@ public class Appointment extends BaseObject {
 		this.individual = individual;
 	}
 	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = ResourceImpl.class)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, targetEntity = ResourceImpl.class)
 	@JoinTable(name = "appointment_resource", joinColumns = {@JoinColumn(name = "appointment_id")},
 	inverseJoinColumns = {@JoinColumn(name = "resource_id")})
 	public List<Resource> getResources() {
@@ -79,7 +79,7 @@ public class Appointment extends BaseObject {
 	}
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "individual_id", nullable = false)
+	@JoinColumn(name = "individual_id")
 	public Individual getIndividual() {
 		return individual;
 	}
@@ -118,5 +118,28 @@ public class Appointment extends BaseObject {
 		}
 		getResources().add(resource);
 		resource.addAppointment(this);
+	}
+	
+	public void removeResource(Resource resource) {
+	/*	if (resource == null) {
+			return;
+		}
+		getResources().remove(resource);*/
+		resource.removeAppointment(this);	
+	}
+	
+	public void addResources(List<Resource> resources) {
+		if (resources == null) {
+			return;
+		}
+		for (Resource resource : resources) {
+			addResource(resource);
+		}
+	}
+	
+	public void removeResources() {
+		for (Resource resource : getResources()) {
+			removeResource(resource);
+		}
 	}
 }

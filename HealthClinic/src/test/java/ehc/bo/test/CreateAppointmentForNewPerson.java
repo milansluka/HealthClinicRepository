@@ -28,7 +28,7 @@ public class CreateAppointmentForNewPerson extends RootTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		if (isSystemSet()) {
+		if (!isSystemSet()) {
 			setUpSystem();
 		}
 	}
@@ -61,14 +61,13 @@ public class CreateAppointmentForNewPerson extends RootTestCase {
 		appointment.addResource(physician);
 		appointment.addResource(room);
 
-		long appointmentId = (long)HibernateUtil.save(appointment);
+		/*long appointmentId = (long)HibernateUtil.save(appointment);*/
+		long appointmentId = addAppointment(appointment);
 		HibernateUtil.commitTransaction();
 		
-		HibernateUtil.beginTransaction();
-		
+		HibernateUtil.beginTransaction();	
 		AppointmentDao appointmentDao = AppointmentDao.getInstance();
-		Appointment persistedAppointment = appointmentDao.findById(appointmentId);
-		
+		Appointment persistedAppointment = appointmentDao.findById(appointmentId);		
 		String appointmentPhysicianFirstName = null;
 		String appointmentPhysicianLastName = null;
 		
@@ -79,8 +78,7 @@ public class CreateAppointmentForNewPerson extends RootTestCase {
 				appointmentPhysicianFirstName = individual.getFirstName();
 				appointmentPhysicianLastName = individual.getName();		
 			}		
-		}
-		
+		}		
 		HibernateUtil.commitTransaction();
 		
 		assertTrue(appointmentPhysicianFirstName.equals(physicianFirstName) && 
@@ -89,6 +87,7 @@ public class CreateAppointmentForNewPerson extends RootTestCase {
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		tearDownSystem();
 	}
 
 }

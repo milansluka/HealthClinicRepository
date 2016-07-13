@@ -79,6 +79,7 @@ Create table "treatment_type"
 	"created_by" Bigint NOT NULL,
 	"modified_by" Bigint,
 	"price" Double precision NOT NULL,
+	"duration" Integer NOT NULL,
  primary key ("id")
 ) Without Oids;
 
@@ -263,7 +264,7 @@ Create table "config"
 -- inserting default settings
 insert into config (name, value) values ('default_company_name', 'Company name');
 insert into config (name, value) values ('default_individual_name', 'admin');
-insert into config (name, value) values ('default_user_login', 'admin');
+insert into config (name, value) values ('default_user_name', 'admin');
 insert into config (name, value) values ('default_user_password', 'admin');
 
 -- init
@@ -278,7 +279,7 @@ BEGIN
   insert into party_role (created_on, created_by, source, target) values(CURRENT_DATE, -1, -1, -1)
   RETURNING id INTO user_id;
   insert into system_user (name, "password", id) 
-  values ((select "value" from config where name = 'default_user_login'), (select "value" from config where name = 'default_user_password'), user_id);
+  values ((select "value" from config where name = 'default_user_name'), (select "value" from config where name = 'default_user_password'), user_id);
   update party_role set created_by = user_id where id = user_id;
   
   -- inserting owner company
@@ -287,9 +288,9 @@ BEGIN
   insert into company (registration_number, id) values ('00000000', company_id);
 
   -- inserting individual representing admin user
-  insert into party (name, created_on, created_by) values ((select "value" from config where name = 'default_user_login'), CURRENT_DATE, user_id)
+  insert into party (name, created_on, created_by) values ((select "value" from config where name = 'default_user_name'), CURRENT_DATE, user_id)
   RETURNING id INTO individual_id;
-  insert into individual (first_name, id) values ((select "value" from config where name = 'default_user_login'), individual_id);  
+  insert into individual (first_name, id) values ((select "value" from config where name = 'default_user_name'), individual_id);  
 
   -- update target and source for party_role (default user)
   update party_role set target = company_id, source = individual_id where id = user_id;

@@ -23,7 +23,7 @@ public class TreatmentType extends BaseObject{
 	String info;
 	String category;	
 	double price;	
-/*	int duration;*/
+	int duration;
 	List<ResourceType> resourceTypes;
 /*	List<Device> requiredDevices;*/
 	List<Appointment> appointments;
@@ -33,13 +33,14 @@ public class TreatmentType extends BaseObject{
 		appointments = new ArrayList<Appointment>();
 	}
 	
-	public TreatmentType(User executor, String name, String category, double price) {
+	public TreatmentType(User executor, String name, String category, double price, int duration) {
 		super(executor);
 		appointments = new ArrayList<Appointment>();
 		resourceTypes = new ArrayList<>();
 		this.name = name;
 		this.category = category;
 		this.price = price;
+		this.duration = duration;
 	}
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -63,6 +64,14 @@ public class TreatmentType extends BaseObject{
 
 	public void setPrice(double price) {
 		this.price = price;
+	}
+
+	public int getDuration() {
+		return duration;
+	}
+
+	public void setDuration(int duration) {
+		this.duration = duration;
 	}
 
 	public void setCategory(String category) {

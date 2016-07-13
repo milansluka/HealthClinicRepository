@@ -85,7 +85,7 @@ public class CreateAppointmentForExistingPerson extends RootTestCase {
 		appointment.addResource(physician);
 		appointment.addResource(room);
 		
-		long appointmentId = (long)HibernateUtil.save(appointment);
+		long appointmentId = addAppointment(appointment);
 		HibernateUtil.commitTransaction();
 		
 		HibernateUtil.beginTransaction();
@@ -113,6 +113,7 @@ public class CreateAppointmentForExistingPerson extends RootTestCase {
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		tearDownSystem();
 	}
 
 }

@@ -1,17 +1,19 @@
 package ehc.bo.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ehc.bo.Resource;
 
 public class AppointmentProposal {
-	List<Resource> resources;
+	Map<ResourceType, List<Resource>> resources = new HashMap<>();
     TreatmentType treatmentType;
     Date from;
     Date to;
      
-	public AppointmentProposal(List<Resource> resources, TreatmentType treatmentType, Date from, Date to) {
+	public AppointmentProposal(Map<ResourceType, List<Resource>> resources, TreatmentType treatmentType, Date from, Date to) {
 		super();
 		this.resources = resources;
 		this.treatmentType = treatmentType;
@@ -19,10 +21,10 @@ public class AppointmentProposal {
 		this.to = to;
 	}
 	
-	public List<Resource> getResources() {
+	public Map<ResourceType, List<Resource>> getResources() {
 		return resources;
 	}
-	public void setResources(List<Resource> resources) {
+	public void setResources(Map<ResourceType, List<Resource>> resources) {
 		this.resources = resources;
 	}
 	public TreatmentType getTreatmentType() {

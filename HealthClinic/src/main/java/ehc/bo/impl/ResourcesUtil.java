@@ -2,7 +2,9 @@ package ehc.bo.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ehc.bo.Resource;
 import ehc.util.DateUtil;
@@ -14,74 +16,103 @@ public class ResourcesUtil {
 
 	public List<AppointmentProposal> getAppointmentProposals(Date from, TreatmentType treatmentType, int count) {
 		List<AppointmentProposal> appointmentProposals = new ArrayList<>();
-		int proposedAppointments = 0;	
-		//in seconds
+
+		int proposedAppointments = 0;
+		// in seconds
 		int margin = 0;
-		//in seconds
-		int treatmentDuration = 60*60;
-		int grid = 30*60;
-		
+		// in seconds
+		int treatmentDuration = treatmentType.getDuration();
+		int grid = 30 * 60;
+
 		Date to = DateUtil.addSeconds(from, treatmentDuration + margin);
-		
+
 		while (proposedAppointments < count) {
-			List<Resource> resources = getResources(from, to, treatmentType.getResourceTypes());
-			
+			Map<ResourceType, List<Resource>> resources = getResources(from, to, treatmentType.getResourceTypes());
+
 			if (resources != null) {
 				AppointmentProposal appointmentProposal = new AppointmentProposal(resources, treatmentType, from, to);
 				appointmentProposals.add(appointmentProposal);
 				proposedAppointments++;
 			}
-			
-			DateUtil.addSeconds(from, grid);
+
+			from = DateUtil.addSeconds(from, grid);
+			to = DateUtil.addSeconds(to, grid);
 		}
-		
+
 		return appointmentProposals;
 	}
 
-	public List<Resource> getResources(Date from, Date to, List<ResourceType> neededResourceTypes) {
-		List<Resource> resources = new ArrayList<>();
+	private List<Resource> findSuitableResources(List<? extends ResourceImpl> resources, ResourceType resourceType, Date from, Date to) {
+		List<Resource> suitableResources = new ArrayList<>();
+		
+		for (Resource resource : resources) {
+			if (resource.isSuitable(resourceType)) {
+				if (resource.isAvailable(from, to)) {
+					suitableResources.add(resource);
+				}
+			}
+		}	
+		return suitableResources;
+	}
+
+	public Map<ResourceType, List<Resource>> getResources(Date from, Date to, List<ResourceType> neededResourceTypes) {
+		/* List<Resource> resources = new ArrayList<>(); */
+		Map<ResourceType, List<Resource>> resources = new HashMap<>();
 		boolean foundResource = false;
 
 		for (ResourceType neededResourceType : neededResourceTypes) {
 			if (neededResourceType instanceof PhysicianType) {
 				List<Physician> physicians = physicianDao.getAll();
-
+				List<Resource> suitablePhysicians = findSuitableResources(physicians, neededResourceType, from, to);
+				if (suitablePhysicians.isEmpty()) {
+					return null;		
+				}
+/*				List<Resource> suitablePhysicians = new ArrayList<>();
 				for (Physician physician : physicians) {
 					if (physician.isSuitable(neededResourceType)) {
 						if (physician.isAvailable(from, to)) {
-							resources.add(physician);
+							suitablePhysicians.add(physician);
 							foundResource = true;
 						}
 					}
-				}
+				}*/
+				resources.put(neededResourceType, suitablePhysicians);
 
 			} else if (neededResourceType instanceof NurseType) {
 				List<Nurse> nurses = nurseDao.getAll();
-
-				for (Nurse nurse : nurses) {
+				List<Resource> suitableNurses = findSuitableResources(nurses, neededResourceType, from, to);
+				if (suitableNurses.isEmpty()) {
+					return null;		
+				}
+				resources.put(neededResourceType, suitableNurses);
+/*				for (Nurse nurse : nurses) {
 					if (nurse.isSuitable(neededResourceType)) {
 						if (nurse.isAvailable(from, to)) {
 							resources.add(nurse);
 							foundResource = true;
 						}
 					}
-				}
+				}*/
 			} else if (neededResourceType instanceof RoomType) {
 				List<Room> rooms = roomDao.getAll();
-
-				for (Room room : rooms) {
+				List<Resource> suitableRooms = findSuitableResources(rooms, neededResourceType, from, to);
+				if (suitableRooms.isEmpty()) {
+					return null;		
+				}
+				resources.put(neededResourceType, suitableRooms);
+/*				for (Room room : rooms) {
 					if (room.isSuitable(neededResourceType)) {
 						if (room.isAvailable(from, to)) {
 							resources.add(room);
 							foundResource = true;
 						}
 					}
-				}		
+				}*/
 			}
-			if (!foundResource) {
+/*			if (!foundResource) {
 				return null;
 			}
-			foundResource = false;
+			foundResource = false;*/
 		}
 		return resources;
 	}

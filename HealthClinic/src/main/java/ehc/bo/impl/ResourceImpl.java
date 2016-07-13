@@ -43,6 +43,11 @@ public class ResourceImpl extends ModifiableObject implements Resource {
 		getResourceAppointments().add(appointment);
 		/*appointment.addResource(this);*/
 	}
+	
+	@Override
+	public void removeAppointment(Appointment appointment) {
+		getResourceAppointments().remove(appointment);
+	}
 
 	@Override
 	public boolean isAvailable(Date from, Date to) {
@@ -60,10 +65,8 @@ public class ResourceImpl extends ModifiableObject implements Resource {
 		return true;
 	}
 	
-	private boolean isCollision(Date from1, Date to1, Date from2, Date to2) {
+	public boolean isCollision(Date from1, Date to1, Date from2, Date to2) {
 
 		return from1.after(from2) && from1.before(to2) || to1.after(from2) && to1.before(to2);
 	}
-	
-
 }

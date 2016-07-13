@@ -15,7 +15,6 @@ public class RoomType extends ResourceType {
 	
 	public RoomType(User executor) {
 		super(executor);
-	}
-	
+	}	
 
 }

@@ -8,6 +8,7 @@ import ehc.bo.impl.AppointmentProposal;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
+import ehc.bo.impl.PhysicianType;
 import ehc.bo.impl.ResourcesUtil;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;
@@ -15,7 +16,9 @@ import ehc.bo.impl.User;
 import ehc.hibernate.HibernateUtil;
 import ehc.util.DateUtil;
 
-public class ScheduleAppointmentNearestToGivenTime extends RootTestCase {
+
+//There are no other planned appointments
+public class ScheduleAppointmentForGivenTimeSuccessful extends RootTestCase {
 	private String personFirstName = "Jan";
 	private String personLastName = "Novak";
 	private String treatmentName = "Odstraňovanie pigmentov chrbát";
@@ -57,10 +60,17 @@ public class ScheduleAppointmentNearestToGivenTime extends RootTestCase {
         int countOfResources = getCountOfResources();
         HibernateUtil.commitTransaction();
         
-        AppointmentProposal appointmentProposal = appointmentProposals.get(0);    
+        AppointmentProposal appointmentProposal = appointmentProposals.get(0); 
+        
+     /*   assertTrue(appointmentProposal.getFrom().equals(when));*/  
             
         assertTrue(appointmentProposal.getFrom().equals(when) && 
-        		appointmentProposal.getResources().size() == countOfResources);      
+        		appointmentProposal.getResources().size() == 3);      
+	}
+	
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		tearDownSystem();
 	}
 
 }
