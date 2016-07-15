@@ -13,10 +13,43 @@ public class ResourcesUtil {
 	private PhysicianDao physicianDao = PhysicianDao.getInstance();
 	private NurseDao nurseDao = NurseDao.getInstance();
 	private RoomDao roomDao = RoomDao.getInstance();
+	private WorkTime workTime = new WorkTime();
+	
+	public ResourcesUtil() {
+		
+	}
+	
+	public ResourcesUtil(WorkTime workTime) {
+		super();
+		this.workTime = workTime;
+	}
 
-	public List<AppointmentProposal> getAppointmentProposals(Date from, TreatmentType treatmentType, int count) {
-		List<AppointmentProposal> appointmentProposals = new ArrayList<>();
+	private Date moveFromIfOutOfWorkTime(Date from, Date to) {
+		Date startWorkTime = workTime.getStartWorkTime(from);
+		Date endWorkTime = workTime.getEndWorkTime(to);
+		if (from.before(startWorkTime)) {
+			return startWorkTime;
+		} else if (to.after(endWorkTime)) {
+			Date nextDay = DateUtil.addDays(from, 1);
+			startWorkTime = workTime.getStartWorkTime(nextDay);
+			return startWorkTime;
+		}
+		return from;
+	}
 
+	public List<AppointmentProposal> getAppointmentProposals(Date from, Date to, TreatmentType treatmentType, int count) {
+	/*	if (DateUtil.addSeconds(from, treatmentType.getDuration()).after(to)) {
+			return null;
+		}*/
+		long appointmentDuration = (to.getTime()-from.getTime())/1000;
+		
+		if (appointmentDuration < treatmentType.getDuration()) {
+			return null;
+		}
+		
+		List<AppointmentProposal> appointmentProposals = new ArrayList<>();	
+		from = moveFromIfOutOfWorkTime(from, to);
+	    to = DateUtil.addSeconds(from, (int)appointmentDuration);
 		int proposedAppointments = 0;
 		// in seconds
 		int margin = 0;
@@ -24,9 +57,10 @@ public class ResourcesUtil {
 		int treatmentDuration = treatmentType.getDuration();
 		int grid = 30 * 60;
 
-		Date to = DateUtil.addSeconds(from, treatmentDuration + margin);
+	/*	Date to = DateUtil.addSeconds(from, treatmentDuration + margin);*/
 
 		while (proposedAppointments < count) {
+			
 			Map<ResourceType, List<Resource>> resources = getResources(from, to, treatmentType.getResourceTypes());
 
 			if (resources != null) {
