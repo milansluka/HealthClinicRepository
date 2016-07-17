@@ -10,7 +10,6 @@ import ehc.bo.impl.CompanyDao;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
-import ehc.bo.impl.PartyRole;
 import ehc.bo.impl.Physician;
 import ehc.bo.impl.PhysicianType;
 import ehc.bo.impl.ResourcePartyRole;

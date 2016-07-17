@@ -2,12 +2,11 @@ package ehc.bo.impl;
 
 public class Login {
 /*	 private boolean loginSuccess; */
-	 private UserDao userDao;
+	 private UserDao userDao = UserDao.getInstance();
 
 	public Login() {
 		super();
 /*		loginSuccess = false;*/
-		userDao = UserDao.getInstance();
 	}
 	
 	public User login(String name, String password) {

@@ -16,7 +16,6 @@ import ehc.bo.impl.User;
 import ehc.bo.impl.WorkTime;
 import ehc.hibernate.HibernateUtil;
 import ehc.util.DateUtil;
-import junit.framework.TestCase;
 
 public class ScheduleAppointmentForGivenTime_TimeAfterWorkTime_ScheduleForNextTime extends RootTestCase {
 	private String personFirstName = "Jan";

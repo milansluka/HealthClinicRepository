@@ -1,7 +1,5 @@
 package ehc.bo.impl;
 
-import java.util.Date;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -12,7 +10,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @PrimaryKeyJoinColumn(name = "id")
 public class Physician extends ResourcePartyRole {
 	PhysicianType type;
-
+	
 	protected Physician() {
 		super();
 	}
@@ -21,12 +19,6 @@ public class Physician extends ResourcePartyRole {
 		super(executor, source, target);
 		this.type = type;
 	}
-
-	/*
-	 * @ManyToOne
-	 * 
-	 * @JoinColumn(name = "physician_type_id")
-	 */
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "physician_type_id")
@@ -45,41 +37,8 @@ public class Physician extends ResourcePartyRole {
 	public boolean isCompetent(TreatmentType treatmentType) {
 		return true;
 	}
-
-/*	private boolean isCollision(Date from1, Date to1, Date from2, Date to2) {
-
-		return from1.after(from2) && from1.before(to2) || to1.after(from2) && to1.before(to2);
-	}*/
-
-	/* @Override */
-/*	public boolean isAvailable(Date from, Date to) {
-		for (Appointment appointment : resourceRole.getAppointments()) {
-			if (isCollision(from, to, appointment.getFrom(), appointment.getTo())) {
-				return false;
-			}
-		}
-
-		return true;
-	}*/
-
-/*	@Override
-	public boolean isSuitable(ResourceType resourceType) {
-		// TODO Auto-generated method stub
-		return false;
-	}*/
-
-	/*
-	 * @Override public boolean isSuitable(ResourceType resourceType) { // TODO
-	 * Auto-generated method stub return false; }
-	 */
-
-	/*
-	 * List<Skill> skills;
-	 * 
-	 * public List<Skill> getSkills() { return skills; }
-	 * 
-	 * public void setSkills(List<Skill> skills) { this.skills = skills; }
-	 * 
-	 * public void addSkill(Skill skill) { getSkills().add(skill); }
-	 */
+	
+	public void addSkill(Skill skill) {
+		getType().addSkill(skill);
+	}
 }

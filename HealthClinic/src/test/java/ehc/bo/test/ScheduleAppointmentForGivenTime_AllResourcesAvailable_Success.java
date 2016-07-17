@@ -1,6 +1,5 @@
 package ehc.bo.test;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -8,7 +7,6 @@ import ehc.bo.impl.AppointmentProposal;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
-import ehc.bo.impl.PhysicianType;
 import ehc.bo.impl.ResourcesUtil;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;
@@ -58,7 +56,6 @@ public class ScheduleAppointmentForGivenTime_AllResourcesAvailable_Success exten
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
 		ResourcesUtil resourcesUtil = new ResourcesUtil();
         List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentType, 1);
-        int countOfResources = getCountOfResources();
         HibernateUtil.commitTransaction();
         
         AppointmentProposal appointmentProposal = appointmentProposals.get(0); 

@@ -3,11 +3,8 @@ package ehc.bo.test;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map.Entry;
 
-import ehc.bo.Resource;
 import ehc.bo.impl.Appointment;
-import ehc.bo.impl.AppointmentProposal;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
@@ -15,9 +12,6 @@ import ehc.bo.impl.Nurse;
 import ehc.bo.impl.NurseDao;
 import ehc.bo.impl.Physician;
 import ehc.bo.impl.PhysicianDao;
-import ehc.bo.impl.ResourceImpl;
-import ehc.bo.impl.ResourceType;
-import ehc.bo.impl.ResourcesUtil;
 import ehc.bo.impl.Room;
 import ehc.bo.impl.RoomDao;
 import ehc.bo.impl.TreatmentType;
@@ -25,13 +19,10 @@ import ehc.bo.impl.TreatmentTypeDao;
 import ehc.bo.impl.User;
 import ehc.hibernate.HibernateUtil;
 import ehc.util.DateUtil;
-import junit.framework.TestCase;
 
 public class ResourceIsNotAvailable extends RootTestCase {
 	private String personFirstName = "Jan";
 	private String personLastName = "Novak";
-	private String treatmentName = "Odstraňovanie pigmentov chrbát";
-	private Date when = DateUtil.date(2016, 7, 7, 7, 30, 0);
 	private TreatmentTypeDao treatmentTypeDao = TreatmentTypeDao.getInstance();
 	private IndividualDao individualDao = IndividualDao.getInstance();
 	private PhysicianDao physicianDao = PhysicianDao.getInstance();
@@ -110,22 +101,13 @@ public class ResourceIsNotAvailable extends RootTestCase {
 	}
 	
 	public void testApp() {	
-		HibernateUtil.beginTransaction();
-		Login login = new Login();
-		User executor = login.login("admin", "admin");
-		Individual individual = individualDao.findByFirstAndLastName(personFirstName, personLastName);
-		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
-		
-		
+		HibernateUtil.beginTransaction();	
 	/*	Appointment appointment = new Appointment(executor, when, DateUtil.addSeconds(when, 60*60), treatmentType, individual);*/
 			
-		Date from1 = DateUtil.date(2016, 7, 7, 7, 0, 0);
-		Date to1 = DateUtil.date(2016, 7, 7, 8, 0, 0);
 		Date from2 = DateUtil.date(2016, 7, 7, 7, 30, 0);
 		Date to2 = DateUtil.date(2016, 7, 7, 8, 30, 0);
 		
 		Room room = roomDao.findByName("test room 1");	
-		ResourceImpl resource = new ResourceImpl(executor);
 		boolean roomIsNotAvailable = !room.isAvailable(from2, to2);	
 		HibernateUtil.commitTransaction();
 			

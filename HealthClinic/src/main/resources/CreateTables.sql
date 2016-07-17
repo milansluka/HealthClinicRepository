@@ -21,6 +21,8 @@ Create table "permission"
 Create table "appointment"
 (
 	"id" BigSerial NOT NULL,
+	"previous" Bigint,
+	"next" Bigint,
 	"created_by" Bigint NOT NULL,
 	"from" Timestamp NOT NULL,
 	"to" Timestamp NOT NULL,
@@ -123,15 +125,17 @@ Create table "skill"
 	"created_by" Bigint NOT NULL,
 	"name" Varchar(256) NOT NULL,
 	"created_on" Timestamp NOT NULL Default CURRENT_DATE,
+	"modified_by" Bigint,
+	"modified_on" Timestamp,
  primary key ("id")
 ) Without Oids;
 
 
 Create table "skill_assignment"
 (
-	"physician_type_id" Bigint NOT NULL,
+	"resource_type_with_skills_id" Bigint NOT NULL,
 	"skill_id" Bigint NOT NULL,
- primary key ("physician_type_id","skill_id")
+ primary key ("resource_type_with_skills_id","skill_id")
 ) Without Oids;
 
 Create table "receptionist"
@@ -212,6 +216,11 @@ Create table "resource_type"
  primary key ("id")
 ) Without Oids;
 
+Create table "resource_type_with_skills"
+(
+	"id" Bigint NOT NULL,
+ primary key ("id")
+) Without Oids;
 
 Create table "resource_type_assignment"
 (
@@ -325,6 +334,10 @@ Alter table "appointment" add  foreign key ("individual_id") references "individ
 
 Alter table "appointment" add  foreign key ("treatment_id") references "treatment_type" ("id") on update restrict on delete restrict;
 
+Alter table "appointment" add  foreign key ("next") references "appointment" ("id") on update restrict on delete restrict;
+
+Alter table "appointment" add  foreign key ("previous") references "appointment" ("id") on update restrict on delete restrict;
+
 Alter table "party_role" add  foreign key ("source") references "party" ("id") on update restrict on delete restrict;
 
 Alter table "party_role" add  foreign key ("target") references "party" ("id") on update restrict on delete restrict;
@@ -353,7 +366,7 @@ Alter table "permission" add  foreign key ("permission_profile_id") references "
 
 Alter table "skill_assignment" add  foreign key ("skill_id") references "skill" ("id") on update restrict on delete restrict;
 
-Alter table "skill_assignment" add  foreign key ("physician_type_id") references "physician_type" ("id") on update restrict on delete restrict;
+Alter table "skill_assignment" add  foreign key ("resource_type_with_skills_id") references "resource_type_with_skills" ("id") on update restrict on delete restrict;
 
 Alter table "room" add  foreign key ("room_type_id") references "room_type" ("id") on update restrict on delete restrict;
 
@@ -366,6 +379,12 @@ Alter table "room_type" add  foreign key ("id") references "resource_type" ("id"
 Alter table "resource_type" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
 
 Alter table "resource_type" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "resource_type_with_skills" add  foreign key ("id") references "resource_type" ("id") on update restrict on delete restrict;
+
+Alter table "skill" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "skill" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
 
 Alter table "resource_type_assignment" add  foreign key ("treatment_type_id") references "treatment_type" ("id") on update restrict on delete restrict;
 

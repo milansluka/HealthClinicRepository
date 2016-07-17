@@ -57,6 +57,7 @@
 		<mapping class="ehc.bo.impl.Nurse" />
 		<mapping class="ehc.bo.impl.NurseType" />
 		<mapping class="ehc.bo.impl.ResourceType" />
+		<mapping class="ehc.bo.impl.ResourceTypeWithSkills" />
 		<mapping class="ehc.bo.impl.ResourceImpl" />
 		<!-- <mapping class="ehc.bo.impl.Device" /> -->
 		<!-- <mapping class="ehc.bo.impl.UserRight" /> <mapping class="ehc.bo.impl.Person" 

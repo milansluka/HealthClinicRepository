@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import ehc.bo.Resource;
@@ -27,9 +28,21 @@ public class Appointment extends BaseObject {
 	Individual individual;
 	TreatmentType treatmentType;
 	List<Resource> resources = new ArrayList<Resource>();
+	Appointment previous = null;
+	Appointment next = null;
+/*	Appointment current = this;*/
 
 	protected Appointment() {
 		super();
+	}
+	
+	public Appointment(User executor, Date from, Date to, TreatmentType treatmentType, Individual individual, AppointmentState state) {
+		super(executor);
+		this.from = from;
+		this.to = to;
+		assignTreatmentType(treatmentType);
+		this.individual = individual;
+		this.state = state;
 	}
 
 	public Appointment(User executor, Date from, Date to, TreatmentType treatmentType, Individual individual) {
@@ -77,6 +90,35 @@ public class Appointment extends BaseObject {
 	public void setTo(Date to) {
 		this.to = to;
 	}
+	
+    @OneToOne
+    @JoinColumn(name = "previous")
+	public Appointment getPrevious() {
+		return previous;
+	}
+
+	public void setPrevious(Appointment previous) {
+		this.previous = previous;
+	}
+
+	@OneToOne
+	@JoinColumn(name = "next")
+	public Appointment getNext() {
+		return next;
+	}
+
+	public void setNext(Appointment next) {
+		this.next = next;
+	}
+	
+/*	@OneToOne
+	public Appointment getCurrent() {
+		return current;
+	}
+
+	public void setCurrent(Appointment current) {
+		this.current = current;
+	}*/
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "individual_id")

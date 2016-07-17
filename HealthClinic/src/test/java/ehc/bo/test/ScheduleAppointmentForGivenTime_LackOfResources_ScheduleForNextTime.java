@@ -3,7 +3,6 @@ package ehc.bo.test;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import ehc.bo.Resource;
@@ -22,7 +21,6 @@ import ehc.bo.impl.TreatmentTypeDao;
 import ehc.bo.impl.User;
 import ehc.hibernate.HibernateUtil;
 import ehc.util.DateUtil;
-import junit.framework.TestCase;
 
 //
 public class ScheduleAppointmentForGivenTime_LackOfResources_ScheduleForNextTime extends RootTestCase {

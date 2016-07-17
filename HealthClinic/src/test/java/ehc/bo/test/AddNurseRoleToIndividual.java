@@ -12,7 +12,6 @@ import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
 import ehc.bo.impl.Nurse;
 import ehc.bo.impl.NurseType;
-import ehc.bo.impl.PartyRole;
 import ehc.bo.impl.ResourcePartyRole;
 import ehc.bo.impl.User;
 import ehc.hibernate.HibernateUtil;

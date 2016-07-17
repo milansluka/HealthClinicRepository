@@ -8,7 +8,6 @@ import ehc.bo.impl.Appointment;
 import ehc.bo.impl.AppointmentDao;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.Login;
-import ehc.bo.impl.PartyRole;
 import ehc.bo.impl.Physician;
 import ehc.bo.impl.PhysicianDao;
 import ehc.bo.impl.Room;

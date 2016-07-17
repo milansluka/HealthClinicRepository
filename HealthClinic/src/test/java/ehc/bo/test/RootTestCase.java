@@ -3,9 +3,6 @@ package ehc.bo.test;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Session;
-
-import ehc.bo.Resource;
 import ehc.bo.impl.Appointment;
 import ehc.bo.impl.AppointmentDao;
 import ehc.bo.impl.Company;
@@ -19,7 +16,6 @@ import ehc.bo.impl.NurseType;
 import ehc.bo.impl.Physician;
 import ehc.bo.impl.PhysicianDao;
 import ehc.bo.impl.PhysicianType;
-import ehc.bo.impl.ResourceImpl;
 import ehc.bo.impl.ResourceType;
 import ehc.bo.impl.Room;
 import ehc.bo.impl.RoomDao;
@@ -225,7 +221,6 @@ public class RootTestCase extends TestCase {
 		HibernateUtil.beginTransaction();
 		Appointment appointment = appointmentDao.findById(id);
 		/*appointment.setResources(new ArrayList<>());	*/
-		Session session = HibernateUtil.getCurrentSessionWithTransaction();	
 		appointment.removeResources();
 		HibernateUtil.saveOrUpdate(appointment);
 /*		for (Resource resource : appointment.getResources()) {

@@ -8,9 +8,7 @@ import javax.persistence.OneToOne;
 @Entity
 public class Nurse extends ResourcePartyRole {
 	NurseType type;
-	/*List<Appointment> appointments;*/
 	
-	/*ResourceImpl resourceRole = new ResourceImpl();*/
 	
 	protected Nurse() {
 		super();
@@ -31,8 +29,8 @@ public class Nurse extends ResourcePartyRole {
 		this.type = type;
 	}
 	
-	public void addAppointment(Appointment appointment) {
-	/*	getAppointments().add(appointment);*/
+	public void addSkill(Skill skill) {
+		getType().addSkill(skill);
 	}
 
 /*	@Override
