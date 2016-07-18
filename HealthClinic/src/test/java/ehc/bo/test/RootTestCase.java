@@ -3,6 +3,8 @@ package ehc.bo.test;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Hibernate;
+
 import ehc.bo.impl.Appointment;
 import ehc.bo.impl.AppointmentDao;
 import ehc.bo.impl.Company;
@@ -20,6 +22,8 @@ import ehc.bo.impl.ResourceType;
 import ehc.bo.impl.Room;
 import ehc.bo.impl.RoomDao;
 import ehc.bo.impl.RoomType;
+import ehc.bo.impl.Skill;
+import ehc.bo.impl.SkillDao;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;
 import ehc.bo.impl.User;
@@ -33,8 +37,10 @@ public class RootTestCase extends TestCase {
 	private List<Long> treatmentTypeIds = new ArrayList<Long>();
 	private List<Long> individualIds = new ArrayList<Long>();
 	private List<Long> appointmentIds = new ArrayList<Long>();
+	private List<Long> skillIds = new ArrayList<Long>();
 	
 	private AppointmentDao appointmentDao = AppointmentDao.getInstance();
+	private SkillDao skillDao = SkillDao.getInstance();
 	
 	protected long addIndividual(String firstName, String lastName) {
 		HibernateUtil.beginTransaction();
@@ -58,6 +64,31 @@ public class RootTestCase extends TestCase {
 		
 		return rooms.size() + nurses.size() + physicians.size();
 	}
+	
+	public void addPhysician(String firstName, String lastName, List<String> skillNames) {
+		HibernateUtil.beginTransaction();
+		Login login = new Login();
+		User executor = login.login("admin", "admin");	
+		Individual person = new Individual(executor, firstName, lastName);
+		long id = (long)HibernateUtil.save(person);
+		physicianIds.add(id);	
+		HibernateUtil.commitTransaction();
+		
+		HibernateUtil.beginTransaction();	
+		IndividualDao individualDao = IndividualDao.getInstance();
+		CompanyDao companyDao = CompanyDao.getInstance();
+		person = individualDao.findByFirstAndLastName(firstName, lastName);
+		Company company = companyDao.findByName("Company name");
+		PhysicianType physicianType = new PhysicianType(executor);
+			
+		for (String skillName : skillNames) {
+			Skill skill = getSkill(skillName);
+			physicianType.addSkill(skill);
+		}	
+		Physician physician = new Physician(executor, physicianType, person, company);
+		HibernateUtil.save(physician);
+		HibernateUtil.commitTransaction();
+	}
 
 	public void addPhysician(String firstName, String lastName) {
 
@@ -68,6 +99,8 @@ public class RootTestCase extends TestCase {
 		Individual person = new Individual(executor, firstName, lastName);
 		long id = (long)HibernateUtil.save(person);
 		physicianIds.add(id);
+		
+		
 
 		IndividualDao individualDao = IndividualDao.getInstance();
 		CompanyDao companyDao = CompanyDao.getInstance();
@@ -86,6 +119,17 @@ public class RootTestCase extends TestCase {
 	/*	physicianIds.add(id);*/
 
 		HibernateUtil.commitTransaction();
+	}
+	
+	public Skill addSkill(String name) {
+		/*HibernateUtil.beginTransaction();*/
+		Login login = new Login();
+		User executor = login.login("admin", "admin");
+		Skill skill = new Skill(executor, name);
+		long id = (long) HibernateUtil.save(skill);
+		skillIds.add(id);		
+	/*	HibernateUtil.commitTransaction();*/	
+		return skill;
 	}
 
 	public void addRoom(String name) {
@@ -137,6 +181,19 @@ public class RootTestCase extends TestCase {
 
 		HibernateUtil.commitTransaction();
 
+	}
+	
+	protected void removeSkill(long id) {
+		SkillDao skillDao = SkillDao.getInstance();
+		
+		HibernateUtil.beginTransaction();
+		Skill skill = skillDao.findById(id);
+		
+		if (skill != null) {
+			skill.removeResourceTypes();
+			HibernateUtil.delete(skill);
+		}
+		HibernateUtil.commitTransaction();
 	}
 
 	protected void removeRoom(long id) {
@@ -196,8 +253,16 @@ public class RootTestCase extends TestCase {
 	}
 
 	protected void addPhysicians() {
-		addPhysician("Mária", "Petrášová");
-		addPhysician("Marika", "Piršelová");
+		List<String> skillNames1 = new ArrayList<>();
+		skillNames1.add("test skill1");
+		skillNames1.add("test skill2");
+		skillNames1.add("test skill3");
+		addPhysician("Mária", "Petrášová", skillNames1);
+		
+		List<String> skillNames2 = new ArrayList<>();
+		skillNames2.add("test skill1");
+		skillNames2.add("test skill2");
+		addPhysician("Marika", "Piršelová", skillNames2);
 	}
 
 	protected void addRooms() {
@@ -205,10 +270,22 @@ public class RootTestCase extends TestCase {
 		addRoom("test room 2");
 		addRoom("test room 3");
 	}
+	
+	protected void addSKills() {
+		addSkill("test skill1");
+		addSkill("test skill2");
+		addSkill("test skill3");
+	}
 
 	protected void addNurses() {
 		addNurse("Zuzana", "Vanková");
 
+	}
+	
+	protected void removeSkills() {
+		for (long id : skillIds) {
+			removeSkill(id);
+		}	
 	}
 	
 	protected void removeAppointments() {
@@ -322,21 +399,56 @@ public class RootTestCase extends TestCase {
 		HibernateUtil.commitTransaction();
 	}
 	
-	
+	protected Skill getSkill(String skillName) {
+	/*	HibernateUtil.beginTransaction();*/
+		Skill skill = skillDao.findByName(skillName);
+		
+		if (skill == null) {
+			skill = addSkill(skillName);
+		}
+		
+		Hibernate.initialize(skill.getResourceTypes());	
+	/*	HibernateUtil.commitTransaction();*/
+		
+		return skill;
+	}
 
 	protected void addTreatmentTypes() {
 		HibernateUtil.beginTransaction();
 		Login login = new Login();
 		User executor = login.login("admin", "admin");
 		
-		addTreatmentType("Odstraňovanie pigmentov chrbát", "Odstránenie pigmentových škvŕn", 80, 60*60);
+		List<ResourceType> resourceTypes1 = new ArrayList<>();
+		PhysicianType physicianType1 = new PhysicianType(executor);
+	    NurseType nurseType1 = new NurseType(executor);
+		RoomType roomType1 = new RoomType(executor);
 		
-		List<ResourceType> resourceTypes = new ArrayList<>();
-		resourceTypes.add(new PhysicianType(executor));
-		resourceTypes.add(new NurseType(executor));
-		resourceTypes.add(new RoomType(executor));
+		physicianType1.addSkill(getSkill("test skill3"));
 		
-		addTreatmentType("OxyGeneo - tvár", "OxyGeneo", resourceTypes, 60*60);
+		resourceTypes1.add(physicianType1);
+		resourceTypes1.add(nurseType1);
+		resourceTypes1.add(roomType1);
+		HibernateUtil.commitTransaction();
+		
+		HibernateUtil.beginTransaction();
+		login = new Login();
+		executor = login.login("admin", "admin");
+		
+		List<ResourceType> resourceTypes2 = new ArrayList<>();
+		PhysicianType physicianType2 = new PhysicianType(executor);
+		NurseType nurseType2 = new NurseType(executor);
+		RoomType roomType2 = new RoomType(executor);
+		
+		physicianType2.addSkill(getSkill("test skill1"));
+		physicianType2.addSkill(getSkill("test skill2"));
+		
+		resourceTypes2.add(physicianType2);
+		resourceTypes2.add(nurseType2);
+		resourceTypes2.add(roomType2);
+		HibernateUtil.commitTransaction();
+		
+		addTreatmentType("Odstraňovanie pigmentov chrbát", "Odstránenie pigmentových škvŕn", resourceTypes1, 60*60);
+		addTreatmentType("OxyGeneo - tvár", "OxyGeneo", resourceTypes2, 60*60);
 	}
 
 	protected void setUpSystem() {
@@ -354,6 +466,7 @@ public class RootTestCase extends TestCase {
 		removeNurses();
 		removeIndividuals();
 		removeTreatmentTypes();
+		removeSkills();
 	}
 
 	public void testApp() {

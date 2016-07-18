@@ -1,10 +1,14 @@
 package ehc.bo.impl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import ehc.bo.Resource;
 import ehc.util.DateUtil;
@@ -14,11 +18,11 @@ public class ResourcesUtil {
 	private NurseDao nurseDao = NurseDao.getInstance();
 	private RoomDao roomDao = RoomDao.getInstance();
 	private WorkTime workTime = new WorkTime();
-	
+
 	public ResourcesUtil() {
-		
+
 	}
-	
+
 	public ResourcesUtil(WorkTime workTime) {
 		super();
 		this.workTime = workTime;
@@ -37,19 +41,21 @@ public class ResourcesUtil {
 		return from;
 	}
 
-	public List<AppointmentProposal> getAppointmentProposals(Date from, Date to, TreatmentType treatmentType, int count) {
-	/*	if (DateUtil.addSeconds(from, treatmentType.getDuration()).after(to)) {
-			return null;
-		}*/
-		long appointmentDuration = (to.getTime()-from.getTime())/1000;
-		
+	public List<AppointmentProposal> getAppointmentProposals(Date from, Date to, TreatmentType treatmentType,
+			int count) {
+		/*
+		 * if (DateUtil.addSeconds(from, treatmentType.getDuration()).after(to))
+		 * { return null; }
+		 */
+		long appointmentDuration = (to.getTime() - from.getTime()) / 1000;
+
 		if (appointmentDuration < treatmentType.getDuration()) {
 			return null;
 		}
-		
-		List<AppointmentProposal> appointmentProposals = new ArrayList<>();	
+
+		List<AppointmentProposal> appointmentProposals = new ArrayList<>();
 		from = moveFromIfOutOfWorkTime(from, to);
-	    to = DateUtil.addSeconds(from, (int)appointmentDuration);
+		to = DateUtil.addSeconds(from, (int) appointmentDuration);
 		int proposedAppointments = 0;
 		// in seconds
 		int margin = 0;
@@ -57,11 +63,11 @@ public class ResourcesUtil {
 		int treatmentDuration = treatmentType.getDuration();
 		int grid = 30 * 60;
 
-	/*	Date to = DateUtil.addSeconds(from, treatmentDuration + margin);*/
+		/* Date to = DateUtil.addSeconds(from, treatmentDuration + margin); */
 
 		while (proposedAppointments < count) {
-			
-			Map<ResourceType, List<Resource>> resources = getResources(from, to, treatmentType.getResourceTypes());
+
+			Map<ResourceType, SortedSet<Resource>> resources = getResources(from, to, treatmentType.getResourceTypes());
 
 			if (resources != null) {
 				AppointmentProposal appointmentProposal = new AppointmentProposal(resources, treatmentType, from, to);
@@ -76,77 +82,70 @@ public class ResourcesUtil {
 		return appointmentProposals;
 	}
 
-	private List<Resource> findSuitableResources(List<? extends ResourceImpl> resources, ResourceType resourceType, Date from, Date to) {
-		List<Resource> suitableResources = new ArrayList<>();
-		
+	private SortedSet<Resource> findSuitableResources(List<? extends ResourceImpl> resources, ResourceType resourceType,
+			Date from, Date to, Comparator<? extends ResourceImpl> comparator) {
+		SortedSet<Resource> suitableResources = new TreeSet(comparator);
+
 		for (Resource resource : resources) {
 			if (resource.isSuitable(resourceType)) {
 				if (resource.isAvailable(from, to)) {
 					suitableResources.add(resource);
 				}
 			}
-		}	
+		}
 		return suitableResources;
 	}
 
-	public Map<ResourceType, List<Resource>> getResources(Date from, Date to, List<ResourceType> neededResourceTypes) {
+	public Map<ResourceType, SortedSet<Resource>> getResources(Date from, Date to, List<ResourceType> neededResourceTypes) {
 		/* List<Resource> resources = new ArrayList<>(); */
-		Map<ResourceType, List<Resource>> resources = new HashMap<>();
+		Map<ResourceType, SortedSet<Resource>> resources = new HashMap<>();
 		boolean foundResource = false;
+		List<Physician> physicians = physicianDao.getAll();
+		List<Nurse> nurses = nurseDao.getAll();
+		List<Room> rooms = roomDao.getAll();
 
 		for (ResourceType neededResourceType : neededResourceTypes) {
 			if (neededResourceType instanceof PhysicianType) {
-				List<Physician> physicians = physicianDao.getAll();
-				List<Resource> suitablePhysicians = findSuitableResources(physicians, neededResourceType, from, to);
+				/* Set<Physician> physicians = physicianDao.getAll(); */
+				SortedSet<Resource> suitablePhysicians = findSuitableResources(physicians, neededResourceType, from, to,
+						new PhysicianSuitabilityComparator());
 				if (suitablePhysicians.isEmpty()) {
-					return null;		
+					return null;
 				}
-/*				List<Resource> suitablePhysicians = new ArrayList<>();
-				for (Physician physician : physicians) {
-					if (physician.isSuitable(neededResourceType)) {
-						if (physician.isAvailable(from, to)) {
-							suitablePhysicians.add(physician);
-							foundResource = true;
-						}
-					}
-				}*/
 				resources.put(neededResourceType, suitablePhysicians);
 
 			} else if (neededResourceType instanceof NurseType) {
-				List<Nurse> nurses = nurseDao.getAll();
-				List<Resource> suitableNurses = findSuitableResources(nurses, neededResourceType, from, to);
+				/* Set<Nurse> nurses = nurseDao.getAll(); */
+				SortedSet<Resource> suitableNurses = findSuitableResources(nurses, neededResourceType, from, to,
+						new NurseSuitabilityComparator());
 				if (suitableNurses.isEmpty()) {
-					return null;		
+					return null;
 				}
 				resources.put(neededResourceType, suitableNurses);
-/*				for (Nurse nurse : nurses) {
-					if (nurse.isSuitable(neededResourceType)) {
-						if (nurse.isAvailable(from, to)) {
-							resources.add(nurse);
-							foundResource = true;
-						}
-					}
-				}*/
+				/*
+				 * for (Nurse nurse : nurses) { if
+				 * (nurse.isSuitable(neededResourceType)) { if
+				 * (nurse.isAvailable(from, to)) { resources.add(nurse);
+				 * foundResource = true; } } }
+				 */
 			} else if (neededResourceType instanceof RoomType) {
-				List<Room> rooms = roomDao.getAll();
-				List<Resource> suitableRooms = findSuitableResources(rooms, neededResourceType, from, to);
+				/* Set<Room> rooms = roomDao.getAll(); */
+				SortedSet<Resource> suitableRooms = findSuitableResources(rooms, neededResourceType, from, to,
+						new RoomSuitabilityComparator());
 				if (suitableRooms.isEmpty()) {
-					return null;		
+					return null;
 				}
 				resources.put(neededResourceType, suitableRooms);
-/*				for (Room room : rooms) {
-					if (room.isSuitable(neededResourceType)) {
-						if (room.isAvailable(from, to)) {
-							resources.add(room);
-							foundResource = true;
-						}
-					}
-				}*/
+				/*
+				 * for (Room room : rooms) { if
+				 * (room.isSuitable(neededResourceType)) { if
+				 * (room.isAvailable(from, to)) { resources.add(room);
+				 * foundResource = true; } } }
+				 */
 			}
-/*			if (!foundResource) {
-				return null;
-			}
-			foundResource = false;*/
+			/*
+			 * if (!foundResource) { return null; } foundResource = false;
+			 */
 		}
 		return resources;
 	}

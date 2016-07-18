@@ -3,6 +3,8 @@ package ehc.bo.test;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
 import java.util.Map.Entry;
 
 import ehc.bo.Resource;
@@ -81,8 +83,8 @@ public class ScheduleAppointmentForGivenTime_LackOfResources_ScheduleForNextTime
 		/*Date to = DateUtil.date(2016, 7, 7, 8, 30, 0);*/
 		List<Resource> resources = new ArrayList<>();
 
-		for (Entry<ResourceType, List<Resource>> entry : appointmentProposal.getResources().entrySet()) {
-			resources.add(entry.getValue().get(0));
+		for (Entry<ResourceType, SortedSet<Resource>> entry : appointmentProposal.getResources().entrySet()) {
+			resources.add(entry.getValue().first());
 		}
 
 		Appointment appointment = new Appointment(executor, when, to, treatmentType, individual);
@@ -108,7 +110,7 @@ public class ScheduleAppointmentForGivenTime_LackOfResources_ScheduleForNextTime
 		int countOfResources = getCountOfResources();
 
 		Room room = roomDao.findByName("test room 1");
-		ResourceImpl resource = new ResourceImpl(executor);
+	/*	ResourceImpl resource = new ResourceImpl(executor);*/
 
 		/*Date to = DateUtil.date(2016, 7, 7, 9, 0, 0);*/
 		boolean roomIsNotAvailable = !room.isAvailable(when, to);

@@ -4,16 +4,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
 
 import ehc.bo.Resource;
 
 public class AppointmentProposal {
-	Map<ResourceType, List<Resource>> resources = new HashMap<>();
+	Map<ResourceType, SortedSet<Resource>> resources = new HashMap<>();
     TreatmentType treatmentType;
     Date from;
     Date to;
      
-	public AppointmentProposal(Map<ResourceType, List<Resource>> resources, TreatmentType treatmentType, Date from, Date to) {
+	public AppointmentProposal(Map<ResourceType, SortedSet<Resource>> resources, TreatmentType treatmentType, Date from, Date to) {
 		super();
 		this.resources = resources;
 		this.treatmentType = treatmentType;
@@ -21,10 +23,10 @@ public class AppointmentProposal {
 		this.to = to;
 	}
 	
-	public Map<ResourceType, List<Resource>> getResources() {
+	public Map<ResourceType, SortedSet<Resource>> getResources() {
 		return resources;
 	}
-	public void setResources(Map<ResourceType, List<Resource>> resources) {
+	public void setResources(Map<ResourceType, SortedSet<Resource>> resources) {
 		this.resources = resources;
 	}
 	public TreatmentType getTreatmentType() {

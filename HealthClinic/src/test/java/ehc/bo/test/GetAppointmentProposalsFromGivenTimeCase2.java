@@ -2,15 +2,15 @@ package ehc.bo.test;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
 import java.util.Map;
+import java.util.SortedSet;
 
 import ehc.bo.Resource;
 import ehc.bo.impl.AppointmentProposal;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
+import ehc.bo.impl.Physician;
 import ehc.bo.impl.PhysicianType;
 import ehc.bo.impl.ResourceType;
 import ehc.bo.impl.ResourcesUtil;
@@ -20,10 +20,10 @@ import ehc.bo.impl.User;
 import ehc.hibernate.HibernateUtil;
 import ehc.util.DateUtil;
 
-public class GetAppointmentProposalsFromGivenTime extends RootTestCase {
+public class GetAppointmentProposalsFromGivenTimeCase2 extends RootTestCase {
 	private IndividualDao individualDao = IndividualDao.getInstance();
 	private TreatmentTypeDao treatmentTypeDao = TreatmentTypeDao.getInstance();
-	
+
 	protected void setUp() throws Exception {
 		super.setUp();
 		
@@ -35,7 +35,7 @@ public class GetAppointmentProposalsFromGivenTime extends RootTestCase {
 	public void testApp() {	
 		String firstName = "Janko"; 
 		String lastName = "Mrkvicka";
-		String treatmentName = "Odstraňovanie pigmentov chrbát";
+		String treatmentName = "OxyGeneo - tvár";
 		Date when = DateUtil.date(2016, 7, 19, 10, 0, 0);
 		Login login = new Login();
 
@@ -49,15 +49,19 @@ public class GetAppointmentProposalsFromGivenTime extends RootTestCase {
         List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentType, 1);
         AppointmentProposal appointmentProposal = appointmentProposals.get(0);
         int countOfPhysicians = 0;
-        
+        Physician physician = null;
         for (Map.Entry<ResourceType, SortedSet<Resource>> entry : appointmentProposal.getResources().entrySet()) {
         	if (entry.getKey() instanceof PhysicianType) {
-        		countOfPhysicians = entry.getValue().size();		
+        		countOfPhysicians = entry.getValue().size();
+        		physician = (Physician)entry.getValue().first();
         	}
-        }     
-        HibernateUtil.commitTransaction();
+        }    
         
-        assertTrue(countOfPhysicians == 1);
+        Individual recommendedPhysician = (Individual)physician.getSource();   
+        HibernateUtil.commitTransaction();
+       
+        assertTrue(countOfPhysicians == 2 && recommendedPhysician.getFirstName().equals("Marika") 
+        		&& recommendedPhysician.getName().equals("Piršelová"));
 
 	}
 
@@ -65,5 +69,4 @@ public class GetAppointmentProposalsFromGivenTime extends RootTestCase {
 		super.tearDown();
 		tearDownSystem();
 	}
-
 }

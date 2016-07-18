@@ -10,7 +10,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @PrimaryKeyJoinColumn(name = "id")
 public class Physician extends ResourcePartyRole {
 	PhysicianType type;
-	
+
 	protected Physician() {
 		super();
 	}
@@ -30,15 +30,22 @@ public class Physician extends ResourcePartyRole {
 		this.type = type;
 	}
 
-	public boolean isCompetent(PhysicianType type) {
-		return true;
-	}
+	/*
+	 * public boolean isCompetent(PhysicianType type) { return true; }
+	 * 
+	 * public boolean isCompetent(TreatmentType treatmentType) { return true; }
+	 */
 
-	public boolean isCompetent(TreatmentType treatmentType) {
-		return true;
-	}
-	
 	public void addSkill(Skill skill) {
 		getType().addSkill(skill);
+	}
+
+	@Override
+	public boolean isSuitable(ResourceType resourceType) {
+		if (!(resourceType instanceof PhysicianType)) {
+			return false;		
+		}
+		PhysicianType physicianType = (PhysicianType)resourceType;		
+		return getType().containsSkills(physicianType.getSkills());
 	}
 }

@@ -8,8 +8,7 @@ import javax.persistence.OneToOne;
 @Entity
 public class Nurse extends ResourcePartyRole {
 	NurseType type;
-	
-	
+		
 	protected Nurse() {
 		super();
 	}
@@ -32,6 +31,13 @@ public class Nurse extends ResourcePartyRole {
 	public void addSkill(Skill skill) {
 		getType().addSkill(skill);
 	}
+
+	@Override
+	public boolean isSuitable(ResourceType resourceType) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 
 /*	@Override
 	public boolean isAvailable(Date from, Date to) {

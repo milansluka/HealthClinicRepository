@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "resource_party_role")
-public class ResourcePartyRole extends ResourceImpl {
+public abstract class ResourcePartyRole extends ResourceImpl {
 	Party source;
 	Party target;
 	
@@ -44,5 +44,6 @@ public class ResourcePartyRole extends ResourceImpl {
 		this.target = target;
 	}
 	
-	
+	@Override
+	public abstract boolean isSuitable(ResourceType resourceType);	
 }

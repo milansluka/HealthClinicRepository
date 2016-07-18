@@ -9,6 +9,8 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
 
+import ehc.bo.Resource;
+
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED) 
 public class Skill extends ModifiableObject {
@@ -45,17 +47,20 @@ public class Skill extends ModifiableObject {
 	public void addResourceType(ResourceTypeWithSkills resourceType) {
 		getResourceTypes().add(resourceType);
 	}
-
-/*	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "skills")
-	public List<PhysicianType> getPhysicianTypes() {
-		return physicianTypes;
+	
+	public void removeResourceType(ResourceTypeWithSkills resourceType) {
+	/*	if (resource == null) {
+			return;
+		}
+		getResources().remove(resource);*/
+		resourceType.removeSkill(this);	
+	}
+	
+	public void removeResourceTypes() {
+		for (ResourceTypeWithSkills resourceType : getResourceTypes()) {
+			removeResourceType(resourceType);
+		}
 	}
 
-	public void setPhysicianTypes(List<PhysicianType> physicianTypes) {
-		this.physicianTypes = physicianTypes;
-	}
 
-	public void addPhysicianType(PhysicianType physicianType) {
-		getPhysicianTypes().add(physicianType);
-	}*/
 }

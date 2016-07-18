@@ -16,7 +16,7 @@ import ehc.bo.Resource;
 @Entity
 @Table(name = "resource")
 @Inheritance(strategy=InheritanceType.JOINED) 
-public class ResourceImpl extends ModifiableObject implements Resource {
+public abstract class ResourceImpl extends ModifiableObject implements Resource {
 	List<Appointment> resourceAppointments = new ArrayList<Appointment>();
 		
 	protected ResourceImpl() {
@@ -60,10 +60,7 @@ public class ResourceImpl extends ModifiableObject implements Resource {
 	}
 
 	@Override
-	public boolean isSuitable(ResourceType resourceType) {
-		// TODO Auto-generated method stub
-		return true;
-	}
+	public abstract boolean isSuitable(ResourceType resourceType);
 	
 	public boolean isCollision(Date from1, Date to1, Date from2, Date to2) {
 

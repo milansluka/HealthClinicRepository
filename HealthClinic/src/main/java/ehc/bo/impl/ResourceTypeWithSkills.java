@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
+import ehc.bo.Resource;
+
 @Entity
 @Table(name = "resource_type_with_skills")
 @PrimaryKeyJoinColumn(name = "id")
@@ -48,5 +50,21 @@ public class ResourceTypeWithSkills extends ResourceType {
 		getSkills().add(skill);
 		skill.addResourceType(this);
 	}
-
+	
+	public void addSkills(List<Skill> skills) {	
+		if (skills == null) {
+			return;
+		}
+		for (Skill skill : skills) {
+			addSkill(skill);
+		}	
+	}
+	
+	public void removeSkill(Skill skill) {
+		getSkills().remove(skill);
+	}
+	
+	public boolean containsSkills(List<Skill> skills) {		
+		return getSkills().containsAll(skills);
+	}
 }

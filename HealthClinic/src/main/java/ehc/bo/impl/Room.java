@@ -38,6 +38,14 @@ public class Room extends ResourceImpl {
 	}
 	public void setName(String name) {
 		this.name = name;
-	}   
+	}
+
+	@Override
+	public boolean isSuitable(ResourceType resourceType) {
+		// TODO Auto-generated method stub
+		return true;
+	} 
+	
+	
     
 }
