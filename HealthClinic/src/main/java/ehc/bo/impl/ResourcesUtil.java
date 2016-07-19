@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -17,6 +16,7 @@ public class ResourcesUtil {
 	private PhysicianDao physicianDao = PhysicianDao.getInstance();
 	private NurseDao nurseDao = NurseDao.getInstance();
 	private RoomDao roomDao = RoomDao.getInstance();
+	private DeviceDao deviceDao = DeviceDao.getInstance();
 	private WorkTime workTime = new WorkTime();
 
 	public ResourcesUtil() {
@@ -97,16 +97,14 @@ public class ResourcesUtil {
 	}
 
 	public Map<ResourceType, SortedSet<Resource>> getResources(Date from, Date to, List<ResourceType> neededResourceTypes) {
-		/* List<Resource> resources = new ArrayList<>(); */
 		Map<ResourceType, SortedSet<Resource>> resources = new HashMap<>();
-		boolean foundResource = false;
 		List<Physician> physicians = physicianDao.getAll();
 		List<Nurse> nurses = nurseDao.getAll();
 		List<Room> rooms = roomDao.getAll();
+		List<Device> devices = deviceDao.getAll();
 
 		for (ResourceType neededResourceType : neededResourceTypes) {
 			if (neededResourceType instanceof PhysicianType) {
-				/* Set<Physician> physicians = physicianDao.getAll(); */
 				SortedSet<Resource> suitablePhysicians = findSuitableResources(physicians, neededResourceType, from, to,
 						new PhysicianSuitabilityComparator());
 				if (suitablePhysicians.isEmpty()) {
@@ -115,69 +113,29 @@ public class ResourcesUtil {
 				resources.put(neededResourceType, suitablePhysicians);
 
 			} else if (neededResourceType instanceof NurseType) {
-				/* Set<Nurse> nurses = nurseDao.getAll(); */
 				SortedSet<Resource> suitableNurses = findSuitableResources(nurses, neededResourceType, from, to,
 						new NurseSuitabilityComparator());
 				if (suitableNurses.isEmpty()) {
 					return null;
 				}
 				resources.put(neededResourceType, suitableNurses);
-				/*
-				 * for (Nurse nurse : nurses) { if
-				 * (nurse.isSuitable(neededResourceType)) { if
-				 * (nurse.isAvailable(from, to)) { resources.add(nurse);
-				 * foundResource = true; } } }
-				 */
+
 			} else if (neededResourceType instanceof RoomType) {
-				/* Set<Room> rooms = roomDao.getAll(); */
 				SortedSet<Resource> suitableRooms = findSuitableResources(rooms, neededResourceType, from, to,
 						new RoomSuitabilityComparator());
 				if (suitableRooms.isEmpty()) {
 					return null;
 				}
 				resources.put(neededResourceType, suitableRooms);
-				/*
-				 * for (Room room : rooms) { if
-				 * (room.isSuitable(neededResourceType)) { if
-				 * (room.isAvailable(from, to)) { resources.add(room);
-				 * foundResource = true; } } }
-				 */
+			} else if (neededResourceType instanceof DeviceType) {
+				SortedSet<Resource> suitableDevices = findSuitableResources(devices, neededResourceType, from, to,
+						new DeviceSuitabilityComparator());
+				if (suitableDevices.isEmpty()) {
+					return null;
+				}
+				resources.put(neededResourceType, suitableDevices);
 			}
-			/*
-			 * if (!foundResource) { return null; } foundResource = false;
-			 */
 		}
 		return resources;
 	}
-
-	/*
-	 * public Physician findPhysician(Date from, Date to, TreatmentType
-	 * treatmentType) { PhysicianDao physicianDao = PhysicianDao.getInstance();
-	 * List<Physician> physicians = physicianDao.getAll();
-	 * 
-	 * PhysicianType requiredPhysicianType = null;
-	 */
-
-	/*
-	 * for (ResourceType resourceType : treatmentType.resourceTypes) { if
-	 * (resourceType instanceof PhysicianType) { requiredPhysicianType =
-	 * (PhysicianType)resourceType; } }
-	 * 
-	 * for (Physician physician : physicians) { if
-	 * (physician.isCompetent(requiredPhysicianType)) { if
-	 * (physician.isAvailable(from, to)) { return physician; } } }
-	 * 
-	 * return null; }
-	 * 
-	 * public Nurse findNurse() { NurseDao nurseDao = NurseDao.getInstance();
-	 * List<Nurse> nurses = nurseDao.getAll();
-	 * 
-	 * if (!nurses.isEmpty()) { return nurses.get(0); } return null; }
-	 * 
-	 * public Room findRoom() { RoomDao roomDao = RoomDao.getInstance();
-	 * List<Room> rooms = roomDao.getAll();
-	 * 
-	 * if (!rooms.isEmpty()) { return rooms.get(0); } return null; }
-	 */
-
 }

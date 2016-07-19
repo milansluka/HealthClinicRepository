@@ -9,6 +9,9 @@ import ehc.bo.impl.Appointment;
 import ehc.bo.impl.AppointmentDao;
 import ehc.bo.impl.Company;
 import ehc.bo.impl.CompanyDao;
+import ehc.bo.impl.Device;
+import ehc.bo.impl.DeviceDao;
+import ehc.bo.impl.DeviceType;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
@@ -32,6 +35,7 @@ import junit.framework.TestCase;
 
 public class RootTestCase extends TestCase {
 	private List<Long> roomIds = new ArrayList<Long>();
+	private List<Long> deviceIds = new ArrayList<Long>();
 	private List<Long> physicianIds = new ArrayList<Long>();
 	private List<Long> nurseIds = new ArrayList<Long>();
 	private List<Long> treatmentTypeIds = new ArrayList<Long>();
@@ -133,6 +137,22 @@ public class RootTestCase extends TestCase {
 	/*	HibernateUtil.commitTransaction();*/	
 		return skill;
 	}
+	
+	public void addDevice(String name, List<String> treatmentTypeNames) {
+		HibernateUtil.beginTransaction();
+		Login login = new Login();
+		User executor = login.login("admin", "admin");
+		DeviceType deviceType = new DeviceType(executor);
+		TreatmentType treatmentType = null;
+		for (String treatmentTypeName : treatmentTypeNames) {
+			treatmentType = treatmentDao.findByName(treatmentTypeName);	
+			deviceType.addPossibleTreatmentType(treatmentType);
+		}
+		Device device = new Device(executor, deviceType, name);
+		long id = (long) HibernateUtil.save(device);
+		deviceIds.add(id);		
+		HibernateUtil.commitTransaction();
+	}
 
 	public void addRoom(String name) {
 		HibernateUtil.beginTransaction();
@@ -231,6 +251,17 @@ public class RootTestCase extends TestCase {
 		HibernateUtil.commitTransaction();
 	}
 	
+	protected void removeDevice(long id) {
+		DeviceDao deviceDao = DeviceDao.getInstance();
+		HibernateUtil.beginTransaction();
+		Device device = deviceDao.findById(id);
+		
+		if (device != null) {
+			HibernateUtil.delete(device);			
+		}
+		HibernateUtil.commitTransaction();
+	}
+	
 	protected void removeIndividual(long id) {
 		IndividualDao individualDao = IndividualDao.getInstance();
 
@@ -287,6 +318,22 @@ public class RootTestCase extends TestCase {
 		skillNames2.add("test skill1");
 		skillNames2.add("test skill2");
 		addPhysician("Marika", "Piršelová", skillNames2);
+	}
+	
+	protected void addDevices() {
+		List<String> treatmentTypeNames1 = new ArrayList<>();
+		treatmentTypeNames1.add("Odstraňovanie pigmentov chrbát");
+		treatmentTypeNames1.add("OxyGeneo - tvár");
+		
+		List<String> treatmentTypeNames2 = new ArrayList<>();
+		treatmentTypeNames2.add("Odstraňovanie pigmentov chrbát");
+		
+		List<String> treatmentTypeNames3 = new ArrayList<>();
+		treatmentTypeNames3.add("OxyGeneo - tvár");
+		
+		addDevice("test device 1", treatmentTypeNames1);
+		addDevice("test device 2", treatmentTypeNames2);
+		addDevice("test device 3", treatmentTypeNames3);
 	}
 
 	protected void addRooms() {
@@ -350,6 +397,12 @@ public class RootTestCase extends TestCase {
 	private void removeRooms() {
 		for (long id : roomIds) {
 			removeRoom(id);
+		}
+	}
+	
+	private void removeDevices() {
+		for (long id : deviceIds) {
+			removeDevice(id);
 		}
 	}
 
@@ -453,16 +506,14 @@ public class RootTestCase extends TestCase {
 		PhysicianType physicianType1 = new PhysicianType(executor);
 	    NurseType nurseType1 = new NurseType(executor);
 		RoomType roomType1 = new RoomType(executor);
+		DeviceType deviceType1 = new DeviceType(executor);
 		
 		physicianType1.addSkill(getSkill("test skill3"));
 		
 		resourceTypes1.add(physicianType1);
 		resourceTypes1.add(nurseType1);
 		resourceTypes1.add(roomType1);
-		HibernateUtil.commitTransaction();
-		
-		HibernateUtil.beginTransaction();
-		
+		resourceTypes1.add(deviceType1);
 		HibernateUtil.commitTransaction();
 		
 		HibernateUtil.beginTransaction();
@@ -473,6 +524,7 @@ public class RootTestCase extends TestCase {
 		PhysicianType physicianType2 = new PhysicianType(executor);
 		NurseType nurseType2 = new NurseType(executor);
 		RoomType roomType2 = new RoomType(executor);
+		DeviceType deviceType2 = new DeviceType(executor);
 		
 		physicianType2.addSkill(getSkill("test skill1"));
 		physicianType2.addSkill(getSkill("test skill2"));
@@ -480,6 +532,7 @@ public class RootTestCase extends TestCase {
 		resourceTypes2.add(physicianType2);
 		resourceTypes2.add(nurseType2);
 		resourceTypes2.add(roomType2);
+		resourceTypes2.add(deviceType2);
 		HibernateUtil.commitTransaction();
 		
 		addTreatmentType("Odstraňovanie pigmentov chrbát", "Odstránenie pigmentových škvŕn", resourceTypes1, 60*60);
@@ -490,6 +543,7 @@ public class RootTestCase extends TestCase {
 		addTreatmentTypes();
 		addPhysicians();
 		addRooms();	
+		addDevices();
 		addNurses();
 		addIndividuals();
 	}
@@ -498,6 +552,7 @@ public class RootTestCase extends TestCase {
 		removeAppointments();
 		removePhysicians();
 		removeRooms();
+		removeDevices();
 		removeNurses();
 		removeIndividuals();
 		removeTreatmentTypes();

@@ -12,21 +12,21 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "room_type")
+@Table(name = "device_type")
 @PrimaryKeyJoinColumn(name="id") 
-public class RoomType extends ResourceType {
+public class DeviceType extends ResourceType {
 	List<TreatmentType> possibleTreatmentTypes = new ArrayList<TreatmentType>();
 	
-	protected RoomType() {
+	protected DeviceType() {
 		super();
 	}
 	
-	public RoomType(User executor) {
+	public DeviceType(User executor) {
 		super(executor);
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "room_type_treatment_type", joinColumns = {@JoinColumn(name = "room_type_id")},
+	@JoinTable(name = "device_type_treatment_type", joinColumns = {@JoinColumn(name = "device_type_id")},
 	inverseJoinColumns = {@JoinColumn(name = "treatment_type_id")})
 	public List<TreatmentType> getPossibleTreatmentTypes() {
 		return possibleTreatmentTypes;
@@ -43,4 +43,5 @@ public class RoomType extends ResourceType {
 	public boolean containsTreatmentType(TreatmentType treatmentType) {		
 		return getPossibleTreatmentTypes().contains(treatmentType);
 	}
+
 }

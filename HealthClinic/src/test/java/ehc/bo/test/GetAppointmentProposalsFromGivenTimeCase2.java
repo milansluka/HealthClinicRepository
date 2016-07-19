@@ -7,6 +7,8 @@ import java.util.SortedSet;
 
 import ehc.bo.Resource;
 import ehc.bo.impl.AppointmentProposal;
+import ehc.bo.impl.Device;
+import ehc.bo.impl.DeviceType;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
@@ -53,8 +55,10 @@ public class GetAppointmentProposalsFromGivenTimeCase2 extends RootTestCase {
         AppointmentProposal appointmentProposal = appointmentProposals.get(0);
         int countOfPhysicians = 0;
         int countOfRooms = 0;
+        int countOfDevices = 0;
         Physician physician = null;
         Room recommendedRom = null;
+        Device recommendedDevice = null;
         for (Map.Entry<ResourceType, SortedSet<Resource>> entry : appointmentProposal.getResources().entrySet()) {
         	if (entry.getKey() instanceof PhysicianType) {
         		countOfPhysicians = entry.getValue().size();
@@ -64,6 +68,10 @@ public class GetAppointmentProposalsFromGivenTimeCase2 extends RootTestCase {
         		countOfRooms = entry.getValue().size();
         		recommendedRom = (Room)entry.getValue().first();
         	}
+        	if (entry.getKey() instanceof DeviceType) {
+        		countOfDevices = entry.getValue().size();
+        		recommendedDevice = (Device)entry.getValue().first();
+        	}
         }    
         
         Individual recommendedPhysician = (Individual)physician.getSource();
@@ -72,7 +80,8 @@ public class GetAppointmentProposalsFromGivenTimeCase2 extends RootTestCase {
        
         assertTrue(countOfPhysicians == 2 && recommendedPhysician.getFirstName().equals("Marika") 
         		&& recommendedPhysician.getName().equals("Piršelová")
-        		&& countOfRooms == 2);
+        		&& countOfRooms == 2 && recommendedRom.getName().equals("test room 3")
+        		&& countOfDevices == 2 && recommendedDevice.getName().equals("test device 3"));
 
 	}
 

@@ -138,11 +138,18 @@ Create table "skill_assignment"
  primary key ("resource_type_with_skills_id","skill_id")
 ) Without Oids;
 
-Create table "treatment_type_assignment"
+Create table "room_type_treatment_type"
 (
-	"room_type_id" Bigint NOT NULL,
 	"treatment_type_id" Bigint NOT NULL,
- primary key ("room_type_id","treatment_type_id")
+	"room_type_id" Bigint NOT NULL,
+ primary key ("treatment_type_id","room_type_id")
+) Without Oids;
+
+Create table "device_type_treatment_type"
+(
+	"device_type_id" Bigint NOT NULL,
+	"treatment_type_id" Bigint NOT NULL,
+ primary key ("device_type_id","treatment_type_id")
 ) Without Oids;
 
 Create table "receptionist"
@@ -210,6 +217,20 @@ Create table "room"
 Create table "room_type"
 (
 	"id" BigSerial NOT NULL,
+ primary key ("id")
+) Without Oids;
+
+Create table "device"
+(
+	"name" Varchar(512) NOT NULL,
+	"id" Bigint NOT NULL,
+	"device_type_id" Bigint NOT NULL,
+ primary key ("id")
+) Without Oids;
+
+Create table "device_type"
+(
+	"id" Bigint NOT NULL,
  primary key ("id")
 ) Without Oids;
 
@@ -371,9 +392,13 @@ Alter table "assigned_permission_profile" add  foreign key ("permission_profile_
 
 Alter table "permission" add  foreign key ("permission_profile_id") references "permission_profile" ("id") on update restrict on delete restrict;
 
-Alter table "treatment_type_assignment" add  foreign key ("room_type_id") references "room_type" ("id") on update restrict on delete restrict;
+Alter table "room_type_treatment_type" add  foreign key ("room_type_id") references "room_type" ("id") on update restrict on delete restrict;
 
-Alter table "treatment_type_assignment" add  foreign key ("treatment_type_id") references "treatment_type" ("id") on update restrict on delete restrict;
+Alter table "room_type_treatment_type" add  foreign key ("treatment_type_id") references "treatment_type" ("id") on update restrict on delete restrict;
+
+Alter table "device_type_treatment_type" add  foreign key ("device_type_id") references "device_type" ("id") on update restrict on delete restrict;
+
+Alter table "device_type_treatment_type" add  foreign key ("treatment_type_id") references "treatment_type" ("id") on update restrict on delete restrict;
 
 Alter table "skill_assignment" add  foreign key ("skill_id") references "skill" ("id") on update restrict on delete restrict;
 
@@ -381,11 +406,15 @@ Alter table "skill_assignment" add  foreign key ("resource_type_with_skills_id")
 
 Alter table "room" add  foreign key ("room_type_id") references "room_type" ("id") on update restrict on delete restrict;
 
+Alter table "device" add  foreign key ("device_type_id") references "device_type" ("id") on update restrict on delete restrict;
+
 Alter table "nurse_type" add  foreign key ("id") references "resource_type" ("id") on update restrict on delete restrict;
 
 Alter table "physician_type" add  foreign key ("id") references "resource_type" ("id") on update restrict on delete restrict;
 
 Alter table "room_type" add  foreign key ("id") references "resource_type" ("id") on update restrict on delete restrict;
+
+Alter table "device_type" add  foreign key ("id") references "resource_type" ("id") on update restrict on delete restrict;
 
 Alter table "resource_type" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
 
@@ -418,6 +447,8 @@ Alter table "appointment_resource" add  foreign key ("appointment_id") reference
 Alter table "appointment_resource" add  foreign key ("resource_id") references "resource" ("id") on update restrict on delete restrict;
 
 Alter table "room" add  foreign key ("id") references "resource" ("id") on update restrict on delete restrict;
+
+Alter table "device" add  foreign key ("id") references "resource" ("id") on update restrict on delete restrict;
 
 Alter table "party" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
 
