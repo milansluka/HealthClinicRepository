@@ -24,7 +24,7 @@ import ehc.bo.Resource;
 public class Appointment extends BaseObject {
 	Date from;
 	Date to;
-	AppointmentState state = AppointmentState.PROPOSED;
+	AppointmentState state = AppointmentState.NEW;
 	Individual individual;
 	TreatmentType treatmentType;
 	List<Resource> resources = new ArrayList<Resource>();

@@ -42,10 +42,12 @@ public class Room extends ResourceImpl {
 
 	@Override
 	public boolean isSuitable(ResourceType resourceType) {
-		// TODO Auto-generated method stub
-		return true;
+		if (!(resourceType instanceof RoomType)) {
+			return false;		
+		}
+		RoomType roomType = (RoomType)resourceType;		
+		return getType().containsTreatmentType(roomType.getTreatmentTypes().get(0));
 	} 
-	
-	
+
     
 }

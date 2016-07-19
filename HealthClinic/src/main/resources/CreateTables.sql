@@ -138,6 +138,13 @@ Create table "skill_assignment"
  primary key ("resource_type_with_skills_id","skill_id")
 ) Without Oids;
 
+Create table "treatment_type_assignment"
+(
+	"room_type_id" Bigint NOT NULL,
+	"treatment_type_id" Bigint NOT NULL,
+ primary key ("room_type_id","treatment_type_id")
+) Without Oids;
+
 Create table "receptionist"
 (
 	"id" Bigint NOT NULL,
@@ -363,6 +370,10 @@ Alter table "system_user" add  foreign key ("id") references "party_role" ("id")
 Alter table "assigned_permission_profile" add  foreign key ("permission_profile_id") references "permission_profile" ("id") on update restrict on delete restrict;
 
 Alter table "permission" add  foreign key ("permission_profile_id") references "permission_profile" ("id") on update restrict on delete restrict;
+
+Alter table "treatment_type_assignment" add  foreign key ("room_type_id") references "room_type" ("id") on update restrict on delete restrict;
+
+Alter table "treatment_type_assignment" add  foreign key ("treatment_type_id") references "treatment_type" ("id") on update restrict on delete restrict;
 
 Alter table "skill_assignment" add  foreign key ("skill_id") references "skill" ("id") on update restrict on delete restrict;
 

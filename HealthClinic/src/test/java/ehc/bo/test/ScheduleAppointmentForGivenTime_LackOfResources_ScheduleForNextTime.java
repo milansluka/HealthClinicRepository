@@ -46,7 +46,11 @@ public class ScheduleAppointmentForGivenTime_LackOfResources_ScheduleForNextTime
 		addNurses();
 		addTreatmentTypes();
 		addIndividuals();
-		addRoom("test room 1");
+		
+		List<String> treatmentNames = new ArrayList<>();
+		treatmentNames.add("Odstraňovanie pigmentov chrbát");
+		treatmentNames.add("OxyGeneo - tvár");
+		addRoom("test room 1", treatmentNames);
 
 		HibernateUtil.beginTransaction();
 		Individual existingPerson = individualDao.findByFirstAndLastName(personFirstName, personLastName);

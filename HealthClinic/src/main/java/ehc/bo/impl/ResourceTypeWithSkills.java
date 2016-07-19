@@ -14,8 +14,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
-import ehc.bo.Resource;
-
 @Entity
 @Table(name = "resource_type_with_skills")
 @PrimaryKeyJoinColumn(name = "id")

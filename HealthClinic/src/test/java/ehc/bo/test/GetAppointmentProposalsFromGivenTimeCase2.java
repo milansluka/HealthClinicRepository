@@ -14,6 +14,8 @@ import ehc.bo.impl.Physician;
 import ehc.bo.impl.PhysicianType;
 import ehc.bo.impl.ResourceType;
 import ehc.bo.impl.ResourcesUtil;
+import ehc.bo.impl.Room;
+import ehc.bo.impl.RoomType;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;
 import ehc.bo.impl.User;
@@ -32,6 +34,7 @@ public class GetAppointmentProposalsFromGivenTimeCase2 extends RootTestCase {
 		}	
 	}
 	
+	
 	public void testApp() {	
 		String firstName = "Janko"; 
 		String lastName = "Mrkvicka";
@@ -49,19 +52,27 @@ public class GetAppointmentProposalsFromGivenTimeCase2 extends RootTestCase {
         List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentType, 1);
         AppointmentProposal appointmentProposal = appointmentProposals.get(0);
         int countOfPhysicians = 0;
+        int countOfRooms = 0;
         Physician physician = null;
+        Room recommendedRom = null;
         for (Map.Entry<ResourceType, SortedSet<Resource>> entry : appointmentProposal.getResources().entrySet()) {
         	if (entry.getKey() instanceof PhysicianType) {
         		countOfPhysicians = entry.getValue().size();
         		physician = (Physician)entry.getValue().first();
         	}
+        	if (entry.getKey() instanceof RoomType) {
+        		countOfRooms = entry.getValue().size();
+        		recommendedRom = (Room)entry.getValue().first();
+        	}
         }    
         
-        Individual recommendedPhysician = (Individual)physician.getSource();   
+        Individual recommendedPhysician = (Individual)physician.getSource();
+   
         HibernateUtil.commitTransaction();
        
         assertTrue(countOfPhysicians == 2 && recommendedPhysician.getFirstName().equals("Marika") 
-        		&& recommendedPhysician.getName().equals("Piršelová"));
+        		&& recommendedPhysician.getName().equals("Piršelová")
+        		&& countOfRooms == 2);
 
 	}
 
