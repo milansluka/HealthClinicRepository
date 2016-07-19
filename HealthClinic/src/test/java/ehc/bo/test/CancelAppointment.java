@@ -4,7 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import ehc.bo.impl.Appointment;
-import ehc.bo.impl.AppointmentState;
+import ehc.bo.impl.AppointmentDao;
+import ehc.bo.impl.AppointmentStateValue;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
@@ -26,6 +27,7 @@ public class CancelAppointment extends RootTestCase {
 	private String treatmentName = "Odstraňovanie pigmentov chrbát";
 	private PhysicianDao physicianDao = PhysicianDao.getInstance();
 	private RoomDao roomDao = RoomDao.getInstance();
+	private AppointmentDao appointmentDao = AppointmentDao.getInstance();
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -71,20 +73,21 @@ public class CancelAppointment extends RootTestCase {
 	}
 	
 	public void testApp() {		
-/*		Login login = new Login();
+		Login login = new Login();
 		
 		HibernateUtil.beginTransaction();
 		User executor = login.login("admin", "admin");
 		Individual person = individualDao.findByFirstAndLastName(personFirstName, personLastName);
 		List<Appointment> appointments = person.getAppointments();
 		Appointment appointment = appointments.get(0);
-		Appointment cancelledAppointment = new Appointment(executor, appointment.getFrom(), 
-				appointment.getTo(), appointment.getTreatmentType(), appointment.getIndividual(), 
-				AppointmentState.ABANDONED);
-		cancelledAppointment.setPrevious(appointment);
-		appointment.setNext(cancelledAppointment);
-		addAppointment(cancelledAppointment);	
-        HibernateUtil.commitTransaction();*/
+		long id = appointment.getId();
+		appointment.setState(executor, AppointmentStateValue.CANCELLED);
+        HibernateUtil.saveOrUpdate(appointment);
+        
+        Appointment cancelledAppointment = appointmentDao.findById(id);
+        assertTrue(cancelledAppointment.getState().getValue() == AppointmentStateValue.CANCELLED);
+
+        HibernateUtil.commitTransaction();
 	}
 
 	protected void tearDown() throws Exception {

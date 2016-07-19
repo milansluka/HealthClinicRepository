@@ -15,14 +15,14 @@ import ehc.bo.Resource;
 
 @Entity
 @Table(name = "resource")
-@Inheritance(strategy=InheritanceType.JOINED) 
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class ResourceImpl extends ModifiableObject implements Resource {
 	List<Appointment> resourceAppointments = new ArrayList<Appointment>();
-		
+
 	protected ResourceImpl() {
 		super();
 	}
-	
+
 	public ResourceImpl(User executor) {
 		super(executor);
 	}
@@ -35,15 +35,11 @@ public abstract class ResourceImpl extends ModifiableObject implements Resource 
 	public void setResourceAppointments(List<Appointment> appointments) {
 		this.resourceAppointments = appointments;
 	}
-	
+
 	public void addAppointment(Appointment appointment) {
-/*		if (appointment == null) {
-			return;
-		}*/
 		getResourceAppointments().add(appointment);
-		/*appointment.addResource(this);*/
 	}
-	
+
 	@Override
 	public void removeAppointment(Appointment appointment) {
 		getResourceAppointments().remove(appointment);
@@ -55,13 +51,13 @@ public abstract class ResourceImpl extends ModifiableObject implements Resource 
 			if (isCollision(from, to, appointment.getFrom(), appointment.getTo())) {
 				return false;
 			}
-		}	
+		}
 		return true;
 	}
 
 	@Override
 	public abstract boolean isSuitable(ResourceType resourceType);
-	
+
 	public boolean isCollision(Date from1, Date to1, Date from2, Date to2) {
 
 		return from1.after(from2) && from1.before(to2) || to1.after(from2) && to1.before(to2);

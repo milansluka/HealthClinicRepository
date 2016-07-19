@@ -48,6 +48,7 @@
 		<mapping class="ehc.bo.impl.Individual" />
 		<mapping class="ehc.bo.impl.Company" />
 		<mapping class="ehc.bo.impl.Appointment" />
+		<mapping class="ehc.bo.impl.AppointmentState" />
 		<mapping class="ehc.bo.impl.TreatmentType" />
 		<mapping class="ehc.bo.impl.Physician" />
 		<mapping class="ehc.bo.impl.PhysicianType" />

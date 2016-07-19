@@ -28,8 +28,18 @@ Create table "appointment"
 	"to" Timestamp NOT NULL,
 	"treatment_id" Bigint NOT NULL,
 	"created_on" Timestamp NOT NULL,
-	"state" Varchar(128) NOT NULL,
 	"individual_id" Bigint NOT NULL,
+ primary key ("id")
+) Without Oids;
+
+Create table "appointment_state"
+(
+	"id" BigSerial NOT NULL,
+	"modified_by" Bigint,
+	"created_by" Bigint NOT NULL,
+	"created_on" Timestamp NOT NULL,
+	"value" Varchar(128) NOT NULL,
+	"modified_on" Timestamp,
  primary key ("id")
 ) Without Oids;
 
@@ -274,14 +284,6 @@ Create table "appointment_resource"
  primary key ("resource_id","appointment_id")
 ) Without Oids;
 
-Create table "device"
-(
-	"id" BigSerial NOT NULL,
-	"name" Varchar(512) NOT NULL,
- primary key ("id")
-) Without Oids;
-
-
 Create table "communication_channel"
 (
 	"id" BigSerial NOT NULL,
@@ -365,6 +367,12 @@ Alter table "appointment" add  foreign key ("treatment_id") references "treatmen
 Alter table "appointment" add  foreign key ("next") references "appointment" ("id") on update restrict on delete restrict;
 
 Alter table "appointment" add  foreign key ("previous") references "appointment" ("id") on update restrict on delete restrict;
+
+Alter table "appointment_state" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "appointment_state" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "appointment_state" add  foreign key ("id") references "appointment" ("id") on update restrict on delete restrict;
 
 Alter table "party_role" add  foreign key ("source") references "party" ("id") on update restrict on delete restrict;
 

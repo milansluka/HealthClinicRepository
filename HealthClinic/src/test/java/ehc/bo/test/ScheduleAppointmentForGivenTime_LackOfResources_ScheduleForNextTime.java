@@ -46,6 +46,7 @@ public class ScheduleAppointmentForGivenTime_LackOfResources_ScheduleForNextTime
 		addNurses();
 		addTreatmentTypes();
 		addIndividuals();
+		addDevices();
 		
 		List<String> treatmentNames = new ArrayList<>();
 		treatmentNames.add("Odstraňovanie pigmentov chrbát");

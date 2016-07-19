@@ -63,7 +63,7 @@ public class ScheduleAppointmentForGivenTime_AllResourcesAvailable_Success exten
      /*   assertTrue(appointmentProposal.getFrom().equals(when));*/  
             
         assertTrue(appointmentProposal.getFrom().equals(when) && 
-        		appointmentProposal.getResources().size() == 3);      
+        		appointmentProposal.getResources().size() == 4);      
 	}
 	
 	protected void tearDown() throws Exception {

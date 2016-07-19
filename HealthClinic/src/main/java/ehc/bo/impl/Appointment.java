@@ -7,8 +7,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -24,25 +22,15 @@ import ehc.bo.Resource;
 public class Appointment extends BaseObject {
 	Date from;
 	Date to;
-	AppointmentState state = AppointmentState.NEW;
+	AppointmentState state;
 	Individual individual;
 	TreatmentType treatmentType;
 	List<Resource> resources = new ArrayList<Resource>();
 	Appointment previous = null;
 	Appointment next = null;
-/*	Appointment current = this;*/
 
 	protected Appointment() {
 		super();
-	}
-	
-	public Appointment(User executor, Date from, Date to, TreatmentType treatmentType, Individual individual, AppointmentState state) {
-		super(executor);
-		this.from = from;
-		this.to = to;
-		assignTreatmentType(treatmentType);
-		this.individual = individual;
-		this.state = state;
 	}
 
 	public Appointment(User executor, Date from, Date to, TreatmentType treatmentType, Individual individual) {
@@ -51,6 +39,8 @@ public class Appointment extends BaseObject {
 		this.to = to;
 		assignTreatmentType(treatmentType);
 		this.individual = individual;
+		state = new AppointmentState(executor);
+		state.setAppointment(this);
 	}
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, targetEntity = ResourceImpl.class)
@@ -62,15 +52,6 @@ public class Appointment extends BaseObject {
 
 	public void setResources(List<Resource> resources) {
 		this.resources = resources;
-	}
-
-	@Enumerated(EnumType.STRING)
-	public AppointmentState getState() {
-		return state;
-	}
-
-	public void setState(AppointmentState state) {
-		this.state = state;
 	}
 
 	@Column(name = "\"from\"")
@@ -91,7 +72,16 @@ public class Appointment extends BaseObject {
 		this.to = to;
 	}
 	
-    @OneToOne
+	@OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL)	
+    public AppointmentState getState() {
+		return state;
+	}
+
+	public void setState(AppointmentState state) {
+		this.state = state;
+	}
+
+	@OneToOne
     @JoinColumn(name = "previous")
 	public Appointment getPrevious() {
 		return previous;
@@ -110,15 +100,6 @@ public class Appointment extends BaseObject {
 	public void setNext(Appointment next) {
 		this.next = next;
 	}
-	
-/*	@OneToOne
-	public Appointment getCurrent() {
-		return current;
-	}
-
-	public void setCurrent(Appointment current) {
-		this.current = current;
-	}*/
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "individual_id")
@@ -183,5 +164,10 @@ public class Appointment extends BaseObject {
 		for (Resource resource : getResources()) {
 			removeResource(resource);
 		}
+	}
+	
+	public void setState(User executor, AppointmentStateValue value) {
+		getState().setModifiedBy(executor);
+		getState().setValue(value);
 	}
 }

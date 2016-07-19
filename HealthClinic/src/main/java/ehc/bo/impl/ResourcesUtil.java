@@ -43,10 +43,6 @@ public class ResourcesUtil {
 
 	public List<AppointmentProposal> getAppointmentProposals(Date from, Date to, TreatmentType treatmentType,
 			int count) {
-		/*
-		 * if (DateUtil.addSeconds(from, treatmentType.getDuration()).after(to))
-		 * { return null; }
-		 */
 		long appointmentDuration = (to.getTime() - from.getTime()) / 1000;
 
 		if (appointmentDuration < treatmentType.getDuration()) {
