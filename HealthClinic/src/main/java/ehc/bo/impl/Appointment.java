@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cascade;
+
 import ehc.bo.Resource;
 
 @Entity
@@ -38,7 +40,7 @@ public class Appointment extends BaseObject {
 		this.from = from;
 		this.to = to;
 		assignTreatmentType(treatmentType);
-		this.individual = individual;
+		assignIndividual(individual);
 		state = new AppointmentState(executor);
 		state.setAppointment(this);
 	}
@@ -101,7 +103,8 @@ public class Appointment extends BaseObject {
 		this.next = next;
 	}
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
+	@Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
 	@JoinColumn(name = "individual_id")
 	public Individual getIndividual() {
 		return individual;
@@ -135,12 +138,23 @@ public class Appointment extends BaseObject {
 		}
 	}
 	
+	public void assignIndividual(Individual individual) {
+		if (individual != null) {
+			setIndividual(individual);
+			individual.addAppointment(this);
+		}
+	}
+	
 	public void addResource(Resource resource) {
 		if (resource == null) {
 			return;
 		}
 		getResources().add(resource);
 		resource.addAppointment(this);
+	}
+	
+	public void removeIndividual() {
+		getIndividual().removeAppointment(this);
 	}
 	
 	public void removeResource(Resource resource) {
@@ -164,6 +178,27 @@ public class Appointment extends BaseObject {
 		for (Resource resource : getResources()) {
 			removeResource(resource);
 		}
+	}
+	
+	public void prepareForDeleting() {
+		removeResources();
+		removeIndividual();
+		removeFromNext();
+		removeFromPrevious();
+	}
+	
+	public void removeFromNext() {
+		if (getNext() == null) {
+			return;
+		}
+		getNext().setPrevious(null);	
+	}
+	
+	public void removeFromPrevious() {
+		if (getPrevious() == null) {
+			return;
+		}
+		getPrevious().setNext(null);		
 	}
 	
 	public void setState(User executor, AppointmentStateValue value) {

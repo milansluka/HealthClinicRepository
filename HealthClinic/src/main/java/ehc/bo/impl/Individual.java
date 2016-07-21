@@ -16,10 +16,8 @@ import org.hibernate.Session;
 @Table(name = "individual")
 @PrimaryKeyJoinColumn(name = "id")
 public class Individual extends Party {
-
 	private String firstName;
-
-	private List<Appointment> appointments;
+	private List<Appointment> appointments = new ArrayList<>();
 
 	protected Individual() {
 		super();
@@ -53,6 +51,10 @@ public class Individual extends Party {
 
 	public void addAppointment(Appointment appointment) {
 		getAppointments().add(appointment);
+	}
+	
+	public void removeAppointment(Appointment appointment) {
+		getAppointments().remove(appointment);
 	}
 
 	public static List<Individual> getIndividuals(String firstName, String name, String phone, Session session) {

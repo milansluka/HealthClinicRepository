@@ -83,7 +83,9 @@ public class CancelAppointment extends RootTestCase {
 		long id = appointment.getId();
 		appointment.setState(executor, AppointmentStateValue.CANCELLED);
         HibernateUtil.saveOrUpdate(appointment);
+        HibernateUtil.commitTransaction();
         
+        HibernateUtil.beginTransaction();
         Appointment cancelledAppointment = appointmentDao.findById(id);
         assertTrue(cancelledAppointment.getState().getValue() == AppointmentStateValue.CANCELLED);
 

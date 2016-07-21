@@ -379,7 +379,9 @@ public class RootTestCase extends TestCase {
 		HibernateUtil.beginTransaction();
 		Appointment appointment = appointmentDao.findById(id);
 		/*appointment.setResources(new ArrayList<>());	*/
-		appointment.removeResources();
+	/*	appointment.removeResources();*/
+		appointment.prepareForDeleting();
+	/*	appointment.removeIndividual();*/
 		HibernateUtil.saveOrUpdate(appointment);
 /*		for (Resource resource : appointment.getResources()) {
 			appointment.removeResources();

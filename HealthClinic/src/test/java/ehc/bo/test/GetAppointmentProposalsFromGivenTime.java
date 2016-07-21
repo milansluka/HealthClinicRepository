@@ -2,9 +2,8 @@ package ehc.bo.test;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
 import java.util.Map;
+import java.util.SortedSet;
 
 import ehc.bo.Resource;
 import ehc.bo.impl.AppointmentProposal;

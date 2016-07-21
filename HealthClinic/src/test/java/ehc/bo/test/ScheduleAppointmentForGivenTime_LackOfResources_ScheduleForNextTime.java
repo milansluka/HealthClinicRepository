@@ -3,9 +3,8 @@ package ehc.bo.test;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
 import java.util.Map.Entry;
+import java.util.SortedSet;
 
 import ehc.bo.Resource;
 import ehc.bo.impl.Appointment;
@@ -13,7 +12,6 @@ import ehc.bo.impl.AppointmentProposal;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
-import ehc.bo.impl.ResourceImpl;
 import ehc.bo.impl.ResourceType;
 import ehc.bo.impl.ResourcesUtil;
 import ehc.bo.impl.Room;
@@ -120,10 +118,11 @@ public class ScheduleAppointmentForGivenTime_LackOfResources_ScheduleForNextTime
 		/*Date to = DateUtil.date(2016, 7, 7, 9, 0, 0);*/
 		boolean roomIsNotAvailable = !room.isAvailable(when, to);
 
-		HibernateUtil.commitTransaction();
-
 		AppointmentProposal appointmentProposal = appointmentProposals.get(0);
-		Date expectedDate = DateUtil.date(2016, 7, 7, 8, 30, 0);
+		Date expectedDate = DateUtil.date(2016, 7, 7, 8, 30, 0);	
+		Appointment appointment = new Appointment(executor, appointmentProposal.getFrom(), appointmentProposal.getTo(), appointmentProposal.getTreatmentType(), person);
+		addAppointment(appointment);
+		HibernateUtil.commitTransaction();
 
 		/*assertTrue(roomIsNotAvailable);*/
 		 assertTrue(appointmentProposal.getFrom().equals(expectedDate)); 

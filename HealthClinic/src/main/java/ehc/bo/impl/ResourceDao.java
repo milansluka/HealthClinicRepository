@@ -2,7 +2,6 @@ package ehc.bo.impl;
 
 import java.util.List;
 
-import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
