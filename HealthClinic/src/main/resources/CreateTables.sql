@@ -85,6 +85,8 @@ Create table "treatment"
 	"appointment_id" Bigint NOT NULL,
 	"treatment_type_id" Bigint NOT NULL,
 	"price" Double precision NOT NULL,
+    "from" Timestamp NOT NULL,
+	"to" Timestamp NOT NULL,
 	"modified_by" Bigint,
     "modified_on" Timestamp,
 	"created_by" Bigint NOT NULL,

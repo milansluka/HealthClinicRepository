@@ -11,6 +11,7 @@ import ehc.bo.impl.AppointmentProposal;
 import ehc.bo.impl.Device;
 import ehc.bo.impl.DeviceType;
 import ehc.bo.impl.Individual;
+import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
 import ehc.bo.impl.Nurse;
 import ehc.bo.impl.NurseType;
@@ -27,6 +28,7 @@ import ehc.hibernate.HibernateUtil;
 import ehc.util.DateUtil;
 
 public class ReserveResourcesForTreatment extends RootTestCase {
+	private IndividualDao individualDao = IndividualDao.getInstance();
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -201,8 +203,6 @@ public class ReserveResourcesForTreatment extends RootTestCase {
 			}
 		}
 
-		/* assertTrue(appointmentProposal.getFrom().equals(when)); */
-
 		Individual physicianPerson = (Individual) physician.getSource();
 		Individual physicianPerson2 = (Individual) physician2.getSource();
 		List<Individual> nursePersons = new ArrayList<>();
@@ -213,17 +213,17 @@ public class ReserveResourcesForTreatment extends RootTestCase {
 			nursePersons.add(nursePerson);
 		}
 		
+		Individual person1 = individualDao.findByFirstAndLastName("Milan", "Sluka");
+		Individual person2 = individualDao.findByFirstAndLastName("Zuzana", "Novakova");
+		
 		int rolesCount = physicianPerson.getReservableSourceRoles().size();
 
 		assertTrue(physicianPerson.getFirstName().equals("Milan") && physicianPerson.getName().equals("Sluka")
 				&& physicianPerson2.getFirstName().equals("Jan") && physicianPerson2.getName().equals("Sluka")
 				&& room2.getName().equals("some room 2") && room.getName().equals("some room 1")
-				&& nursePersons.get(0).getFirstName().equals("Zuzana")
-				&& nursePersons.get(0).getName().equals("Novakova")
-				&& nursePersons.get(1).getFirstName().equals("Milan")
-				&& nursePersons.get(1).getName().equals("Sluka") && device.getName().equals("some device 1") &&
+				&& device.getName().equals("some device 1") &&
 				nursePerson2.getFirstName().equals("Jana") && nursePerson2.getName().equals("Mrkvickova") &&
-				rolesCount == 2);
+				rolesCount == 2 && nursePersons.contains(person1) && nursePersons.contains(person2));
 
 		HibernateUtil.commitTransaction();
 	}

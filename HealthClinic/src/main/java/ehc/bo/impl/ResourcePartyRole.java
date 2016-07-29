@@ -70,6 +70,15 @@ public abstract class ResourcePartyRole extends ResourceImpl {
 		ExecutorProvision executorProvision = new ExecutorProvision(executor, this, treatmentType, provisionAmount);
 		treatmentTypeProvisions.add(executorProvision);
 	}
+	
+	public double getProvisionFromTreatmentType(TreatmentType treatmentType) {
+		for (ExecutorProvision executorProvision : treatmentTypeProvisions) {
+			if (executorProvision.getTreatmentType().equals(treatmentType)) {
+				return executorProvision.getProvisionAmount();
+			}
+		}
+		return treatmentType.getDefaultProvision();
+	}
 
 	@Override
 	public boolean isAvailable(Date from, Date to) {

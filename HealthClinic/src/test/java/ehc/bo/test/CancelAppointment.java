@@ -40,13 +40,7 @@ public class CancelAppointment extends RootTestCase {
 		Individual existingPerson = individualDao.findByFirstAndLastName(personFirstName, personLastName);
 		HibernateUtil.commitTransaction();
 		if (existingPerson == null) {
-			Login login = new Login();
-			
-			HibernateUtil.beginTransaction();
-			User executor = login.login("admin", "admin");
-			Individual person = new Individual(executor, personFirstName, personLastName);
-			HibernateUtil.save(person);		
-			HibernateUtil.commitTransaction();
+			addIndividual(personFirstName, personLastName);
 			
 		}	
 		Login login = new Login();

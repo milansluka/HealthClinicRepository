@@ -74,7 +74,7 @@ public class Individual extends Party {
 		List results = query.list();
 		return (Individual)results.get(0);
 	}
-
+	
 	@Override
 	public int compareTo(Party o) {
 		int ret = super.compareTo(o);
@@ -84,6 +84,29 @@ public class Individual extends Party {
 		}
 		return ret;
 	}
-	
-	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Individual other = (Individual) obj;
+		if (firstName == null) {
+			if (other.firstName != null)
+				return false;
+		} else if (!firstName.equals(other.firstName))
+			return false;
+		return true;
+	}
 }

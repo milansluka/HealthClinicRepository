@@ -64,6 +64,8 @@ public class RootTestCase extends TestCase {
 		long id = (long)HibernateUtil.save(person);
 		HibernateUtil.commitTransaction();
 		
+		individualIds.add(id);
+		
 		return id;
 	}
 	

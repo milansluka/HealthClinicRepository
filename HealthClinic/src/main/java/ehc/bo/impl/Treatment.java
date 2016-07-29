@@ -1,9 +1,11 @@
 package ehc.bo.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
@@ -18,6 +20,8 @@ import ehc.bo.Resource;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Treatment extends ModifiableObject {
+	private Date from;
+	private Date to;
 	private Appointment appointment;
 	private TreatmentType treatmentType;
 	private List<Resource> resources = new ArrayList<>();
@@ -27,11 +31,13 @@ public class Treatment extends ModifiableObject {
 		super();
 	}
 	
-	public Treatment(User executor, Appointment appointment, TreatmentType treatmentType, double price) {
+	public Treatment(User executor, Appointment appointment, TreatmentType treatmentType, double price, Date from, Date to) {
 		super(executor);
 		addAppointment(appointment);
 		addTreatmentType(treatmentType);
 		this.price = price;
+		this.from = from;
+		this.to = to;
 	}
 
 	@ManyToOne
@@ -69,6 +75,24 @@ public class Treatment extends ModifiableObject {
 	}
 	public void setPrice(double price) {
 		this.price = price;
+	}
+	
+	@Column(name = "\"from\"")
+	public Date getFrom() {
+		return from;
+	}
+
+	public void setFrom(Date from) {
+		this.from = from;
+	}
+	
+	@Column(name = "\"to\"")
+	public Date getTo() {
+		return to;
+	}
+
+	public void setTo(Date to) {
+		this.to = to;
 	}
 	
 	public void addResource(Resource resource) {

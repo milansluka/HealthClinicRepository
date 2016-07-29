@@ -30,14 +30,7 @@ public class CreateAppointmentWithMoreTreatmentTypes extends RootTestCase {
 		Individual existingPerson = individualDao.findByFirstAndLastName("Janko", "Mrkvicka");
 		HibernateUtil.commitTransaction();
 		if (existingPerson == null) {
-			Login login = new Login();
-			
-			HibernateUtil.beginTransaction();
-			User executor = login.login("admin", "admin");
-			Individual person = new Individual(executor, "Janko", "Mrkvicka");
-			HibernateUtil.save(person);		
-			HibernateUtil.commitTransaction();
-			
+			addIndividual("Janko", "Mrkvicka");		
 		}
 	
 	}

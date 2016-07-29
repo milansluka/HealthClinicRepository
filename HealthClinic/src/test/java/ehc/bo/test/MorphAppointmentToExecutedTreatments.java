@@ -94,7 +94,7 @@ public class MorphAppointmentToExecutedTreatments extends RootTestCase {
 		Appointment appointment = appointmentDao.findById(appointmentId);
 		TreatmentType treatmentType = treatmentTypeDao.findByName("Odstraňovanie pigmentov chrbát");
 		appointment.setState(executor, AppointmentStateValue.CONFIRMED);
-		Treatment treatment = new Treatment(executor, appointment, treatmentType, 50);
+		Treatment treatment = new Treatment(executor, appointment, treatmentType, 50, appointment.getFrom(), appointment.getTo());
 		Individual executorOfTreatment = individualDao.findByFirstAndLastName("Mária", "Petrášová");
 		Physician physician = (Physician)executorOfTreatment.getReservableSourceRoles().get(0);
 		treatment.addResource(physician);
