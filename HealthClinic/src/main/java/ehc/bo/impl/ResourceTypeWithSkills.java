@@ -30,7 +30,7 @@ public class ResourceTypeWithSkills extends ResourceType {
 	}
 	
 	@ManyToMany(fetch = FetchType.LAZY)
-	@Cascade(CascadeType.SAVE_UPDATE)
+	@Cascade({CascadeType.MERGE, CascadeType.SAVE_UPDATE})
 	@JoinTable(name = "skill_assignment", joinColumns = {@JoinColumn(name = "resource_type_with_skills_id")},
 	inverseJoinColumns = {@JoinColumn(name = "skill_id")})
 	public List<Skill> getSkills() {

@@ -40,6 +40,24 @@ public class ResourcesUtil {
 		}
 		return from;
 	}
+	
+	public AppointmentProposal getAppointmentProposal(Date from, Date to, TreatmentType treatmentType) {
+		long appointmentDuration = (to.getTime() - from.getTime()) / 1000;
+
+		if (appointmentDuration < treatmentType.getDuration()) {
+			return null;
+		}
+		
+		from = moveFromIfOutOfWorkTime(from, to);
+		to = DateUtil.addSeconds(from, (int) appointmentDuration);
+		Map<ResourceType, SortedSet<Resource>> resources = getResources(from, to, treatmentType.getResourceTypes());
+		
+		if (resources != null) {
+			return new AppointmentProposal(resources, treatmentType, from, to);
+		}
+
+		return null;
+	}
 
 	public List<AppointmentProposal> getAppointmentProposals(Date from, Date to, TreatmentType treatmentType,
 			int count) {
@@ -61,8 +79,11 @@ public class ResourcesUtil {
 
 		/* Date to = DateUtil.addSeconds(from, treatmentDuration + margin); */
 
+		//getSuitableResources
+		
 		while (proposedAppointments < count) {
 
+			//getAvailableResources
 			Map<ResourceType, SortedSet<Resource>> resources = getResources(from, to, treatmentType.getResourceTypes());
 
 			if (resources != null) {

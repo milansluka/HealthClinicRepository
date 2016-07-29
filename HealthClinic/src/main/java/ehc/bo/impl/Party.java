@@ -3,6 +3,7 @@ package ehc.bo.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -10,7 +11,7 @@ import javax.persistence.OneToMany;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Party extends ModifiableObject {
+public class Party extends ModifiableObject implements Comparable<Party> {
 	String name;
 	List<PartyRole> sourceRoles = new ArrayList<>();
 	List<PartyRole> targetRoles = new ArrayList<>();
@@ -27,7 +28,8 @@ public class Party extends ModifiableObject {
 		this.name = name;
 	}
 
-	@OneToMany(mappedBy = "source", orphanRemoval = true)
+	/*@OneToMany(mappedBy = "source", orphanRemoval = true)*/
+	@OneToMany(mappedBy = "source", cascade = CascadeType.ALL)
 	public List<PartyRole> getSourceRoles() {
 		return sourceRoles;
 	}
@@ -36,7 +38,8 @@ public class Party extends ModifiableObject {
 		this.sourceRoles = roles;
 	}
 
-	@OneToMany(mappedBy = "target", orphanRemoval = true)
+/*	@OneToMany(mappedBy = "target", orphanRemoval = true)*/
+	@OneToMany(mappedBy = "target", cascade = CascadeType.ALL)
 	public List<PartyRole> getTargetRoles() {
 		return targetRoles;
 	}
@@ -45,7 +48,8 @@ public class Party extends ModifiableObject {
 		this.targetRoles = roles;
 	}
 
-	@OneToMany(mappedBy = "source", orphanRemoval = true)
+/*	@OneToMany(mappedBy = "source", orphanRemoval = true)*/
+	@OneToMany(mappedBy = "source", cascade = CascadeType.ALL)
 	public List<ResourcePartyRole> getReservableSourceRoles() {
 		return reservableSourceRoles;
 	}
@@ -54,7 +58,8 @@ public class Party extends ModifiableObject {
 		this.reservableSourceRoles = reservableSourceRoles;
 	}
 
-	@OneToMany(mappedBy = "target", orphanRemoval = true)
+/*	@OneToMany(mappedBy = "target", orphanRemoval = true)*/
+	@OneToMany(mappedBy = "target", cascade = CascadeType.ALL)
 	public List<ResourcePartyRole> getReservableTargetRoles() {
 		return reservableTargetRoles;
 	}
@@ -97,6 +102,11 @@ public class Party extends ModifiableObject {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public int compareTo(Party o) {
+		return getName().compareTo(o.getName());
 	}
 
 }

@@ -74,4 +74,16 @@ public class Individual extends Party {
 		List results = query.list();
 		return (Individual)results.get(0);
 	}
+
+	@Override
+	public int compareTo(Party o) {
+		int ret = super.compareTo(o);
+		if (ret == 0) {
+			Individual individual = (Individual)o;
+			return getFirstName().compareTo(individual.getFirstName());		
+		}
+		return ret;
+	}
+	
+	
 }

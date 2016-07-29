@@ -17,7 +17,6 @@ public class DeviceDao {
 		return instance;
 	}
 	
-	
 	public Device findById(long id) {
 		Session session = HibernateUtil.getCurrentSession();	
 		Device device = session.get(Device.class, id);	

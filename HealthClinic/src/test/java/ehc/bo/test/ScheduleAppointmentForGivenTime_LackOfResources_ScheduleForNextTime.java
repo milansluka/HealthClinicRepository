@@ -91,6 +91,7 @@ public class ScheduleAppointmentForGivenTime_LackOfResources_ScheduleForNextTime
 		}
 
 		Appointment appointment = new Appointment(executor, when, to, treatmentType, individual);
+		/*appointment.addTreatmentType(treatmentType);*/
 		appointment.addResources(resources);
 		addAppointment(appointment);
 		HibernateUtil.commitTransaction();

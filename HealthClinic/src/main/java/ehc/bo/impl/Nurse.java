@@ -34,8 +34,11 @@ public class Nurse extends ResourcePartyRole {
 
 	@Override
 	public boolean isSuitable(ResourceType resourceType) {
-		// TODO Auto-generated method stub
-		return true;
+		if (!(resourceType instanceof NurseType)) {
+			return false;		
+		}
+		NurseType nurseType = (NurseType)resourceType;		
+		return getType().containsSkills(nurseType.getSkills());
 	}
 
 

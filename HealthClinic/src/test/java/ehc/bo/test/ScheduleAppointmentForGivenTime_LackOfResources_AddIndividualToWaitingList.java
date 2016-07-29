@@ -3,32 +3,36 @@ package ehc.bo.test;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.SortedSet;
+import java.util.Map.Entry;
 
 import ehc.bo.Resource;
 import ehc.bo.impl.Appointment;
-import ehc.bo.impl.AppointmentDao;
 import ehc.bo.impl.AppointmentProposal;
-import ehc.bo.impl.AppointmentStateValue;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
 import ehc.bo.impl.ResourceType;
 import ehc.bo.impl.ResourcesUtil;
+import ehc.bo.impl.Room;
+import ehc.bo.impl.RoomDao;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;
 import ehc.bo.impl.User;
+import ehc.bo.impl.WaitingIndividual;
+import ehc.bo.impl.WaitingIndividualDao;
 import ehc.hibernate.HibernateUtil;
 import ehc.util.DateUtil;
 
-public class ChangeAppointment extends RootTestCase {
+public class ScheduleAppointmentForGivenTime_LackOfResources_AddIndividualToWaitingList extends RootTestCase {
 	private String personFirstName = "Jan";
 	private String personLastName = "Novak";
 	private String treatmentName = "Odstraňovanie pigmentov chrbát";
+	private Date when = DateUtil.date(2016, 7, 7, 8, 0, 0);
+	private Date to = DateUtil.date(2016, 7, 7, 9, 20, 0);
 	private TreatmentTypeDao treatmentTypeDao = TreatmentTypeDao.getInstance();
 	private IndividualDao individualDao = IndividualDao.getInstance();
-	private AppointmentDao appointmentDao = AppointmentDao.getInstance();
+	private WaitingIndividualDao waitingIndividualDao = WaitingIndividualDao.getInstance();
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -67,9 +71,9 @@ public class ChangeAppointment extends RootTestCase {
 		// appointment from 7:30 to 8:30
 		Date when = DateUtil.date(2016, 7, 7, 7, 30, 0);
 		Date to = DateUtil.date(2016, 7, 7, 8, 30, 0);
-/*		String treatmentName = "OxyGeneo - tvár";
+		String treatmentName = "OxyGeneo - tvár";
 		String personFirstName = "Janko";
-		String personLastName = "Mrkvicka";*/
+		String personLastName = "Mrkvicka";
 
 		HibernateUtil.beginTransaction();
 		Login login = new Login();
@@ -104,26 +108,19 @@ public class ChangeAppointment extends RootTestCase {
 		HibernateUtil.beginTransaction();
 		User executor = login.login("admin", "admin");
 		Individual person = individualDao.findByFirstAndLastName(personFirstName, personLastName);
-        Appointment appointment = person.getAppointments().get(0);
-        long id = appointment.getId();
-        Date when = DateUtil.date(2016, 7, 7, 9, 0, 0);
-		Date to = DateUtil.date(2016, 7, 7, 10, 30, 0);
-
-		Appointment newAppointment = new Appointment(executor, when, to, appointment.getTreatmentTypes().get(0), person);
-		appointment.setState(executor, AppointmentStateValue.CANCELLED);
-	    appointment.setNext(newAppointment);
-	    newAppointment.setPrevious(appointment);
-	    newAppointment.addResources(appointment.getResources());
-	    HibernateUtil.saveOrUpdate(appointment);	
-		long idNew = addAppointment(newAppointment);
+		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
+		ResourcesUtil resourcesUtil = new ResourcesUtil();
+		AppointmentProposal appointmentProposal = resourcesUtil.getAppointmentProposal(when, to, treatmentType);
 		HibernateUtil.commitTransaction();
-		
+		long id = -1;
+		if (appointmentProposal == null) {
+			WaitingIndividual waitingIndividual = new WaitingIndividual(executor, person, treatmentType, when, to);
+			id = addWaitingIndividual(waitingIndividual);
+		}			
+			
 		HibernateUtil.beginTransaction();
-		appointment = appointmentDao.findById(id);
-		assertTrue(appointment.getState().getValue() == AppointmentStateValue.CANCELLED &&
-				appointment.getNext().getId() == idNew && 
-				appointment.getNext().getPrevious().getId() == id);
-		
+		WaitingIndividual waitingIndividual = waitingIndividualDao.findById(id);
+		assertTrue(waitingIndividual.getIndividual().getFirstName().equals(personFirstName));
 		HibernateUtil.commitTransaction();
 	}
 

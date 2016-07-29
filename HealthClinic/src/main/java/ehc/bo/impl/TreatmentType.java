@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -11,9 +12,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.hibernate.Query;
-import org.hibernate.Session;
 
 @Entity
 @Table(name = "treatment_type")
@@ -23,24 +21,25 @@ public class TreatmentType extends BaseObject{
 	String info;
 	String category;	
 	double price;	
+	double defaultProvision;
 	int duration;
-	List<ResourceType> resourceTypes;
-/*	List<Device> requiredDevices;*/
-	List<Appointment> appointments;
+	List<ResourceType> resourceTypes = new ArrayList<>();
+	List<Appointment> appointments = new ArrayList<>();
+	List<Treatment> executedTreatments = new ArrayList<>();
+	List<ExecutorProvision> executorProvisions = new ArrayList<>();
 	
 	protected TreatmentType() {
 		super();
 		appointments = new ArrayList<Appointment>();
 	}
 	
-	public TreatmentType(User executor, String name, String category, double price, int duration) {
+	public TreatmentType(User executor, String name, String category, double price, double defaultProvision, int duration) {
 		super(executor);
-		appointments = new ArrayList<Appointment>();
-		resourceTypes = new ArrayList<>();
 		this.name = name;
 		this.category = category;
 		this.price = price;
 		this.duration = duration;
+		this.defaultProvision = defaultProvision;
 	}
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -52,6 +51,25 @@ public class TreatmentType extends BaseObject{
 
 	public void setResourceTypes(List<ResourceType> resourceTypes) {
 		this.resourceTypes = resourceTypes;
+	}
+	
+    @OneToMany(mappedBy = "treatmentType")
+	public List<Treatment> getExecutedTreatments() {
+		return executedTreatments;
+	}
+
+	public void setExecutedTreatments(List<Treatment> executedTreatments) {
+		this.executedTreatments = executedTreatments;
+	}
+	
+	
+    @OneToMany(mappedBy = "treatmentType")
+	public List<ExecutorProvision> getExecutorProvisions() {
+		return executorProvisions;
+	}
+
+	public void setExecutorProvisions(List<ExecutorProvision> executorProvisions) {
+		this.executorProvisions = executorProvisions;
 	}
 
 	public String getCategory() {
@@ -66,6 +84,15 @@ public class TreatmentType extends BaseObject{
 		this.price = price;
 	}
 
+	@Column(name = "default_provision")
+	public double getDefaultProvision() {
+		return defaultProvision;
+	}
+
+	public void setDefaultProvision(double defaultProvision) {
+		this.defaultProvision = defaultProvision;
+	}
+
 	public int getDuration() {
 		return duration;
 	}
@@ -78,7 +105,8 @@ public class TreatmentType extends BaseObject{
 		this.category = category;
 	}
 
-	@OneToMany(mappedBy = "treatmentType")
+	/*@OneToMany(mappedBy = "treatmentType")*/
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "treatmentTypes")
 	public List<Appointment> getAppointments() {
 		return appointments;
 	}
@@ -111,23 +139,7 @@ public class TreatmentType extends BaseObject{
 		resourceType.addTreatmentType(this);
 	}
 	
-/*	public static TreatmentType getTreatmentType(long id, Session session) {
-		String hql = "FROM TreatmentType t WHERE t.id = :id";
-		Query query = session.createQuery(hql);
-		query.setParameter("id", id);
-
-		List results = query.list();
-		
-		return (TreatmentType) results.get(0);		
-	}*/
-	
-/*	public static TreatmentType getTreatmentType(String type, Session session) {
-		String hql = "FROM TreatmentType t WHERE t.type = :type";
-		Query query = session.createQuery(hql);
-		query.setParameter("type", type);
-
-		List results = query.list();
-		
-		return (TreatmentType) results.get(0);		
-	}*/
+	public void addTreatment(Treatment treatment) {
+		getExecutedTreatments().add(treatment);
+	}
 }

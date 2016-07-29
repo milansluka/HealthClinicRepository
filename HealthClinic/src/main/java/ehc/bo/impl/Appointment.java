@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -26,8 +27,10 @@ public class Appointment extends BaseObject {
 	Date to;
 	AppointmentState state;
 	Individual individual;
-	TreatmentType treatmentType;
+	/*TreatmentType treatmentType;*/
+	List<TreatmentType> treatmentTypes = new ArrayList<>();
 	List<Resource> resources = new ArrayList<Resource>();
+	List<Treatment> executedTreatments = new ArrayList<Treatment>();
 	Appointment previous = null;
 	Appointment next = null;
 
@@ -39,7 +42,19 @@ public class Appointment extends BaseObject {
 		super(executor);
 		this.from = from;
 		this.to = to;
-		assignTreatmentType(treatmentType);
+		/*assignTreatmentType(treatmentType);*/
+		addTreatmentType(treatmentType);
+		assignIndividual(individual);
+		state = new AppointmentState(executor);
+		state.setAppointment(this);
+	}
+	
+	public Appointment(User executor, Date from, Date to, List<TreatmentType> treatmentTypes, Individual individual) {
+		super(executor);
+		this.from = from;
+		this.to = to;
+		/*assignTreatmentType(treatmentType);*/
+		addTreatmentTypes(treatmentTypes);
 		assignIndividual(individual);
 		state = new AppointmentState(executor);
 		state.setAppointment(this);
@@ -54,6 +69,16 @@ public class Appointment extends BaseObject {
 
 	public void setResources(List<Resource> resources) {
 		this.resources = resources;
+	}
+	
+	
+    @OneToMany(mappedBy = "appointment", cascade = CascadeType.ALL)
+	public List<Treatment> getExecutedTreatments() {
+		return executedTreatments;
+	}
+
+	public void setExecutedTreatments(List<Treatment> executedTreatments) {
+		this.executedTreatments = executedTreatments;
 	}
 
 	@Column(name = "\"from\"")
@@ -113,8 +138,10 @@ public class Appointment extends BaseObject {
 	public void setIndividual(Individual person) {
 		this.individual = person;
 	}
+	
+	
 
-	@ManyToOne
+/*	@ManyToOne
 	@JoinColumn(name = "treatment_id")
 	public TreatmentType getTreatmentType() {
 		return treatmentType;
@@ -122,6 +149,17 @@ public class Appointment extends BaseObject {
 
 	public void setTreatmentType(TreatmentType treatmentType) {
 		this.treatmentType = treatmentType;
+	}*/
+
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@JoinTable(name = "appointment_treatment_type", joinColumns = {@JoinColumn(name = "appointment_id")},
+	inverseJoinColumns = {@JoinColumn(name = "treatment_type_id")})
+	public List<TreatmentType> getTreatmentTypes() {
+		return treatmentTypes;
+	}
+
+	public void setTreatmentTypes(List<TreatmentType> treatmentTypes) {
+		this.treatmentTypes = treatmentTypes;
 	}
 
 	public void assignPerson(Individual person) {
@@ -130,13 +168,29 @@ public class Appointment extends BaseObject {
 			person.addAppointment(this);
 		}
 	}
+	
+	public void addTreatmentType(TreatmentType treatmentType) {
+		if (treatmentType != null) {
+			getTreatmentTypes().add(treatmentType);
+			treatmentType.addAppointment(this);
+		}
+	}
+	
+	public void addTreatmentTypes(List<TreatmentType> treatmentTypes) {
+		if (treatmentTypes == null) {
+			return;
+		}
+		for (TreatmentType treatmentType : treatmentTypes) {
+			addTreatmentType(treatmentType);
+		}
+	}
 
-	public void assignTreatmentType(TreatmentType treatmentType) {
+/*	public void assignTreatmentType(TreatmentType treatmentType) {
 		if (treatmentType != null) {
 			setTreatmentType(treatmentType);
 			treatmentType.addAppointment(this);
 		}
-	}
+	}*/
 	
 	public void assignIndividual(Individual individual) {
 		if (individual != null) {
@@ -181,8 +235,8 @@ public class Appointment extends BaseObject {
 	}
 	
 	public void prepareForDeleting() {
-		removeResources();
-		removeIndividual();
+		/*removeResources();*/
+		/*removeIndividual();*/
 		removeFromNext();
 		removeFromPrevious();
 	}
@@ -204,5 +258,9 @@ public class Appointment extends BaseObject {
 	public void setState(User executor, AppointmentStateValue value) {
 		getState().setModifiedBy(executor);
 		getState().setValue(value);
+	}
+	
+	public void addTreatment(Treatment treatment) {
+		getExecutedTreatments().add(treatment);
 	}
 }
