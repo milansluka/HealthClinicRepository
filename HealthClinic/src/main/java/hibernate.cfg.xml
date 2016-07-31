@@ -65,6 +65,7 @@
 		<mapping class="ehc.bo.impl.ResourceTypeWithSkills" />
 		<mapping class="ehc.bo.impl.ResourceImpl" />
 		<mapping class="ehc.bo.impl.ExecutorProvision" />
+		<mapping class="ehc.bo.impl.Payment" />
 		<!-- <mapping class="ehc.bo.impl.Device" /> -->
 		<!-- <mapping class="ehc.bo.impl.UserRight" /> <mapping class="ehc.bo.impl.Person" 
 			/> <mapping class="ehc.bo.impl.Appointment" /> <mapping class="ehc.bo.impl.Intervention" 

@@ -27,10 +27,11 @@ public class Appointment extends BaseObject {
 	Date to;
 	AppointmentState state;
 	Individual individual;
-	/*TreatmentType treatmentType;*/
+	/* TreatmentType treatmentType; */
 	List<TreatmentType> treatmentTypes = new ArrayList<>();
-	List<Resource> resources = new ArrayList<Resource>();
-	List<Treatment> executedTreatments = new ArrayList<Treatment>();
+	List<Resource> resources = new ArrayList<>();
+	List<Treatment> executedTreatments = new ArrayList<>();
+	List<Payment> payments = new ArrayList<>();
 	Appointment previous = null;
 	Appointment next = null;
 
@@ -42,27 +43,27 @@ public class Appointment extends BaseObject {
 		super(executor);
 		this.from = from;
 		this.to = to;
-		/*assignTreatmentType(treatmentType);*/
+		/* assignTreatmentType(treatmentType); */
 		addTreatmentType(treatmentType);
 		assignIndividual(individual);
 		state = new AppointmentState(executor);
 		state.setAppointment(this);
 	}
-	
+
 	public Appointment(User executor, Date from, Date to, List<TreatmentType> treatmentTypes, Individual individual) {
 		super(executor);
 		this.from = from;
 		this.to = to;
-		/*assignTreatmentType(treatmentType);*/
+		/* assignTreatmentType(treatmentType); */
 		addTreatmentTypes(treatmentTypes);
 		assignIndividual(individual);
 		state = new AppointmentState(executor);
 		state.setAppointment(this);
 	}
-	
+
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, targetEntity = ResourceImpl.class)
-	@JoinTable(name = "appointment_resource", joinColumns = {@JoinColumn(name = "appointment_id")},
-	inverseJoinColumns = {@JoinColumn(name = "resource_id")})
+	@JoinTable(name = "appointment_resource", joinColumns = {
+			@JoinColumn(name = "appointment_id") }, inverseJoinColumns = { @JoinColumn(name = "resource_id") })
 	public List<Resource> getResources() {
 		return resources;
 	}
@@ -70,15 +71,23 @@ public class Appointment extends BaseObject {
 	public void setResources(List<Resource> resources) {
 		this.resources = resources;
 	}
-	
-	
-    @OneToMany(mappedBy = "appointment", cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "appointment", cascade = CascadeType.ALL)
 	public List<Treatment> getExecutedTreatments() {
 		return executedTreatments;
 	}
 
 	public void setExecutedTreatments(List<Treatment> executedTreatments) {
 		this.executedTreatments = executedTreatments;
+	}
+
+	@OneToMany(mappedBy = "appointment", cascade = CascadeType.ALL)
+	public List<Payment> getPayments() {
+		return payments;
+	}
+
+	public void setPayments(List<Payment> payments) {
+		this.payments = payments;
 	}
 
 	@Column(name = "\"from\"")
@@ -98,9 +107,9 @@ public class Appointment extends BaseObject {
 	public void setTo(Date to) {
 		this.to = to;
 	}
-	
-	@OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL)	
-    public AppointmentState getState() {
+
+	@OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL)
+	public AppointmentState getState() {
 		return state;
 	}
 
@@ -109,7 +118,7 @@ public class Appointment extends BaseObject {
 	}
 
 	@OneToOne
-    @JoinColumn(name = "previous")
+	@JoinColumn(name = "previous")
 	public Appointment getPrevious() {
 		return previous;
 	}
@@ -138,22 +147,20 @@ public class Appointment extends BaseObject {
 	public void setIndividual(Individual person) {
 		this.individual = person;
 	}
-	
-	
 
-/*	@ManyToOne
-	@JoinColumn(name = "treatment_id")
-	public TreatmentType getTreatmentType() {
-		return treatmentType;
-	}
-
-	public void setTreatmentType(TreatmentType treatmentType) {
-		this.treatmentType = treatmentType;
-	}*/
+	/*
+	 * @ManyToOne
+	 * 
+	 * @JoinColumn(name = "treatment_id") public TreatmentType
+	 * getTreatmentType() { return treatmentType; }
+	 * 
+	 * public void setTreatmentType(TreatmentType treatmentType) {
+	 * this.treatmentType = treatmentType; }
+	 */
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-	@JoinTable(name = "appointment_treatment_type", joinColumns = {@JoinColumn(name = "appointment_id")},
-	inverseJoinColumns = {@JoinColumn(name = "treatment_type_id")})
+	@JoinTable(name = "appointment_treatment_type", joinColumns = {
+			@JoinColumn(name = "appointment_id") }, inverseJoinColumns = { @JoinColumn(name = "treatment_type_id") })
 	public List<TreatmentType> getTreatmentTypes() {
 		return treatmentTypes;
 	}
@@ -168,14 +175,14 @@ public class Appointment extends BaseObject {
 			person.addAppointment(this);
 		}
 	}
-	
+
 	public void addTreatmentType(TreatmentType treatmentType) {
 		if (treatmentType != null) {
 			getTreatmentTypes().add(treatmentType);
 			treatmentType.addAppointment(this);
 		}
 	}
-	
+
 	public void addTreatmentTypes(List<TreatmentType> treatmentTypes) {
 		if (treatmentTypes == null) {
 			return;
@@ -185,20 +192,19 @@ public class Appointment extends BaseObject {
 		}
 	}
 
-/*	public void assignTreatmentType(TreatmentType treatmentType) {
-		if (treatmentType != null) {
-			setTreatmentType(treatmentType);
-			treatmentType.addAppointment(this);
-		}
-	}*/
-	
+	/*
+	 * public void assignTreatmentType(TreatmentType treatmentType) { if
+	 * (treatmentType != null) { setTreatmentType(treatmentType);
+	 * treatmentType.addAppointment(this); } }
+	 */
+
 	public void assignIndividual(Individual individual) {
 		if (individual != null) {
 			setIndividual(individual);
 			individual.addAppointment(this);
 		}
 	}
-	
+
 	public void addResource(Resource resource) {
 		if (resource == null) {
 			return;
@@ -207,18 +213,21 @@ public class Appointment extends BaseObject {
 		resource.addAppointment(this);
 	}
 	
+	public void addPayment(Payment payment) {
+		getPayments().add(payment);
+	}
+
 	public void removeIndividual() {
 		getIndividual().removeAppointment(this);
 	}
-	
+
 	public void removeResource(Resource resource) {
-	/*	if (resource == null) {
-			return;
-		}
-		getResources().remove(resource);*/
-		resource.removeAppointment(this);	
+		/*
+		 * if (resource == null) { return; } getResources().remove(resource);
+		 */
+		resource.removeAppointment(this);
 	}
-	
+
 	public void addResources(List<Resource> resources) {
 		if (resources == null) {
 			return;
@@ -227,39 +236,39 @@ public class Appointment extends BaseObject {
 			addResource(resource);
 		}
 	}
-	
+
 	public void removeResources() {
 		for (Resource resource : getResources()) {
 			removeResource(resource);
 		}
 	}
-	
+
 	public void prepareForDeleting() {
-		/*removeResources();*/
-		/*removeIndividual();*/
+		/* removeResources(); */
+		/* removeIndividual(); */
 		removeFromNext();
 		removeFromPrevious();
 	}
-	
+
 	public void removeFromNext() {
 		if (getNext() == null) {
 			return;
 		}
-		getNext().setPrevious(null);	
+		getNext().setPrevious(null);
 	}
-	
+
 	public void removeFromPrevious() {
 		if (getPrevious() == null) {
 			return;
 		}
-		getPrevious().setNext(null);		
+		getPrevious().setNext(null);
 	}
-	
+
 	public void setState(User executor, AppointmentStateValue value) {
 		getState().setModifiedBy(executor);
 		getState().setValue(value);
 	}
-	
+
 	public void addTreatment(Treatment treatment) {
 		getExecutedTreatments().add(treatment);
 	}

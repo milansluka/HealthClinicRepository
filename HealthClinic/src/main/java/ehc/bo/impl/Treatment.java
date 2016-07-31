@@ -24,6 +24,7 @@ public class Treatment extends ModifiableObject {
 	private Date to;
 	private Appointment appointment;
 	private TreatmentType treatmentType;
+	private Payment payment;
 	private List<Resource> resources = new ArrayList<>();
 	private double price;
 	
@@ -58,6 +59,16 @@ public class Treatment extends ModifiableObject {
 
 	public void setTreatmentType(TreatmentType treatmentType) {
 		this.treatmentType = treatmentType;
+	}
+	
+    @ManyToOne
+    @JoinColumn(name = "payment_id")
+	public Payment getPayment() {
+		return payment;
+	}
+
+	public void setPayment(Payment payment) {
+		this.payment = payment;
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, targetEntity = ResourceImpl.class)

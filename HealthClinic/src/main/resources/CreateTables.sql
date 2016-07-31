@@ -84,6 +84,7 @@ Create table "treatment"
 	"id" BigSerial NOT NULL,
 	"appointment_id" Bigint NOT NULL,
 	"treatment_type_id" Bigint NOT NULL,
+    "payment_id" Bigint,
 	"price" Double precision NOT NULL,
     "from" Timestamp NOT NULL,
 	"to" Timestamp NOT NULL,
@@ -320,6 +321,17 @@ Create table "appointment_resource"
  primary key ("resource_id","appointment_id")
 ) Without Oids;
 
+Create table "payment"
+(
+	"id" BigSerial NOT NULL,
+	"appointment_id" Bigint NOT NULL,
+	"modified_by" Bigint,
+	"created_by" Bigint NOT NULL,
+	"created_on" Timestamp NOT NULL,
+	"modified_on" Timestamp,
+ primary key ("id")
+) Without Oids;
+
 Create table "communication_channel"
 (
 	"id" BigSerial NOT NULL,
@@ -381,6 +393,8 @@ Alter table "appointment" add  foreign key ("created_by") references "system_use
 Alter table "treatment" add  foreign key ("appointment_id") references "appointment" ("id") on update restrict on delete restrict;
 
 Alter table "treatment" add  foreign key ("treatment_type_id") references "treatment_type" ("id") on update restrict on delete restrict;
+
+Alter table "treatment" add  foreign key ("payment_id") references "payment" ("id") on update restrict on delete restrict;
 
 Alter table "treatment_type" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
 
@@ -507,3 +521,9 @@ Alter table "waiting_list" add  foreign key ("modified_by") references "system_u
 Alter table "executor_treatment_type" add  foreign key ("treatment_type_id") references "treatment_type" ("id") on update restrict on delete restrict;
 
 Alter table "executor_treatment_type" add  foreign key ("executor_id") references "resource_party_role" ("id") on update restrict on delete restrict;
+
+Alter table "payment" add  foreign key ("appointment_id") references "appointment" ("id") on update restrict on delete restrict;
+
+Alter table "payment" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "payment" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
