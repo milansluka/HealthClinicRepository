@@ -12,7 +12,6 @@ import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
 import ehc.bo.impl.Physician;
-import ehc.bo.impl.ResourceType;
 import ehc.bo.impl.Treatment;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;

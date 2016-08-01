@@ -1,6 +1,35 @@
 set schema 'dbo';
 
 /* Create Tables */
+
+Create table "attachment"
+(
+	"id" BigSerial NOT NULL,
+	"treatment_id" Bigint NOT NULL,
+	"name" Varchar(1024) NOT NULL,
+	"path" Varchar(2048) NOT NULL,
+	"created_on" Timestamp NOT NULL,
+	"modified_on" Timestamp,
+	"created_by" Bigint NOT NULL,
+	"modified_by" Bigint,
+ primary key ("id")
+) Without Oids;
+
+Create table "communication_channel"
+(
+	"id" BigSerial NOT NULL,
+	"valid_from" Timestamp NOT NULL,
+	"valid_to" Timestamp,
+	"value" Varchar(512) NOT NULL,
+	"discriminator" Integer NOT NULL,
+    "created_on" Timestamp NOT NULL,
+	"modified_on" Timestamp,
+	"created_by" Bigint NOT NULL,
+	"modified_by" Bigint,
+	"party_id" Bigint NOT NULL,
+ primary key ("id")
+) Without Oids;
+
 Create table "system_user"
 (
 	"name" Varchar(64) NOT NULL UNIQUE,
@@ -325,21 +354,13 @@ Create table "payment"
 (
 	"id" BigSerial NOT NULL,
 	"appointment_id" Bigint NOT NULL,
+	"paid_amount" Double precision NOT NULL,
 	"modified_by" Bigint,
 	"created_by" Bigint NOT NULL,
 	"created_on" Timestamp NOT NULL,
 	"modified_on" Timestamp,
  primary key ("id")
 ) Without Oids;
-
-Create table "communication_channel"
-(
-	"id" BigSerial NOT NULL,
-	"value" Varchar(256) NOT NULL,
-	"discriminator" Integer NOT NULL UNIQUE,
- primary key ("id")
-) Without Oids;
-
 
 Create table "config"
 (
@@ -527,3 +548,16 @@ Alter table "payment" add  foreign key ("appointment_id") references "appointmen
 Alter table "payment" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
 
 Alter table "payment" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "attachment" add  foreign key ("treatment_id") references "treatment" ("id") on update restrict on delete restrict;
+
+Alter table "attachment" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "attachment" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "communication_channel" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "communication_channel" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "communication_channel" add  foreign key ("party_id") references "party" ("id") on update restrict on delete restrict;
+

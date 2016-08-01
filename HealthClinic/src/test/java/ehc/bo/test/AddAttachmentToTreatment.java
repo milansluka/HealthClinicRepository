@@ -4,36 +4,44 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Hibernate;
+
 import ehc.bo.Resource;
 import ehc.bo.impl.Appointment;
 import ehc.bo.impl.AppointmentDao;
 import ehc.bo.impl.AppointmentStateValue;
+import ehc.bo.impl.Attachment;
+import ehc.bo.impl.Company;
+import ehc.bo.impl.CompanyDao;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
-import ehc.bo.impl.Payment;
-import ehc.bo.impl.PaymentDao;
+import ehc.bo.impl.Nurse;
+import ehc.bo.impl.NurseType;
+import ehc.bo.impl.ResourcePartyRole;
 import ehc.bo.impl.Treatment;
+import ehc.bo.impl.TreatmentDao;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;
 import ehc.bo.impl.User;
 import ehc.hibernate.HibernateUtil;
 import ehc.util.DateUtil;
 
-public class PayForTreatments extends RootTestCase {
+public class AddAttachmentToTreatment extends RootTestCase {
 	private TreatmentTypeDao treatmentTypeDao = TreatmentTypeDao.getInstance();
 	private IndividualDao individualDao = IndividualDao.getInstance();
 	private AppointmentDao appointmentDao = AppointmentDao.getInstance();
-	private List<Long> appointmentIds = new ArrayList<>();
+	private TreatmentDao treatmentDao = TreatmentDao.getInstance();
+	private List<Long> treatmentIds = new ArrayList<>();
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		
+
 		if (!isSystemSet()) {
 			setUpSystem();
 		}
-			
-		//appointment 2.7.2016 from 7:30 to 8:30
+
+		// appointment 2.7.2016 from 7:30 to 8:30
 		HibernateUtil.beginTransaction();
 		Login login = new Login();
 		User executor = login.login("admin", "admin");
@@ -49,45 +57,33 @@ public class PayForTreatments extends RootTestCase {
 		Appointment appointment = new Appointment(executor, from, to, treatmentTypes, individual);
 		appointment.addResources(resources);
 		long appId = addAppointment(appointment);
-		appointmentIds.add(appId);
 		HibernateUtil.commitTransaction();
-		
-		//execute treatments	
+
+		// execute treatments
 		HibernateUtil.beginTransaction();
 		Appointment appointment2 = appointmentDao.findById(appId);
-		Treatment treatment = new Treatment(executor, appointment2, appointment2.getTreatmentTypes().get(0), 80, appointment2.getFrom(), appointment2.getTo());
+		Treatment treatment = new Treatment(executor, appointment2, appointment2.getTreatmentTypes().get(0), 80,
+				appointment2.getFrom(), appointment2.getTo());
 		appointment.setState(executor, AppointmentStateValue.CONFIRMED);
 		treatment.addResource(appointment2.getResources().get(0));
-		HibernateUtil.save(treatment);
+		long treatmentId = (long) HibernateUtil.save(treatment);
+		treatmentIds.add(treatmentId);
 		HibernateUtil.commitTransaction();
 	}
-	
+
 	public void testApp() {
 		HibernateUtil.beginTransaction();
 		Login login = new Login();
 		User executor = login.login("admin", "admin");
-		Appointment appointment = appointmentDao.findById(appointmentIds.get(0));
-	/*	Treatment treatment = appointment.getExecutedTreatments().get(0);*/
-		
-		double paidAmount = 0;
-		
-		for (Treatment treatment : appointment.getExecutedTreatments()) {
-			paidAmount += treatment.getPrice();
-		}
-		
-		long paymentId = -1;
-		
-		Payment payment = new Payment(executor, appointment, appointment.getExecutedTreatments(), paidAmount);
-		if (payment.isSufficient()) {
-			paymentId = (long)HibernateUtil.save(payment);		
-		}
-	
+		Treatment treatment = treatmentDao.findById(treatmentIds.get(0));
+		Attachment attachment = new Attachment(executor, "some attachment", "/", treatment);
+		HibernateUtil.save(attachment);
 		HibernateUtil.commitTransaction();
-		
+
 		HibernateUtil.beginTransaction();
-		PaymentDao paymentDao = PaymentDao.getInstance();
-		payment = paymentDao.findById(paymentId);
-		assertTrue(payment.getPaidAmount() == paidAmount);
+		treatment = treatmentDao.findById(treatmentIds.get(0));
+		attachment = treatment.getAttachments().get(0);
+        assertTrue(attachment.getName().equals("some attachment"));
 		HibernateUtil.commitTransaction();
 	}
 

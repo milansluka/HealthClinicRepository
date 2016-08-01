@@ -12,11 +12,12 @@ import javax.persistence.OneToMany;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Party extends ModifiableObject implements Comparable<Party> {
-	String name;
-	List<PartyRole> sourceRoles = new ArrayList<>();
-	List<PartyRole> targetRoles = new ArrayList<>();
-	List<ResourcePartyRole> reservableSourceRoles = new ArrayList<>();
-	List<ResourcePartyRole> reservableTargetRoles = new ArrayList<>();
+	private String name;
+	private List<PartyRole> sourceRoles = new ArrayList<>();
+	private List<PartyRole> targetRoles = new ArrayList<>();
+	private List<ResourcePartyRole> reservableSourceRoles = new ArrayList<>();
+	private List<ResourcePartyRole> reservableTargetRoles = new ArrayList<>();
+	private List<CommunicationChannel> communicationChannels = new ArrayList<>();
 
 	protected Party() {
 		super();
@@ -48,7 +49,6 @@ public class Party extends ModifiableObject implements Comparable<Party> {
 		this.targetRoles = roles;
 	}
 
-/*	@OneToMany(mappedBy = "source", orphanRemoval = true)*/
 	@OneToMany(mappedBy = "source", cascade = CascadeType.ALL)
 	public List<ResourcePartyRole> getReservableSourceRoles() {
 		return reservableSourceRoles;
@@ -58,7 +58,6 @@ public class Party extends ModifiableObject implements Comparable<Party> {
 		this.reservableSourceRoles = reservableSourceRoles;
 	}
 
-/*	@OneToMany(mappedBy = "target", orphanRemoval = true)*/
 	@OneToMany(mappedBy = "target", cascade = CascadeType.ALL)
 	public List<ResourcePartyRole> getReservableTargetRoles() {
 		return reservableTargetRoles;
@@ -66,6 +65,15 @@ public class Party extends ModifiableObject implements Comparable<Party> {
 
 	public void setReservableTargetRoles(List<ResourcePartyRole> reservableTargetRoles) {
 		this.reservableTargetRoles = reservableTargetRoles;
+	}
+	
+	@OneToMany(mappedBy = "party", cascade = CascadeType.ALL)
+	public List<CommunicationChannel> getCommunicationChannels() {
+		return communicationChannels;
+	}
+
+	public void setCommunicationChannels(List<CommunicationChannel> communicationChannels) {
+		this.communicationChannels = communicationChannels;
 	}
 
 	public void addTargetRole(PartyRole role) {
@@ -102,6 +110,10 @@ public class Party extends ModifiableObject implements Comparable<Party> {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public void addCommunicationChannel(CommunicationChannel communicationChannel) {
+		getCommunicationChannels().add(communicationChannel);
 	}
 
 	@Override

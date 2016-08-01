@@ -50,6 +50,7 @@
 		<mapping class="ehc.bo.impl.Company" />
 		<mapping class="ehc.bo.impl.Appointment" />
 		<mapping class="ehc.bo.impl.AppointmentState" />
+		<mapping class="ehc.bo.impl.Attachment" />
 		<mapping class="ehc.bo.impl.Treatment" />
 		<mapping class="ehc.bo.impl.TreatmentType" />
 		<mapping class="ehc.bo.impl.Physician" />
@@ -66,6 +67,9 @@
 		<mapping class="ehc.bo.impl.ResourceImpl" />
 		<mapping class="ehc.bo.impl.ExecutorProvision" />
 		<mapping class="ehc.bo.impl.Payment" />
+		<mapping class="ehc.bo.impl.CommunicationChannel" />
+		<mapping class="ehc.bo.impl.Email" />
+		<mapping class="ehc.bo.impl.Phone" />
 		<!-- <mapping class="ehc.bo.impl.Device" /> -->
 		<!-- <mapping class="ehc.bo.impl.UserRight" /> <mapping class="ehc.bo.impl.Person" 
 			/> <mapping class="ehc.bo.impl.Appointment" /> <mapping class="ehc.bo.impl.Intervention" 

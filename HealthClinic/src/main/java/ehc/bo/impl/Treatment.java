@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import ehc.bo.Resource;
 
@@ -26,6 +27,7 @@ public class Treatment extends ModifiableObject {
 	private TreatmentType treatmentType;
 	private Payment payment;
 	private List<Resource> resources = new ArrayList<>();
+	private List<Attachment> attachments = new ArrayList<>();
 	private double price;
 	
 	protected Treatment() {
@@ -81,9 +83,20 @@ public class Treatment extends ModifiableObject {
 	public void setResources(List<Resource> resources) {
 		this.resources = resources;
 	}
+	
+	@OneToMany(mappedBy = "treatment", cascade = CascadeType.ALL)
+	public List<Attachment> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(List<Attachment> attachments) {
+		this.attachments = attachments;
+	}
+
 	public double getPrice() {
 		return price;
 	}
+	
 	public void setPrice(double price) {
 		this.price = price;
 	}
@@ -112,6 +125,10 @@ public class Treatment extends ModifiableObject {
 		}
 		getResources().add(resource);
 		resource.addTreatment(this);
+	}
+	
+	public void addAttachment(Attachment attachment) {
+		getAttachments().add(attachment);
 	}
 	
 	private void addAppointment(Appointment appointment) {
