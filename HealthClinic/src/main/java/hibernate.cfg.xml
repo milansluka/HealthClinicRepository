@@ -67,6 +67,7 @@
 		<mapping class="ehc.bo.impl.ResourceImpl" />
 		<mapping class="ehc.bo.impl.ExecutorProvision" />
 		<mapping class="ehc.bo.impl.Payment" />
+		<mapping class="ehc.bo.impl.PaymentChannel" />
 		<mapping class="ehc.bo.impl.CommunicationChannel" />
 		<mapping class="ehc.bo.impl.Email" />
 		<mapping class="ehc.bo.impl.Phone" />

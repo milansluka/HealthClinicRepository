@@ -307,6 +307,7 @@ Create table "device"
 Create table "device_type"
 (
 	"id" Bigint NOT NULL,
+	"name" Varchar(512) NOT NULL,
  primary key ("id")
 ) Without Oids;
 
@@ -355,10 +356,31 @@ Create table "payment"
 	"id" BigSerial NOT NULL,
 	"appointment_id" Bigint NOT NULL,
 	"paid_amount" Double precision NOT NULL,
+	"payment_channel_id" Bigint NOT NULL,
 	"modified_by" Bigint,
 	"created_by" Bigint NOT NULL,
 	"created_on" Timestamp NOT NULL,
 	"modified_on" Timestamp,
+ primary key ("id")
+) Without Oids;
+
+Create table "payment_channel"
+(
+	"id" BigSerial NOT NULL,
+	"party_id" Bigint NOT NULL,
+	"modified_by" Bigint,
+	"created_by" Bigint NOT NULL,
+	"created_on" Timestamp NOT NULL,
+	"modified_on" Timestamp,
+	
+ primary key ("id")
+) Without Oids;
+
+Create table "credit_card"
+(
+	"id" Bigint NOT NULL,
+	"card_number" Varchar(32) NOT NULL,
+	"card_expiry" Timestamp NOT NULL,
  primary key ("id")
 ) Without Oids;
 
@@ -545,6 +567,8 @@ Alter table "executor_treatment_type" add  foreign key ("executor_id") reference
 
 Alter table "payment" add  foreign key ("appointment_id") references "appointment" ("id") on update restrict on delete restrict;
 
+Alter table "payment" add  foreign key ("payment_channel_id") references "payment_channel" ("id") on update restrict on delete restrict;
+
 Alter table "payment" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
 
 Alter table "payment" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
@@ -561,3 +585,8 @@ Alter table "communication_channel" add  foreign key ("modified_by") references 
 
 Alter table "communication_channel" add  foreign key ("party_id") references "party" ("id") on update restrict on delete restrict;
 
+Alter table "payment_channel" add  foreign key ("party_id") references "party" ("id") on update restrict on delete restrict;
+
+Alter table "payment_channel" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "payment_channel" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;

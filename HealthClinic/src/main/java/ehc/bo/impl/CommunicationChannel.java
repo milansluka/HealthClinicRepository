@@ -69,12 +69,12 @@ public class CommunicationChannel extends ModifiableObject {
 		this.value = value;
 	}
 	
-	public void assignParty(Party party) {
+/*	public void assignParty(Party party) {
 		if (party == null) {
 			return;
 		}
 		setParty(party);
 		party.addCommunicationChannel(this);
-	}
+	}*/
 
 }

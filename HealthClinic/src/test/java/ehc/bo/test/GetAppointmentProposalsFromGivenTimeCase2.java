@@ -81,7 +81,7 @@ public class GetAppointmentProposalsFromGivenTimeCase2 extends RootTestCase {
         assertTrue(countOfPhysicians == 2 && recommendedPhysician.getFirstName().equals("Marika") 
         		&& recommendedPhysician.getName().equals("Piršelová")
         		&& countOfRooms == 2 && recommendedRom.getName().equals("test room 3")
-        		&& countOfDevices == 2 && recommendedDevice.getName().equals("test device 3"));
+        		&& countOfDevices == 3 && recommendedDevice.getName().equals("test device 3"));
 
 	}
 

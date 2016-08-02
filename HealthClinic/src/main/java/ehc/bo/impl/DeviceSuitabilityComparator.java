@@ -6,8 +6,8 @@ public class DeviceSuitabilityComparator implements Comparator<Device> {
 
 	@Override
 	public int compare(Device device1, Device device2) {
-	    
-		return device1.getType().getPossibleTreatmentTypes().size() - device2.getType().getPossibleTreatmentTypes().size();
+	    return -1;
+		/*return device1.getType().getPossibleTreatmentTypes().size() - device2.getType().getPossibleTreatmentTypes().size();*/
 	}
 
 }

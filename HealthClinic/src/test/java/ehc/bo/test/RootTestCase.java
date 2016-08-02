@@ -187,12 +187,12 @@ public class RootTestCase extends TestCase {
 		HibernateUtil.beginTransaction();
 		Login login = new Login();
 		User executor = login.login("admin", "admin");
-		DeviceType deviceType = new DeviceType(executor);
-		TreatmentType treatmentType = null;
-		for (String treatmentTypeName : treatmentTypeNames) {
+		DeviceType deviceType = new DeviceType(executor, "laser");
+		/*TreatmentType treatmentType = null;*/
+	/*	for (String treatmentTypeName : treatmentTypeNames) {
 			treatmentType = treatmentDao.findByName(treatmentTypeName);	
 			deviceType.addPossibleTreatmentType(treatmentType);
-		}
+		}*/
 		Device device = new Device(executor, deviceType, name);
 		long id = (long) HibernateUtil.save(device);
 		deviceIds.add(id);		
@@ -603,7 +603,7 @@ public class RootTestCase extends TestCase {
 		PhysicianType physicianType1 = new PhysicianType(executor);
 	    NurseType nurseType1 = new NurseType(executor);
 		RoomType roomType1 = new RoomType(executor);
-		DeviceType deviceType1 = new DeviceType(executor);
+		DeviceType deviceType1 = new DeviceType(executor, "laser");
 		
 		physicianType1.addSkill(getSkill("test skill3"));
 		
@@ -621,7 +621,7 @@ public class RootTestCase extends TestCase {
 		PhysicianType physicianType2 = new PhysicianType(executor);
 		NurseType nurseType2 = new NurseType(executor);
 		RoomType roomType2 = new RoomType(executor);
-		DeviceType deviceType2 = new DeviceType(executor);
+		DeviceType deviceType2 = new DeviceType(executor, "laser");
 		
 		physicianType2.addSkill(getSkill("test skill1"));
 		physicianType2.addSkill(getSkill("test skill2"));

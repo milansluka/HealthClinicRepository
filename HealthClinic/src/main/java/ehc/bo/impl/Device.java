@@ -44,8 +44,9 @@ public class Device extends ResourceImpl {
 		if (!(resourceType instanceof DeviceType)) {
 			return false;		
 		}
-		DeviceType deviceType = (DeviceType)resourceType;		
-		return getType().containsTreatmentType(deviceType.getTreatmentTypes().get(0));
+		DeviceType deviceType = (DeviceType)resourceType;
+		return getType().getName().equals(deviceType.getName());
+		/*return getType().containsTreatmentType(deviceType.getTreatmentTypes().get(0));*/
 	}
 
 }

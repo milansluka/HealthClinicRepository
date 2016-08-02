@@ -1,6 +1,7 @@
 package ehc.bo.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -19,14 +20,17 @@ public class Payment extends ModifiableObject {
 	private Appointment appointment;
     private List<Treatment> treatments = new ArrayList<>();
     private double paidAmount = 0;
+/*    private Party payer;*/
+    private PaymentChannel paymentChannel;
       
     protected Payment() {
 		super();
 	}
     
-	public Payment(User executor, Appointment appointment, List<Treatment> treatmentsForPay, double paidSum) {
+	public Payment(User executor, Appointment appointment, List<Treatment> treatmentsForPay, PaymentChannel paymentChannel, double paidSum) {
 		super(executor);
 		assignAppointment(appointment);
+		assignPaymentChannel(paymentChannel);
 		addTreatments(treatmentsForPay);
 		this.paidAmount = paidSum;
 	}
@@ -50,6 +54,21 @@ public class Payment extends ModifiableObject {
 		this.appointment = appointment;
 	}
 	
+	@Transient
+	public Party getPayer() {
+		return getPaymentChannel().getParty();
+	}
+
+	@ManyToOne
+	@JoinColumn(name = "payment_channel_id")
+	public PaymentChannel getPaymentChannel() {
+		return paymentChannel;
+	}
+
+	public void setPaymentChannel(PaymentChannel paymentChannel) {
+		this.paymentChannel = paymentChannel;
+	}
+
 	@OneToMany(mappedBy = "payment", cascade = CascadeType.ALL)
 	public List<Treatment> geTreatments() {
 		return treatments;
@@ -64,6 +83,14 @@ public class Payment extends ModifiableObject {
 		}
 		this.appointment = appointment;
 		appointment.addPayment(this);	
+	}
+	
+	public void assignPaymentChannel(PaymentChannel paymentChannel) {
+		if (paymentChannel == null) {
+			return;
+		}
+		this.paymentChannel = paymentChannel;
+		paymentChannel.addPayment(this);	
 	}
 	
 	public void addTreatment(Treatment treatment) {
@@ -88,5 +115,10 @@ public class Payment extends ModifiableObject {
 		}
 		
 		return paidAmount >= neededAmount;
+	}
+	
+	@Transient
+	public Date getDateOfExecution() {
+		return getCreatedOn();
 	}
 }

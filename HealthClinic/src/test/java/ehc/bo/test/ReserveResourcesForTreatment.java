@@ -66,7 +66,7 @@ public class ReserveResourcesForTreatment extends RootTestCase {
 		resourceTypes.add(nurseType);
 		RoomType roomType = new RoomType(executor);
 		resourceTypes.add(roomType);
-		DeviceType deviceType = new DeviceType(executor);
+		DeviceType deviceType = new DeviceType(executor, "laser");
 		resourceTypes.add(deviceType);
 		addTreatmentType(treatmentName, "empty", resourceTypes, 60);
 		HibernateUtil.commitTransaction();

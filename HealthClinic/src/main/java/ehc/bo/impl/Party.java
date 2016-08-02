@@ -18,6 +18,7 @@ public class Party extends ModifiableObject implements Comparable<Party> {
 	private List<ResourcePartyRole> reservableSourceRoles = new ArrayList<>();
 	private List<ResourcePartyRole> reservableTargetRoles = new ArrayList<>();
 	private List<CommunicationChannel> communicationChannels = new ArrayList<>();
+	private List<PaymentChannel> paymentChannels = new ArrayList<>();
 
 	protected Party() {
 		super();
@@ -75,6 +76,15 @@ public class Party extends ModifiableObject implements Comparable<Party> {
 	public void setCommunicationChannels(List<CommunicationChannel> communicationChannels) {
 		this.communicationChannels = communicationChannels;
 	}
+	
+	@OneToMany(mappedBy = "party", cascade = CascadeType.ALL)
+	public List<PaymentChannel> getPaymentChannels() {
+		return paymentChannels;
+	}
+
+	public void setPaymentChannels(List<PaymentChannel> paymentChannels) {
+		this.paymentChannels = paymentChannels;
+	}
 
 	public void addTargetRole(PartyRole role) {
 		if (role == null)
@@ -114,6 +124,10 @@ public class Party extends ModifiableObject implements Comparable<Party> {
 	
 	public void addCommunicationChannel(CommunicationChannel communicationChannel) {
 		getCommunicationChannels().add(communicationChannel);
+	}
+	
+	public void addPaymentChannel(PaymentChannel paymentChannel) {
+		getPaymentChannels().add(paymentChannel);
 	}
 
 	@Override
