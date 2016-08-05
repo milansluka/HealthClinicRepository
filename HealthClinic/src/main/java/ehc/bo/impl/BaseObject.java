@@ -29,7 +29,6 @@ public class BaseObject {
 	}
 
 	@Id
-	/* @GeneratedValue(strategy = GenerationType.SEQUENCE) */
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public long getId() {
 		return id;

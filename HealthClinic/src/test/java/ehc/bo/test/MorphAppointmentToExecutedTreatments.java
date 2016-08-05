@@ -1,5 +1,6 @@
 package ehc.bo.test;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,13 +15,15 @@ import ehc.bo.impl.AppointmentStateValue;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
+import ehc.bo.impl.Money;
 import ehc.bo.impl.Physician;
 import ehc.bo.impl.ResourceType;
-import ehc.bo.impl.ResourcesUtil;
+import ehc.bo.impl.AppointmentProposalUtil;
 import ehc.bo.impl.Treatment;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;
 import ehc.bo.impl.User;
+import ehc.bo.impl.WorkTime;
 import ehc.hibernate.HibernateUtil;
 import ehc.util.DateUtil;
 
@@ -57,8 +60,12 @@ public class MorphAppointmentToExecutedTreatments extends RootTestCase {
 			HibernateUtil.commitTransaction();
 
 		}
+		
+		HibernateUtil.beginTransaction();
+		WorkTime workTime = getWorkTime();
+		HibernateUtil.commitTransaction();
 
-		ResourcesUtil resourcesUtil = new ResourcesUtil();
+		AppointmentProposalUtil resourcesUtil = new AppointmentProposalUtil(workTime);
 
 		// appointment from 7:30 to 8:30
 		Date when = DateUtil.date(2016, 7, 7, 7, 30, 0);
@@ -72,7 +79,9 @@ public class MorphAppointmentToExecutedTreatments extends RootTestCase {
 		User executor = login.login("admin", "admin");
 		Individual individual = individualDao.findByFirstAndLastName(personFirstName, personLastName);
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
-		List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentType, 1);
+		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		treatmentTypes.add(treatmentType);
+		List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentTypes, 1);
 
 		AppointmentProposal appointmentProposal = appointmentProposals.get(0);
 		List<Resource> resources = new ArrayList<>();
@@ -94,7 +103,7 @@ public class MorphAppointmentToExecutedTreatments extends RootTestCase {
 		Appointment appointment = appointmentDao.findById(appointmentId);
 		TreatmentType treatmentType = treatmentTypeDao.findByName("Odstraňovanie pigmentov chrbát");
 		appointment.setState(executor, AppointmentStateValue.CONFIRMED);
-		Treatment treatment = new Treatment(executor, appointment, treatmentType, 50, appointment.getFrom(), appointment.getTo());
+		Treatment treatment = new Treatment(executor, appointment, treatmentType, new Money(new BigDecimal("50.0")), appointment.getFrom(), appointment.getTo());
 		Individual executorOfTreatment = individualDao.findByFirstAndLastName("Mária", "Petrášová");
 		Physician physician = (Physician)executorOfTreatment.getReservableSourceRoles().get(0);
 		treatment.addResource(physician);
@@ -103,7 +112,8 @@ public class MorphAppointmentToExecutedTreatments extends RootTestCase {
 		
 		HibernateUtil.beginTransaction();
 		appointment = appointmentDao.findById(appointmentId);
-		assertTrue(appointment.getExecutedTreatments().get(0).getPrice() == 50);
+		Money money = new Money(new BigDecimal("50.0"));
+		assertTrue(appointment.getExecutedTreatments().get(0).getPrice().equals(money));
 		HibernateUtil.commitTransaction();
 	}
 

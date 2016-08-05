@@ -15,7 +15,7 @@ import ehc.bo.impl.User;
 import ehc.hibernate.HibernateUtil;
 import ehc.util.DateUtil;
 
-public class CreateAppointmentWithMoreTreatmentTypes extends RootTestCase {
+public class CreateAppointmentWithMoreTreatmentTypes_CannotBeJoined_Exception extends RootTestCase {
 	private IndividualDao individualDao = IndividualDao.getInstance();
 	private TreatmentTypeDao treatmentTypeDao = TreatmentTypeDao.getInstance();
 	private AppointmentDao appointmentDao = AppointmentDao.getInstance();

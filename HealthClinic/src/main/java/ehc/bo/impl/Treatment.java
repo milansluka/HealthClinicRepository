@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import ehc.bo.Resource;
 
@@ -28,13 +29,14 @@ public class Treatment extends ModifiableObject {
 	private Payment payment;
 	private List<Resource> resources = new ArrayList<>();
 	private List<Attachment> attachments = new ArrayList<>();
-	private double price;
+/*	private double price;*/
+	private Money price;
 	
 	protected Treatment() {
 		super();
 	}
 	
-	public Treatment(User executor, Appointment appointment, TreatmentType treatmentType, double price, Date from, Date to) {
+	public Treatment(User executor, Appointment appointment, TreatmentType treatmentType, Money price, Date from, Date to) {
 		super(executor);
 		addAppointment(appointment);
 		addTreatmentType(treatmentType);
@@ -92,15 +94,27 @@ public class Treatment extends ModifiableObject {
 	public void setAttachments(List<Attachment> attachments) {
 		this.attachments = attachments;
 	}
+	
+	
 
-	public double getPrice() {
+/*	public double getPrice() {
 		return price;
 	}
 	
 	public void setPrice(double price) {
 		this.price = price;
-	}
+	}*/
 	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "price")
+	public Money getPrice() {
+		return price;
+	}
+
+	public void setPrice(Money price) {
+		this.price = price;
+	}
+
 	@Column(name = "\"from\"")
 	public Date getFrom() {
 		return from;

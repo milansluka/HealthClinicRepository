@@ -1,5 +1,7 @@
 package ehc.bo.impl;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +14,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 @Entity
@@ -19,7 +22,8 @@ import javax.persistence.Transient;
 public class Payment extends ModifiableObject {
 	private Appointment appointment;
     private List<Treatment> treatments = new ArrayList<>();
-    private double paidAmount = 0;
+   /* private double paidAmount = 0;*/
+    private Money paidAmount;
 /*    private Party payer;*/
     private PaymentChannel paymentChannel;
       
@@ -27,20 +31,40 @@ public class Payment extends ModifiableObject {
 		super();
 	}
     
-	public Payment(User executor, Appointment appointment, List<Treatment> treatmentsForPay, PaymentChannel paymentChannel, double paidSum) {
+/*	public Payment(User executor, Appointment appointment, List<Treatment> treatmentsForPay, PaymentChannel paymentChannel, double paidSum) {
 		super(executor);
 		assignAppointment(appointment);
 		assignPaymentChannel(paymentChannel);
 		addTreatments(treatmentsForPay);
 		this.paidAmount = paidSum;
+	}*/
+	
+	public Payment(User executor, Appointment appointment, List<Treatment> treatmentsForPay, PaymentChannel paymentChannel, Money paidAmount) {
+		super(executor);
+		assignAppointment(appointment);
+		assignPaymentChannel(paymentChannel);
+		addTreatments(treatmentsForPay);
+		this.paidAmount = paidAmount;
 	}
 	
-	@Column(name = "paid_amount")
+	
+	
+/*	@Column(name = "paid_amount")
 	public double getPaidAmount() {
 		return paidAmount;
 	}
 
 	public void setPaidAmount(double paidAmount) {
+		this.paidAmount = paidAmount;
+	}*/
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "paid_amount")
+	public Money getPaidAmount() {
+		return paidAmount;
+	}
+
+	public void setPaidAmount(Money paidAmount) {
 		this.paidAmount = paidAmount;
 	}
 
@@ -107,14 +131,15 @@ public class Payment extends ModifiableObject {
 		}
 	}
 	
+	
 	@Transient
 	public boolean isSufficient() {
-		double neededAmount = 0;
+		Money neededAmount = new Money();
 		for (Treatment treatment : geTreatments()) {
-			neededAmount += treatment.getPrice();		
+			neededAmount.add(treatment.getPrice());		
 		}
 		
-		return paidAmount >= neededAmount;
+		return paidAmount.greaterThanOrEqual(neededAmount);
 	}
 	
 	@Transient

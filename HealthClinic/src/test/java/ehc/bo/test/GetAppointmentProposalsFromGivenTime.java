@@ -1,5 +1,6 @@
 package ehc.bo.test;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,7 @@ import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
 import ehc.bo.impl.PhysicianType;
 import ehc.bo.impl.ResourceType;
-import ehc.bo.impl.ResourcesUtil;
+import ehc.bo.impl.AppointmentProposalUtil;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;
 import ehc.bo.impl.User;
@@ -42,10 +43,12 @@ public class GetAppointmentProposalsFromGivenTime extends RootTestCase {
 		User executor = login.login("admin", "admin");
 		Individual person = individualDao.findByFirstAndLastName(firstName, lastName);
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
+		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		treatmentTypes.add(treatmentType);
 		Date to = DateUtil.date(2016, 7, 19, 11, 30, 0);
 		
-		ResourcesUtil resourcesUtil = new ResourcesUtil();
-        List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentType, 1);
+		AppointmentProposalUtil resourcesUtil = new AppointmentProposalUtil(getWorkTime());
+        List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentTypes, 1);
         AppointmentProposal appointmentProposal = appointmentProposals.get(0);
         int countOfPhysicians = 0;
         

@@ -5,25 +5,52 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 import ehc.util.DateUtil;
 
-public class WorkTime {
+@Entity
+@Table(name = "work_time")
+@Inheritance(strategy = InheritanceType.JOINED)
+public class WorkTime extends ModifiableObject {
 	List<Day> days = new ArrayList<Day>();
-	
-	public WorkTime() {
+
+	protected WorkTime() {
 		super();
-		days.add(new Day("Nedeľa", 7, 0, 18, 0));
+/*		days.add(new Day("Nedeľa", 7, 0, 18, 0));
 		days.add(new Day("Pondelok", 7, 0, 18, 0));
 		days.add(new Day("Utorok", 8, 30, 18, 0));
 		days.add(new Day("Streda", 9, 0, 14, 0));
 		days.add(new Day("Štvrtok", 7, 30, 18, 0));
-		days.add(new Day("Piatok", 7, 0, 18, 0));	
+		days.add(new Day("Piatok", 7, 0, 18, 0));
 		days.add(new Day("Sobota", 7, 0, 18, 0));
+	}*/
 	}
-		
-	public WorkTime(List<Day> days) {
-		super();
+
+	public WorkTime(User executor) {
+		super(executor);
+	}
+
+	@OneToMany(mappedBy = "workTime", cascade = CascadeType.ALL)
+	public List<Day> getDays() {
+		return days;
+	}
+
+	public void setDays(List<Day> days) {
 		this.days = days;
+	}
+	
+	public void addDay(Day day) {
+		if (day == null) {
+			return;
+		}
+		getDays().add(day);
+		day.setWorkTime(this);
 	}
 
 	public Date getStartWorkTime(Date date) {
@@ -31,18 +58,18 @@ public class WorkTime {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-		Day day = days.get(dayOfWeek-1);
-		retDate = DateUtil.addSeconds(retDate, day.getFrom());
-		return retDate;	
+		Day day = days.get(dayOfWeek - 1);
+		retDate = DateUtil.addSeconds(retDate, day.getStartWorkTime());
+		return retDate;
 	}
-	
+
 	public Date getEndWorkTime(Date date) {
 		Date retDate = DateUtil.normDays(date);
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-		Day day = days.get(dayOfWeek-1);
-		retDate = DateUtil.addSeconds(retDate, day.getTo());
-		return retDate;	
-	}	
+		Day day = days.get(dayOfWeek - 1);
+		retDate = DateUtil.addSeconds(retDate, day.getEndWorkTime());
+		return retDate;
+	}
 }

@@ -1,19 +1,35 @@
 package ehc.bo.impl;
 
-public class Day {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public class Day extends ModifiableObject {
 /*	String name;
 	Date from;
 	Date to;*/
 	/*private int dayOfWeek;*/
 	private String name;
-	private int from;
-	private int to;
+	private int startWorkTime;
+	private int endWorkTime;
+	private WorkTime workTime;
 /*	private Calendar c;*/
 	
-	public Day(String name, int fromHours, int fromMinutes, int toHours, int toMinutes) {
+	protected Day() {
+		super();
+	}
+	
+	public Day(User executor, String name, int fromHours, int fromMinutes, int toHours, int toMinutes) {
+		super(executor);
 		this.name = name;
-		from = fromHours*3600 + fromMinutes*60;
-		to = toHours*3600 + toMinutes*60;
+		startWorkTime = fromHours*3600 + fromMinutes*60;
+		endWorkTime = toHours*3600 + toMinutes*60;
 	}
 	
 	public String getName() {
@@ -22,16 +38,32 @@ public class Day {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getFrom() {
-		return from;
+	
+	@Column(name = "start_work_time")
+	public int getStartWorkTime() {
+		return startWorkTime;
 	}
-	public void setFrom(int from) {
-		this.from = from;
+	public void setStartWorkTime(int from) {
+		this.startWorkTime = from;
 	}
-	public int getTo() {
-		return to;
+	
+	@Column(name = "end_work_time")
+	public int getEndWorkTime() {
+		return endWorkTime;
 	}
-	public void setTo(int to) {
-		this.to = to;
+	public void setEndWorkTime(int to) {
+		this.endWorkTime = to;
 	}
+
+	@ManyToOne
+	@JoinColumn(name = "work_time_id")
+	public WorkTime getWorkTime() {
+		return workTime;
+	}
+
+	public void setWorkTime(WorkTime workTime) {
+		this.workTime = workTime;
+	}
+	
+	
 }

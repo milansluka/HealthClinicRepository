@@ -25,13 +25,8 @@ public class AddPhoneNumberToIndividual extends RootTestCase {
 		User executor = login.login("admin", "admin");
 		Individual individual = individualDao.findByFirstAndLastName("Janko", "Mrkvicka");
 	    Phone phone = new Phone(executor, "0910456789", DateUtil.now(), individual);
-	    long phoneId = (long)HibernateUtil.save(phone);	
+	    HibernateUtil.save(phone);	
 		HibernateUtil.commitTransaction();
-		
-	/*	HibernateUtil.beginTransaction();
-		phone = HibernateUtil.get(Phone.class, phoneId);
-		assertTrue(phone.getPhoneNumber().equals("0910456789"));	
-		HibernateUtil.commitTransaction();*/
 		
 		HibernateUtil.beginTransaction();
 		individual = individualDao.findByFirstAndLastName("Janko", "Mrkvicka");

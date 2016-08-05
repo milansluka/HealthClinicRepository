@@ -5,11 +5,10 @@ import java.util.Date;
 import java.util.List;
 
 import ehc.bo.impl.AppointmentProposal;
-import ehc.bo.impl.Day;
+import ehc.bo.impl.AppointmentProposalUtil;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
-import ehc.bo.impl.ResourcesUtil;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;
 import ehc.bo.impl.User;
@@ -25,7 +24,7 @@ public class ScheduleAppointmentForGivenTime_TimeBeforeWorkTime_ScheduleForNextT
 	private Date to = DateUtil.date(2016, 7, 14, 8, 20, 0);
 	private TreatmentTypeDao treatmentTypeDao = TreatmentTypeDao.getInstance();
 	private IndividualDao individualDao = IndividualDao.getInstance();
-	private ResourcesUtil resourcesUtil;
+	private AppointmentProposalUtil resourcesUtil;
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -47,18 +46,11 @@ public class ScheduleAppointmentForGivenTime_TimeBeforeWorkTime_ScheduleForNextT
 			HibernateUtil.commitTransaction();
 
 		}
-
-		List<Day> days = new ArrayList<Day>();
-		days.add(new Day("Nedeľa", 7, 0, 18, 0));
-		days.add(new Day("Pondelok", 7, 0, 18, 0));
-		days.add(new Day("Utorok", 8, 30, 18, 0));
-		days.add(new Day("Streda", 9, 0, 14, 0));
-		days.add(new Day("Štvrtok", 7, 30, 18, 0));
-		days.add(new Day("Piatok", 7, 0, 18, 0));
-		days.add(new Day("Sobota", 7, 0, 18, 0));
 	
-		WorkTime workTime = new WorkTime(days);
-		resourcesUtil = new ResourcesUtil(workTime);
+		HibernateUtil.beginTransaction();
+		WorkTime workTime = getWorkTime();
+		HibernateUtil.commitTransaction();
+		resourcesUtil = new AppointmentProposalUtil(workTime);
 	}
 
 	protected void tearDown() throws Exception {
@@ -73,8 +65,10 @@ public class ScheduleAppointmentForGivenTime_TimeBeforeWorkTime_ScheduleForNextT
 		User executor = login.login("admin", "admin");
 		Individual person = individualDao.findByFirstAndLastName(personFirstName, personLastName);
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
+		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		treatmentTypes.add(treatmentType);
 	/*	ResourcesUtil resourcesUtil = new ResourcesUtil();*/
-		List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentType, 1);
+		List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentTypes, 1);
 		int countOfResources = getCountOfResources();
 		HibernateUtil.commitTransaction();
 

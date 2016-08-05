@@ -2,6 +2,7 @@ package ehc.bo.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 
@@ -10,6 +11,8 @@ import ehc.bo.Resource;
 public class AppointmentProposal {
 	Map<ResourceType, SortedSet<Resource>> resources = new HashMap<>();
     TreatmentType treatmentType;
+    List<TreatmentType> treatmentTypes;
+   
     Date from;
     Date to;
      
@@ -17,6 +20,14 @@ public class AppointmentProposal {
 		super();
 		this.resources = resources;
 		this.treatmentType = treatmentType;
+		this.from = from;
+		this.to = to;
+	}
+	
+	public AppointmentProposal(Map<ResourceType, SortedSet<Resource>> resources, List<TreatmentType> treatmentTypes, Date from, Date to) {
+		super();
+		this.resources = resources;
+		this.treatmentTypes = treatmentTypes;
 		this.from = from;
 		this.to = to;
 	}
@@ -45,6 +56,22 @@ public class AppointmentProposal {
 	public void setTo(Date to) {
 		this.to = to;
 	}
-    
+	
+	public List<TreatmentType> getTreatmentTypes() {
+		return treatmentTypes;
+	}
+
+	public void setTreatmentTypes(List<TreatmentType> treatmentTypes) {
+		this.treatmentTypes = treatmentTypes;
+	}
+
+	public void addTreatmentType(TreatmentType treatmentType) {
+		
+	}
+	
+	public void addTreatmentTypes(List<TreatmentType> treatmentTypes) {
+		getTreatmentTypes().addAll(treatmentTypes);		
+	}
+
     
 }

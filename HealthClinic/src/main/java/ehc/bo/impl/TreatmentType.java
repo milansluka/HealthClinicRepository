@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -20,7 +21,8 @@ public class TreatmentType extends BaseObject{
 	String name;
 	String info;
 	String category;	
-	double price;	
+/*	double price;*/
+	Money price;
 	double defaultProvision;
 	int duration;
 	List<ResourceType> resourceTypes = new ArrayList<>();
@@ -33,7 +35,7 @@ public class TreatmentType extends BaseObject{
 		appointments = new ArrayList<Appointment>();
 	}
 	
-	public TreatmentType(User executor, String name, String category, double price, double defaultProvision, int duration) {
+	public TreatmentType(User executor, String name, String category, Money price, double defaultProvision, int duration) {
 		super(executor);
 		this.name = name;
 		this.category = category;
@@ -42,6 +44,16 @@ public class TreatmentType extends BaseObject{
 		this.defaultProvision = defaultProvision;
 	}
 	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "price")
+	public Money getPrice() {
+		return price;
+	}
+
+	public void setPrice(Money price) {
+		this.price = price;
+	}
+
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "resource_type_assignment", joinColumns = {@JoinColumn(name = "treatment_type_id")},
 	inverseJoinColumns = {@JoinColumn(name = "resource_type_id")})
@@ -76,13 +88,13 @@ public class TreatmentType extends BaseObject{
 		return category;
 	}
 
-	public double getPrice() {
+/*	public double getPrice() {
 		return price;
 	}
 
 	public void setPrice(double price) {
 		this.price = price;
-	}
+	}*/
 
 	@Column(name = "default_provision")
 	public double getDefaultProvision() {

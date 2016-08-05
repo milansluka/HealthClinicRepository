@@ -15,10 +15,11 @@ import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
 import ehc.bo.impl.ResourceType;
-import ehc.bo.impl.ResourcesUtil;
+import ehc.bo.impl.AppointmentProposalUtil;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;
 import ehc.bo.impl.User;
+import ehc.bo.impl.WorkTime;
 import ehc.hibernate.HibernateUtil;
 import ehc.util.DateUtil;
 
@@ -42,6 +43,7 @@ public class ChangeAppointment extends RootTestCase {
 		addTreatmentTypes();
 		addIndividuals();
 		addDevices();
+		addWorkTime();
 		
 		List<String> treatmentNames = new ArrayList<>();
 		treatmentNames.add("Odstraňovanie pigmentov chrbát");
@@ -63,7 +65,11 @@ public class ChangeAppointment extends RootTestCase {
 
 		}
 
-		ResourcesUtil resourcesUtil = new ResourcesUtil();
+		HibernateUtil.beginTransaction();
+		WorkTime workTime = getWorkTime();
+		HibernateUtil.commitTransaction();
+		
+		AppointmentProposalUtil resourcesUtil = new AppointmentProposalUtil(workTime);
 
 		// appointment from 7:30 to 8:30
 		Date when = DateUtil.date(2016, 7, 7, 7, 30, 0);
@@ -77,7 +83,9 @@ public class ChangeAppointment extends RootTestCase {
 		User executor = login.login("admin", "admin");
 		Individual individual = individualDao.findByFirstAndLastName(personFirstName, personLastName);
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
-		List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentType, 1);
+		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		treatmentTypes.add(treatmentType);
+		List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentTypes, 1);
 
 		AppointmentProposal appointmentProposal = appointmentProposals.get(0);
 		/*Date from = DateUtil.date(2016, 7, 7, 7, 30, 0);*/

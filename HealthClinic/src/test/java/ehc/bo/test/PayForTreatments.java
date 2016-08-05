@@ -1,5 +1,6 @@
 package ehc.bo.test;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,7 @@ import ehc.bo.impl.AppointmentStateValue;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
+import ehc.bo.impl.Money;
 import ehc.bo.impl.Payment;
 import ehc.bo.impl.PaymentChannel;
 import ehc.bo.impl.PaymentDao;
@@ -56,7 +58,7 @@ public class PayForTreatments extends RootTestCase {
 		//execute treatments	
 		HibernateUtil.beginTransaction();
 		Appointment appointment2 = appointmentDao.findById(appId);
-		Treatment treatment = new Treatment(executor, appointment2, appointment2.getTreatmentTypes().get(0), 80, appointment2.getFrom(), appointment2.getTo());
+		Treatment treatment = new Treatment(executor, appointment2, appointment2.getTreatmentTypes().get(0), new Money(new BigDecimal("80.0")), appointment2.getFrom(), appointment2.getTo());
 		appointment.setState(executor, AppointmentStateValue.CONFIRMED);
 		treatment.addResource(appointment2.getResources().get(0));
 		HibernateUtil.save(treatment);
@@ -70,10 +72,10 @@ public class PayForTreatments extends RootTestCase {
 		Appointment appointment = appointmentDao.findById(appointmentIds.get(0));
 	/*	Treatment treatment = appointment.getExecutedTreatments().get(0);*/
 		
-		double paidAmount = 0;
+		Money paidAmount = new Money();
 		
 		for (Treatment treatment : appointment.getExecutedTreatments()) {
-			paidAmount += treatment.getPrice();
+			paidAmount.add(treatment.getPrice());
 		}
 		
 		long paymentId = -1;
@@ -93,7 +95,7 @@ public class PayForTreatments extends RootTestCase {
 		HibernateUtil.beginTransaction();
 		PaymentDao paymentDao = PaymentDao.getInstance();
 		payment = paymentDao.findById(paymentId);
-		assertTrue(payment.getPaidAmount() == paidAmount);
+		assertTrue(payment.getPaidAmount().equals(paidAmount));
 		HibernateUtil.commitTransaction();
 	}
 

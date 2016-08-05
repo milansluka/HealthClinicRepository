@@ -1,7 +1,7 @@
 package ehc.bo.test;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Hibernate;
@@ -10,12 +10,14 @@ import ehc.bo.impl.Appointment;
 import ehc.bo.impl.AppointmentDao;
 import ehc.bo.impl.Company;
 import ehc.bo.impl.CompanyDao;
+import ehc.bo.impl.Day;
 import ehc.bo.impl.Device;
 import ehc.bo.impl.DeviceDao;
 import ehc.bo.impl.DeviceType;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
+import ehc.bo.impl.Money;
 import ehc.bo.impl.Nurse;
 import ehc.bo.impl.NurseDao;
 import ehc.bo.impl.NurseType;
@@ -23,7 +25,6 @@ import ehc.bo.impl.Physician;
 import ehc.bo.impl.PhysicianDao;
 import ehc.bo.impl.PhysicianType;
 import ehc.bo.impl.ResourceType;
-import ehc.bo.impl.ResourceTypeWithSkills;
 import ehc.bo.impl.Room;
 import ehc.bo.impl.RoomDao;
 import ehc.bo.impl.RoomType;
@@ -34,6 +35,7 @@ import ehc.bo.impl.TreatmentTypeDao;
 import ehc.bo.impl.User;
 import ehc.bo.impl.WaitingIndividual;
 import ehc.bo.impl.WaitingIndividualDao;
+import ehc.bo.impl.WorkTime;
 import ehc.hibernate.HibernateUtil;
 import junit.framework.TestCase;
 
@@ -47,6 +49,7 @@ public class RootTestCase extends TestCase {
 	private List<Long> waitingIndividualIds = new ArrayList<Long>();
 	private List<Long> appointmentIds = new ArrayList<Long>();
 	private List<Long> skillIds = new ArrayList<Long>();
+	private List<Long> workTimeIds = new ArrayList<Long>();
 	
 	private AppointmentDao appointmentDao = AppointmentDao.getInstance();
 	private SkillDao skillDao = SkillDao.getInstance();
@@ -87,6 +90,36 @@ public class RootTestCase extends TestCase {
 		List<Nurse> nurses = nurseDao.getAll();
 		
 		return rooms.size() + nurses.size() + physicians.size();
+	}
+	
+	public void addWorkTime() {
+		HibernateUtil.beginTransaction();
+		Login login = new Login();
+		User executor = login.login("admin", "admin");
+		WorkTime workTime = new WorkTime(executor);
+		workTime.addDay(new Day(executor, "Nedeľa", 7, 0, 18, 0));
+		workTime.addDay(new Day(executor, "Pondelok", 7, 0, 18, 0));
+		workTime.addDay(new Day(executor, "Utorok", 8, 30, 18, 0));
+		workTime.addDay(new Day(executor, "Streda", 9, 0, 14, 0));
+		workTime.addDay(new Day(executor, "Štvrtok", 7, 30, 18, 0));
+		workTime.addDay(new Day(executor, "Piatok", 7, 0, 18, 0));
+		workTime.addDay(new Day(executor, "Sobota", 7, 0, 18, 0));
+		long workTimeId = (long)HibernateUtil.save(workTime);
+		workTimeIds.add(workTimeId);
+		HibernateUtil.commitTransaction();
+	}
+	
+	public void removeWorkTimes() {
+		for (long workTimeId : workTimeIds) {
+			removeWorkTime(workTimeId);
+		}	
+	}
+	
+	public void removeWorkTime(long id) {
+		HibernateUtil.beginTransaction();
+		WorkTime workTime = HibernateUtil.get(WorkTime.class, id);
+		HibernateUtil.delete(workTime);
+		HibernateUtil.commitTransaction();	
 	}
 	
 	public void addPhysician(String firstName, String lastName, List<String> skillNames) {
@@ -545,7 +578,7 @@ public class RootTestCase extends TestCase {
 		
 		Login login = new Login();
 		User executor = login.login("admin", "admin");
-		TreatmentType treatmentType = new TreatmentType(executor, name, category, 50, 0.1, duration);
+		TreatmentType treatmentType = new TreatmentType(executor, name, category, new Money(50), 0.1, duration);
 		
 		for (ResourceType resourceType : resourceTypes) {
 			treatmentType.addResourceType(resourceType);		
@@ -560,7 +593,7 @@ public class RootTestCase extends TestCase {
 		/*HibernateUtil.commitTransaction();*/	
 	}
 
-	protected void addTreatmentType(String name, String category, double price, double provision, int duration) {
+	protected void addTreatmentType(String name, String category, String price, double provision, int duration) {
 		HibernateUtil.beginTransaction();
 		Login login = new Login();
 		User executor = login.login("admin", "admin");
@@ -568,7 +601,7 @@ public class RootTestCase extends TestCase {
 		PhysicianType physicianType = new PhysicianType(executor);
 		NurseType nurseType = new NurseType(executor);
 		RoomType roomType = new RoomType(executor);
-		TreatmentType treatmentType = new TreatmentType(executor, name, category, price, provision, duration);
+		TreatmentType treatmentType = new TreatmentType(executor, name, category, new Money(new BigDecimal(price)), provision, duration);
 		treatmentType.addResourceType(physicianType);
 		treatmentType.addResourceType(nurseType);
 		treatmentType.addResourceType(roomType);
@@ -592,6 +625,14 @@ public class RootTestCase extends TestCase {
 	/*	HibernateUtil.commitTransaction();*/
 		
 		return skill;
+	}
+	
+	public WorkTime getWorkTime() {
+		long workTimeId = workTimeIds.get(0);
+		HibernateUtil.getCurrentSessionWithTransaction();
+		WorkTime workTime = HibernateUtil.get(WorkTime.class, workTimeId);
+		Hibernate.initialize(workTime.getDays());
+		return workTime;
 	}
 
 	protected void addTreatmentTypes() {
@@ -645,6 +686,7 @@ public class RootTestCase extends TestCase {
 		addDevices();
 		addNurses();
 		addIndividuals();
+		addWorkTime();
 	}
 
 	protected void tearDownSystem() {
@@ -657,6 +699,7 @@ public class RootTestCase extends TestCase {
 		removeIndividuals();
 		removeTreatmentTypes();
 		removeSkills();
+		removeWorkTimes();
 	}
 
 	public void testApp() {

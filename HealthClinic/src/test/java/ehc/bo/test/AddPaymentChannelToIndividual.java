@@ -1,10 +1,10 @@
 package ehc.bo.test;
 
+import ehc.bo.impl.CreditCard;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
 import ehc.bo.impl.PaymentChannel;
-import ehc.bo.impl.Phone;
 import ehc.bo.impl.User;
 import ehc.hibernate.HibernateUtil;
 import ehc.util.DateUtil;
@@ -25,14 +25,14 @@ public class AddPaymentChannelToIndividual extends RootTestCase {
 		Login login = new Login();
 		User executor = login.login("admin", "admin");
 		Individual individual = individualDao.findByFirstAndLastName("Janko", "Mrkvicka");
-	    PaymentChannel paymentChannel = new PaymentChannel(executor, individual);
+	    PaymentChannel paymentChannel = new CreditCard(executor, individual, "0123456789", DateUtil.date(2018, 9, 9));
 	    HibernateUtil.save(paymentChannel);	
 		HibernateUtil.commitTransaction();
 		
 		HibernateUtil.beginTransaction();
 		individual = individualDao.findByFirstAndLastName("Janko", "Mrkvicka");
-		paymentChannel = individual.getPaymentChannels().get(0);
-		assertNotNull(paymentChannel);
+		CreditCard creditCard = (CreditCard)individual.getPaymentChannels().get(0);
+		assertNotNull(creditCard.getCardNumber().equals("0123456789") && creditCard.getCardExpiry().equals(DateUtil.date(2018, 9, 9)));
 		HibernateUtil.commitTransaction();
 	}
 

@@ -1,5 +1,6 @@
 package ehc.bo.test;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import ehc.bo.impl.AppointmentProposal;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
-import ehc.bo.impl.ResourcesUtil;
+import ehc.bo.impl.AppointmentProposalUtil;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;
 import ehc.bo.impl.User;
@@ -54,8 +55,10 @@ public class ScheduleAppointmentForGivenTime_AllResourcesAvailable_Success exten
 		User executor = login.login("admin", "admin");
 		Individual person = individualDao.findByFirstAndLastName(personFirstName, personLastName);
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
-		ResourcesUtil resourcesUtil = new ResourcesUtil();
-        List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentType, 1);
+		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		treatmentTypes.add(treatmentType);
+		AppointmentProposalUtil resourcesUtil = new AppointmentProposalUtil(getWorkTime());
+        List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentTypes, 1);
         HibernateUtil.commitTransaction();
         
         AppointmentProposal appointmentProposal = appointmentProposals.get(0); 

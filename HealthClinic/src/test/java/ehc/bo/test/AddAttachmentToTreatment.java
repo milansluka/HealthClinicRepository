@@ -1,24 +1,19 @@
 package ehc.bo.test;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import org.hibernate.Hibernate;
 
 import ehc.bo.Resource;
 import ehc.bo.impl.Appointment;
 import ehc.bo.impl.AppointmentDao;
 import ehc.bo.impl.AppointmentStateValue;
 import ehc.bo.impl.Attachment;
-import ehc.bo.impl.Company;
-import ehc.bo.impl.CompanyDao;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
-import ehc.bo.impl.Nurse;
-import ehc.bo.impl.NurseType;
-import ehc.bo.impl.ResourcePartyRole;
+import ehc.bo.impl.Money;
 import ehc.bo.impl.Treatment;
 import ehc.bo.impl.TreatmentDao;
 import ehc.bo.impl.TreatmentType;
@@ -62,8 +57,8 @@ public class AddAttachmentToTreatment extends RootTestCase {
 		// execute treatments
 		HibernateUtil.beginTransaction();
 		Appointment appointment2 = appointmentDao.findById(appId);
-		Treatment treatment = new Treatment(executor, appointment2, appointment2.getTreatmentTypes().get(0), 80,
-				appointment2.getFrom(), appointment2.getTo());
+		Treatment treatment = new Treatment(executor, appointment2, appointment2.getTreatmentTypes().get(0), 
+				new Money(new BigDecimal("80.0")), appointment2.getFrom(), appointment2.getTo());
 		appointment.setState(executor, AppointmentStateValue.CONFIRMED);
 		treatment.addResource(appointment2.getResources().get(0));
 		long treatmentId = (long) HibernateUtil.save(treatment);

@@ -30,6 +30,14 @@ Create table "communication_channel"
  primary key ("id")
 ) Without Oids;
 
+Create table "money"
+(
+	"id" BigSerial NOT NULL,
+	"amount" Numeric NOT NULL,
+	"currency" Varchar(32) NOT NULL,
+	 primary key ("id")
+) Without Oids;
+
 Create table "system_user"
 (
 	"name" Varchar(64) NOT NULL UNIQUE,
@@ -114,7 +122,7 @@ Create table "treatment"
 	"appointment_id" Bigint NOT NULL,
 	"treatment_type_id" Bigint NOT NULL,
     "payment_id" Bigint,
-	"price" Double precision NOT NULL,
+	"price" Bigint NOT NULL,
     "from" Timestamp NOT NULL,
 	"to" Timestamp NOT NULL,
 	"modified_by" Bigint,
@@ -141,7 +149,7 @@ Create table "treatment_type"
 	"modified_on" Timestamp,
 	"created_by" Bigint NOT NULL,
 	"modified_by" Bigint,
-	"price" Double precision NOT NULL,
+	"price" Bigint NOT NULL,
 	"duration" Integer NOT NULL,
 	"treatment_group_id" Bigint,
 	"default_provision" Double precision NOT NULL,
@@ -355,7 +363,7 @@ Create table "payment"
 (
 	"id" BigSerial NOT NULL,
 	"appointment_id" Bigint NOT NULL,
-	"paid_amount" Double precision NOT NULL,
+	"paid_amount" Bigint NOT NULL,
 	"payment_channel_id" Bigint NOT NULL,
 	"modified_by" Bigint,
 	"created_by" Bigint NOT NULL,
@@ -381,6 +389,30 @@ Create table "credit_card"
 	"id" Bigint NOT NULL,
 	"card_number" Varchar(32) NOT NULL,
 	"card_expiry" Timestamp NOT NULL,
+ primary key ("id")
+) Without Oids;
+
+Create table "work_time"
+(
+	"id" BigSerial NOT NULL,
+	"modified_by" Bigint,
+	"created_by" Bigint NOT NULL,
+    "created_on" Timestamp NOT NULL,
+	"modified_on" Timestamp,
+ primary key ("id")
+) Without Oids;
+
+Create table "day"
+(
+	"id" BigSerial NOT NULL,
+	"name" Varchar(126) NOT NULL,
+	"start_work_time" Integer NOT NULL,
+	"end_work_time" Integer NOT NULL,
+	"work_time_id" Bigint NOT NULL,
+	"modified_by" Bigint,
+	"created_by" Bigint NOT NULL,
+	"created_on" Timestamp NOT NULL,
+	"modified_on" Timestamp,
  primary key ("id")
 ) Without Oids;
 
@@ -590,3 +622,21 @@ Alter table "payment_channel" add  foreign key ("party_id") references "party" (
 Alter table "payment_channel" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
 
 Alter table "payment_channel" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "credit_card" add  foreign key ("id") references "payment_channel" ("id") on update restrict on delete restrict;
+
+Alter table "day" add  foreign key ("work_time_id") references "work_time" ("id") on update restrict on delete restrict;
+
+Alter table "day" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "day" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "work_time" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "work_time" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "payment" add  foreign key ("paid_amount") references "money" ("id") on update restrict on delete restrict;
+
+Alter table "treatment_type" add  foreign key ("price") references "money" ("id") on update restrict on delete restrict;
+
+Alter table "treatment" add  foreign key ("price") references "money" ("id") on update restrict on delete restrict;

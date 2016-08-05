@@ -18,7 +18,7 @@ import ehc.bo.impl.NurseType;
 import ehc.bo.impl.Physician;
 import ehc.bo.impl.PhysicianType;
 import ehc.bo.impl.ResourceType;
-import ehc.bo.impl.ResourcesUtil;
+import ehc.bo.impl.AppointmentProposalUtil;
 import ehc.bo.impl.Room;
 import ehc.bo.impl.RoomType;
 import ehc.bo.impl.TreatmentType;
@@ -164,10 +164,12 @@ public class ReserveResourcesForTreatment extends RootTestCase {
 
 		TreatmentTypeDao treatmentTypeDao = TreatmentTypeDao.getInstance();
 		TreatmentType treatmentType = treatmentTypeDao.findByName("Zväčšenie pier");
-		ResourcesUtil resourcesUtil = new ResourcesUtil();
+		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		treatmentTypes.add(treatmentType);
+		AppointmentProposalUtil resourcesUtil = new AppointmentProposalUtil(getWorkTime());
 		Date when = DateUtil.date(2016, 7, 24, 11, 30, 0);
 		Date to = DateUtil.date(2016, 7, 24, 12, 45, 0);
-		List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentType,
+		List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentTypes,
 				1);
 
 		Physician physician = null;

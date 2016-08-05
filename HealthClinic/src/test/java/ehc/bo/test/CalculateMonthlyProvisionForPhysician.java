@@ -1,5 +1,6 @@
 package ehc.bo.test;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,7 @@ import ehc.bo.impl.AppointmentStateValue;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
+import ehc.bo.impl.Money;
 import ehc.bo.impl.Physician;
 import ehc.bo.impl.Treatment;
 import ehc.bo.impl.TreatmentType;
@@ -87,7 +89,8 @@ public class CalculateMonthlyProvisionForPhysician extends RootTestCase {
 		HibernateUtil.beginTransaction();
 		for (long id : appointmentIds) {
 			Appointment appointment2 = appointmentDao.findById(id);
-			Treatment treatment = new Treatment(executor, appointment2, appointment2.getTreatmentTypes().get(0), 80, appointment2.getFrom(), appointment2.getTo());
+			Treatment treatment = new Treatment(executor, appointment2, appointment2.getTreatmentTypes().get(0), 
+					new Money(new BigDecimal("80.0")), appointment2.getFrom(), appointment2.getTo());
 			appointment.setState(executor, AppointmentStateValue.CONFIRMED);
 			treatment.addResource(appointment2.getResources().get(0));
 			HibernateUtil.save(treatment);
@@ -104,17 +107,18 @@ public class CalculateMonthlyProvisionForPhysician extends RootTestCase {
 		Date to = DateUtil.date(2016, 7, 30, 10, 40, 0);
 		
 		Physician physician = (Physician)individual.getReservableSourceRoles().get(0);
-		double provisionPerMonth = 0;
+		Money provisionPerMonth = new Money();
 		
 		for (Treatment treatment : physician.getTreatments()) {
 			if (treatment.getFrom().after(from) && treatment.getTo().before(to)) {
 				TreatmentType treatmentType = treatment.getTreatmentType();
-				double provision = physician.getProvisionFromTreatmentType(treatmentType);
-				provisionPerMonth += provision*treatment.getPrice();
+				double provisionPercentage = physician.getProvisionFromTreatmentType(treatmentType);
+				provisionPerMonth.add(treatment.getPrice().getPercentage(provisionPercentage));
 			}		
 		}
 		
-		assertTrue(provisionPerMonth == 80);
+		Money expectedProvisionPerMonth = new Money(80);
+		assertTrue(provisionPerMonth.equals(expectedProvisionPerMonth));
 		
 		HibernateUtil.commitTransaction();
 	}
