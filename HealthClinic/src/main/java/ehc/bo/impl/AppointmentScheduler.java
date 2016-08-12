@@ -13,13 +13,15 @@ import ehc.bo.Resource;
 import ehc.util.DateUtil;
 
 public class AppointmentScheduler {
+	public static final String TREATMENTS_CANNOT_BE_JOINED_MSG = "Treatments can not be planned in one appointment, it is recommended to create more appointments";
+	public static final String INSUFFICIENT_DIFFERENCE_BETWEEN_FROM_AND_TO_MSG = "Treatment type duration is longer than set duration";
 
 	private PhysicianDao physicianDao = PhysicianDao.getInstance();
 	private NurseDao nurseDao = NurseDao.getInstance();
-	private RoomDao roomDao = RoomDao.getInstance();
 	private DeviceDao deviceDao = DeviceDao.getInstance();
 	private WorkTime workTime;
 	private int timeGridInMinutes;
+	private String message;
 
 	public AppointmentScheduler(WorkTime workTime, int timeGridInMinutes) {
 		super();
@@ -102,18 +104,9 @@ public class AppointmentScheduler {
 		return appointmentScheduleDatas;
 	}
 
-	/*
-	 * public AppointmentProposal getAppointmentProposal(Date from, Date to,
-	 * List<TreatmentType> treatmentTypes, List<ResourceType> resourceTypes) {
-	 * from = moveFromIfOutOfWorkTime(from, to); to = DateUtil.addSeconds(from,
-	 * (int) getAppointmentDuration(from, to));
-	 * 
-	 * 
-	 * }
-	 */
-
 	public AppointmentProposal getAppointmentProposal(Date from, Date to, List<TreatmentType> treatmentTypes) {
-		if (!canBeJoined(treatmentTypes)) {
+		if (!canBeCombinedIntoOneAppointment(treatmentTypes)) {
+			
 			return null;
 		}
 
@@ -134,11 +127,13 @@ public class AppointmentScheduler {
 
 	public List<AppointmentProposal> getAppointmentProposals(Date from, Date to, List<TreatmentType> treatmentTypes,
 			int count) {
-		if (!canBeJoined(treatmentTypes)) {
+		if (!canBeCombinedIntoOneAppointment(treatmentTypes)) {
+			setMessage(TREATMENTS_CANNOT_BE_JOINED_MSG);
 			return null;
 		}
 
 		if (!sufficientAppointmentDuration(from, to, treatmentTypes)) {
+			setMessage(INSUFFICIENT_DIFFERENCE_BETWEEN_FROM_AND_TO_MSG);
 			return null;
 		}
 
@@ -146,7 +141,6 @@ public class AppointmentScheduler {
 		to = DateUtil.addSeconds(from, (int) getAppointmentDuration(from, to));
 
 		int proposedAppointments = 0;
-		/* int grid = 30 * 60; */
 		List<AppointmentProposal> appointmentProposals = new ArrayList<>();
 
 		while (proposedAppointments < count) {
@@ -165,29 +159,7 @@ public class AppointmentScheduler {
 
 		return appointmentProposals;
 	}
-
-/*	private RoomType getRoomType(TreatmentType treatmentType) {
-		for (ResourceType resourceType : treatmentType.getResourceTypes()) {
-			if (resourceType instanceof RoomType) {
-				return (RoomType) resourceType;
-			}
-		}
-		return null;
-	}*/
-
-/*	private boolean canTreatmentTypesBeDoneInOneRoom(List<TreatmentType> treatmentTypes) {
-		List<Room> possibleRooms = new ArrayList<>();
-
-		if (treatmentTypes.size() < 2) {
-			return true;
-		}
-
-		TreatmentType treatmentType = treatmentTypes.get(0);
-		List<RoomType> roomTypes = treatmentType.getPossibleRoomTypes();
-
-		return true;
-	}*/
-
+	
 	private SortedSet<Resource> findSuitableRooms(List<TreatmentType> treatmentTypes, Date from, Date to) {
 		TreatmentType treatmentType = treatmentTypes.get(0);
 		List<RoomType> roomTypes = treatmentType.getPossibleRoomTypes();
@@ -209,24 +181,13 @@ public class AppointmentScheduler {
 		}	
 		return rooms;
 	}
+	
+	private void setMessage(String message) {
+		this.message = message;
+	}
 
-	private boolean canBeJoined(List<TreatmentType> treatmentTypes) {
-		if (treatmentTypes.size() < 2) {
-			return true;
-		}
-		List<ResourceType> resourceTypes = treatmentTypes.get(0).getResourceTypes();
-		for (int i = 1; i < treatmentTypes.size(); i++) {
-			TreatmentType treatmentType = treatmentTypes.get(i);
-			if (resourceTypes.size() != treatmentType.getResourceTypes().size()) {
-				return false;
-			} else {
-				boolean areTheSame = resourceTypes.containsAll(treatmentType.getResourceTypes());
-				if (!areTheSame) {
-					return false;
-				}
-			}
-		}
-		return true;
+	public String getMessage() {
+		return message;
 	}
 
 	public boolean canBeCombinedIntoOneAppointment(List<TreatmentType> treatmentTypes) {

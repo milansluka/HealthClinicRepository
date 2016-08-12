@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cascade;
 
@@ -38,23 +39,10 @@ public class Appointment extends BaseObject {
 		super();
 	}
 
-/*	public Appointment(User executor, Date from, Date to, TreatmentType treatmentType, Individual individual) {
-		super(executor);
-		this.from = from;
-		this.to = to;
-		 assignTreatmentType(treatmentType); 
-		addTreatmentType(treatmentType);
-		assignIndividual(individual);
-		state = new AppointmentState(executor);
-		state.setAppointment(this);
-	}*/
-
 	public Appointment(User executor, Date from, Date to, Individual individual) {
 		super(executor);
 		this.from = from;
 		this.to = to;
-		/* assignTreatmentType(treatmentType); */
-		/*addTreatmentTypes(treatmentTypes);*/
 		assignIndividual(individual);
 		state = new AppointmentState(executor);
 		state.setAppointment(this);
@@ -147,16 +135,6 @@ public class Appointment extends BaseObject {
 		this.individual = person;
 	}
 
-	/*
-	 * @ManyToOne
-	 * 
-	 * @JoinColumn(name = "treatment_id") public TreatmentType
-	 * getTreatmentType() { return treatmentType; }
-	 * 
-	 * public void setTreatmentType(TreatmentType treatmentType) {
-	 * this.treatmentType = treatmentType; }
-	 */
-
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinTable(name = "appointment_treatment_type", joinColumns = {
 			@JoinColumn(name = "appointment_id") }, inverseJoinColumns = { @JoinColumn(name = "treatment_type_id") })
@@ -221,9 +199,6 @@ public class Appointment extends BaseObject {
 	}
 
 	public void removeResource(Resource resource) {
-		/*
-		 * if (resource == null) { return; } getResources().remove(resource);
-		 */
 		resource.removeAppointment(this);
 	}
 
@@ -270,5 +245,32 @@ public class Appointment extends BaseObject {
 
 	public void addTreatment(Treatment treatment) {
 		getExecutedTreatments().add(treatment);
+	}
+	
+	@Transient
+	public boolean isPayed() {
+		Money paidAmount = new Money();
+		Money requiredAmount = new Money();
+		
+		for (Payment payment : getPayments()) {
+			paidAmount.add(payment.getPaidAmount());
+		}
+		for (Treatment treatment : getExecutedTreatments()) {
+			requiredAmount.add(treatment.getPrice());
+		}
+		
+		return paidAmount.greaterThanOrEqual(requiredAmount);	
+	}
+	
+	@Transient
+	public List<Treatment> getUnpaidTreatments() {
+		List<Treatment> unpaidTreatments = new ArrayList<>();
+		
+		for (Treatment treatment : getExecutedTreatments()) {
+			if (treatment.getPayment() == null) {
+				unpaidTreatments.add(treatment);
+			}
+		}		
+		return unpaidTreatments;	
 	}
 }

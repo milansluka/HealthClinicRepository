@@ -99,7 +99,8 @@ public class PayForTreatments extends RootTestCase {
 		HibernateUtil.beginTransaction();
 		PaymentDao paymentDao = PaymentDao.getInstance();
 		payment = paymentDao.findById(paymentId);
-		assertTrue(payment.getPaidAmount().equals(paidAmount));
+		appointment = appointmentDao.findById(appointmentIds.get(0));
+		assertTrue(payment.getPaidAmount().equals(paidAmount) && appointment.isPayed());
 		HibernateUtil.commitTransaction();
 	}
 

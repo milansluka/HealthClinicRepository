@@ -69,6 +69,7 @@
 		<mapping class="ehc.bo.impl.ExecutorProvision" />
 		<mapping class="ehc.bo.impl.Payment" />
 		<mapping class="ehc.bo.impl.PaymentChannel" />
+		<mapping class="ehc.bo.impl.BankTransfer" />
 		<mapping class="ehc.bo.impl.CreditCard" />
 		<mapping class="ehc.bo.impl.CommunicationChannel" />
 		<mapping class="ehc.bo.impl.Email" />

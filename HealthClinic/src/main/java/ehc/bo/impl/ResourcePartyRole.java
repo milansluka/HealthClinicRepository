@@ -71,6 +71,13 @@ public abstract class ResourcePartyRole extends ResourceImpl {
 		treatmentTypeProvisions.add(executorProvision);
 	}
 	
+	
+	public void addProvision(User executor, TreatmentGroup treatmentGroup, double provisionAmount) {
+		for (TreatmentType treatmentType : treatmentGroup.getTreatmentTypes()) {
+			addProvision(executor, treatmentType, provisionAmount);
+		}
+	}
+	
 	public double getProvisionFromTreatmentType(TreatmentType treatmentType) {
 		for (ExecutorProvision executorProvision : treatmentTypeProvisions) {
 			if (executorProvision.getTreatmentType().equals(treatmentType)) {

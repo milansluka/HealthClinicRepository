@@ -396,6 +396,14 @@ Create table "credit_card"
  primary key ("id")
 ) Without Oids;
 
+Create table "bank_transfer"
+(
+	"id" Bigint NOT NULL,
+	"account_number" Char(8) NOT NULL,
+	"sort_code" Char(6) NOT NULL,
+ primary key ("id")
+) Without Oids;
+
 Create table "work_time"
 (
 	"id" BigSerial NOT NULL,
@@ -630,6 +638,8 @@ Alter table "payment_channel" add  foreign key ("party_id") references "party" (
 Alter table "payment_channel" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
 
 Alter table "payment_channel" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "bank_transfer" add  foreign key ("id") references "payment_channel" ("id") on update restrict on delete restrict;
 
 Alter table "credit_card" add  foreign key ("id") references "payment_channel" ("id") on update restrict on delete restrict;
 

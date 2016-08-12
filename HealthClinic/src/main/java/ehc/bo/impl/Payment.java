@@ -19,41 +19,20 @@ import javax.persistence.Transient;
 public class Payment extends ModifiableObject {
 	private Appointment appointment;
     private List<Treatment> treatments = new ArrayList<>();
-   /* private double paidAmount = 0;*/
     private Money paidAmount;
-/*    private Party payer;*/
     private PaymentChannel paymentChannel;
       
     protected Payment() {
 		super();
 	}
-    
-/*	public Payment(User executor, Appointment appointment, List<Treatment> treatmentsForPay, PaymentChannel paymentChannel, double paidSum) {
+	
+	public Payment(User executor, Appointment appointment, List<Treatment> treatmentsToPay, PaymentChannel paymentChannel, Money paidAmount) {
 		super(executor);
+		this.paidAmount = paidAmount;
+		addTreatments(treatmentsToPay);
 		assignAppointment(appointment);
 		assignPaymentChannel(paymentChannel);
-		addTreatments(treatmentsForPay);
-		this.paidAmount = paidSum;
-	}*/
-	
-	public Payment(User executor, Appointment appointment, List<Treatment> treatmentsForPay, PaymentChannel paymentChannel, Money paidAmount) {
-		super(executor);
-		assignAppointment(appointment);
-		assignPaymentChannel(paymentChannel);
-		addTreatments(treatmentsForPay);
-		this.paidAmount = paidAmount;
 	}
-	
-	
-	
-/*	@Column(name = "paid_amount")
-	public double getPaidAmount() {
-		return paidAmount;
-	}
-
-	public void setPaidAmount(double paidAmount) {
-		this.paidAmount = paidAmount;
-	}*/
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "paid_amount")

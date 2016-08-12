@@ -30,12 +30,6 @@ public class Physician extends ResourcePartyRole {
 		this.type = type;
 	}
 
-	/*
-	 * public boolean isCompetent(PhysicianType type) { return true; }
-	 * 
-	 * public boolean isCompetent(TreatmentType treatmentType) { return true; }
-	 */
-
 	public void addSkill(Skill skill) {
 		getType().addSkill(skill);
 	}

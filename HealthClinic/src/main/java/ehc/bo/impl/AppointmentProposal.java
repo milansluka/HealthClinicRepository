@@ -15,7 +15,6 @@ public class AppointmentProposal {
     Date from;
     Date to;
      
-	
 	public AppointmentProposal(Map<ResourceType, SortedSet<Resource>> resources, List<TreatmentType> treatmentTypes, Date from, Date to) {
 		super();
 		this.resources = resources;
@@ -30,12 +29,7 @@ public class AppointmentProposal {
 	public void setResources(Map<ResourceType, SortedSet<Resource>> resources) {
 		this.resources = resources;
 	}
-/*	public TreatmentType getTreatmentType() {
-		return treatmentType;
-	}
-	public void setTreatmentType(TreatmentType treatmentType) {
-		this.treatmentType = treatmentType;
-	}*/
+
 	public Date getFrom() {
 		return from;
 	}

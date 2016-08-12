@@ -9,7 +9,7 @@ import ehc.bo.impl.User;
 import ehc.hibernate.HibernateUtil;
 import ehc.util.DateUtil;
 
-public class AddPaymentChannelToIndividual extends RootTestCase {
+public class AddCreditCardToIndividual extends RootTestCase {
     private IndividualDao individualDao = IndividualDao.getInstance();
 	
 	protected void setUp() throws Exception {
