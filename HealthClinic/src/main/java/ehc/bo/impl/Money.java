@@ -108,6 +108,9 @@ public class Money {
 
 	@Override
 	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
 		Money money = (Money) obj;
 		if (getCurrency().equals(money.getCurrency())) {
 			return getAmount().equals(money.getAmount());

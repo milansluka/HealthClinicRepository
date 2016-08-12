@@ -9,7 +9,8 @@ import java.util.SortedSet;
 import ehc.bo.Resource;
 import ehc.bo.impl.Appointment;
 import ehc.bo.impl.AppointmentProposal;
-import ehc.bo.impl.AppointmentProposalUtil;
+import ehc.bo.impl.AppointmentScheduler;
+import ehc.bo.impl.HealthPoint;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
@@ -66,11 +67,6 @@ public class ScheduleAppointmentForGivenTime_LackOfResources_AddIndividualToWait
 
 		}
 
-		HibernateUtil.beginTransaction();
-		WorkTime workTime = getWorkTime();
-		HibernateUtil.commitTransaction();
-		AppointmentProposalUtil resourcesUtil = new AppointmentProposalUtil(workTime);
-
 		// appointment from 7:30 to 8:30
 		Date when = DateUtil.date(2016, 7, 7, 7, 30, 0);
 		Date to = DateUtil.date(2016, 7, 7, 8, 30, 0);
@@ -85,7 +81,8 @@ public class ScheduleAppointmentForGivenTime_LackOfResources_AddIndividualToWait
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
 		List<TreatmentType> treatmentTypes = new ArrayList<>();
 		treatmentTypes.add(treatmentType);
-		List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentTypes, 1);
+		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
+		List<AppointmentProposal> appointmentProposals = appointmentScheduler.getAppointmentProposals(when, to, treatmentTypes, 1);
 
 		AppointmentProposal appointmentProposal = appointmentProposals.get(0);
 		/*Date from = DateUtil.date(2016, 7, 7, 7, 30, 0);*/
@@ -96,7 +93,7 @@ public class ScheduleAppointmentForGivenTime_LackOfResources_AddIndividualToWait
 			resources.add(entry.getValue().first());
 		}
 
-		Appointment appointment = new Appointment(executor, when, to, treatmentType, individual);
+		Appointment appointment = new Appointment(executor, when, to, individual);
 		appointment.addResources(resources);
 		addAppointment(appointment);
 		HibernateUtil.commitTransaction();
@@ -116,8 +113,8 @@ public class ScheduleAppointmentForGivenTime_LackOfResources_AddIndividualToWait
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
 		List<TreatmentType> treatmentTypes = new ArrayList<>();
 		treatmentTypes.add(treatmentType);
-		AppointmentProposalUtil resourcesUtil = new AppointmentProposalUtil(getWorkTime());
-		AppointmentProposal appointmentProposal = resourcesUtil.getAppointmentProposal(when, to, treatmentTypes);
+		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
+		AppointmentProposal appointmentProposal = appointmentScheduler.getAppointmentProposal(when, to, treatmentTypes);
 		HibernateUtil.commitTransaction();
 		long id = -1;
 		if (appointmentProposal == null) {

@@ -3,12 +3,19 @@ package ehc.bo.test;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
 
+import org.hibernate.Hibernate;
+
+import ehc.bo.Resource;
 import ehc.bo.impl.AppointmentProposal;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
-import ehc.bo.impl.AppointmentProposalUtil;
+import ehc.bo.impl.ResourceType;
+import ehc.bo.impl.AppointmentScheduler;
+import ehc.bo.impl.HealthPoint;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;
 import ehc.bo.impl.User;
@@ -55,16 +62,21 @@ public class ScheduleAppointmentForGivenTime_AllResourcesAvailable_Success exten
 		User executor = login.login("admin", "admin");
 		Individual person = individualDao.findByFirstAndLastName(personFirstName, personLastName);
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
+		Hibernate.initialize(treatmentType.getResourceTypes());
+		List<ResourceType> resourceTypes = treatmentType.getResourceTypes();
 		List<TreatmentType> treatmentTypes = new ArrayList<>();
 		treatmentTypes.add(treatmentType);
-		AppointmentProposalUtil resourcesUtil = new AppointmentProposalUtil(getWorkTime());
-        List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentTypes, 1);
+		
+		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
+        List<AppointmentProposal> appointmentProposals = appointmentScheduler.getAppointmentProposals(when, to, treatmentTypes, 1);
         HibernateUtil.commitTransaction();
         
         AppointmentProposal appointmentProposal = appointmentProposals.get(0); 
         
      /*   assertTrue(appointmentProposal.getFrom().equals(when));*/  
             
+        Map<ResourceType, SortedSet<Resource>> resources = appointmentProposal.getResources();
+        
         assertTrue(appointmentProposal.getFrom().equals(when) && 
         		appointmentProposal.getResources().size() == 4);      
 	}

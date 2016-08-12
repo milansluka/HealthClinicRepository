@@ -1,13 +1,6 @@
 package ehc.bo.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
@@ -46,6 +39,23 @@ public class DeviceType extends ResourceType {
 		this.name = name;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof DeviceType)) {
+			return false;
+		}
+		DeviceType deviceType = (DeviceType)obj;
+		return getName().equals(deviceType.getName());
+	}
+	
 /*	public void addPossibleTreatmentType(TreatmentType treatmentType) {
 		getPossibleTreatmentTypes().add(treatmentType);
 	}

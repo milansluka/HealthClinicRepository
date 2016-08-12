@@ -9,9 +9,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
-
 @Entity
 @Table(name = "individual")
 @PrimaryKeyJoinColumn(name = "id")
@@ -55,24 +52,6 @@ public class Individual extends Party {
 	
 	public void removeAppointment(Appointment appointment) {
 		getAppointments().remove(appointment);
-	}
-
-	public static List<Individual> getIndividuals(String firstName, String name, String phone, Session session) {
-		String hql = "FROM Individual i WHERE i.firstName = :firstName and i.name = :name " + "and i.phone = :phone";
-		Query query = session.createQuery(hql);
-		query.setParameter("firstName", firstName);
-		query.setParameter("name", name);
-		query.setParameter("phone", phone);
-
-		return query.list();
-	}
-	
-	public static Individual getPerson(long id, Session session) {
-		String hql = "FROM Individual i WHERE i.ide = :id";
-		Query query = session.createQuery(hql);
-		query.setParameter("id", id);
-		List results = query.list();
-		return (Individual)results.get(0);
 	}
 	
 	@Override

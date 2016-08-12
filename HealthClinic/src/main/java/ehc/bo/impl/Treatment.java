@@ -29,7 +29,6 @@ public class Treatment extends ModifiableObject {
 	private Payment payment;
 	private List<Resource> resources = new ArrayList<>();
 	private List<Attachment> attachments = new ArrayList<>();
-/*	private double price;*/
 	private Money price;
 	
 	protected Treatment() {

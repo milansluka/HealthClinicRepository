@@ -8,8 +8,10 @@ import java.util.SortedSet;
 
 import ehc.bo.Resource;
 import ehc.bo.impl.AppointmentProposal;
+import ehc.bo.impl.AppointmentScheduler;
 import ehc.bo.impl.Device;
 import ehc.bo.impl.DeviceType;
+import ehc.bo.impl.HealthPoint;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
@@ -18,9 +20,9 @@ import ehc.bo.impl.NurseType;
 import ehc.bo.impl.Physician;
 import ehc.bo.impl.PhysicianType;
 import ehc.bo.impl.ResourceType;
-import ehc.bo.impl.AppointmentProposalUtil;
 import ehc.bo.impl.Room;
 import ehc.bo.impl.RoomType;
+import ehc.bo.impl.TreatmentGroup;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;
 import ehc.bo.impl.User;
@@ -57,18 +59,15 @@ public class ReserveResourcesForTreatment extends RootTestCase {
 
 		nurseType = new NurseType(executor);
 		nurseType.addSkill(getSkill("nurse skill 4"));
-		/*
-		 * nurseType.addSkill(getSkill("nurse skill 1"));
-		 * nurseType.addSkill(getSkill("nurse skill 2"));
-		 * nurseType.addSkill(getSkill("nurse skill 3"));
-		 */
 
 		resourceTypes.add(nurseType);
 		RoomType roomType = new RoomType(executor);
 		resourceTypes.add(roomType);
 		DeviceType deviceType = new DeviceType(executor, "laser");
 		resourceTypes.add(deviceType);
-		addTreatmentType(treatmentName, "empty", resourceTypes, 60);
+			
+		TreatmentGroup treatmentGroup = addTreatmentGroup("test treatment type group");		
+		addTreatmentType(treatmentName, resourceTypes, 60, treatmentGroup);
 		HibernateUtil.commitTransaction();
 
 		/* addIndividual("Milan", "Sluka"); */
@@ -157,16 +156,13 @@ public class ReserveResourcesForTreatment extends RootTestCase {
 	}
 
 	public void testApp() {
-		Login login = new Login();
-
 		HibernateUtil.beginTransaction();
-		User executor = login.login("admin", "admin");
 
 		TreatmentTypeDao treatmentTypeDao = TreatmentTypeDao.getInstance();
 		TreatmentType treatmentType = treatmentTypeDao.findByName("Zväčšenie pier");
 		List<TreatmentType> treatmentTypes = new ArrayList<>();
 		treatmentTypes.add(treatmentType);
-		AppointmentProposalUtil resourcesUtil = new AppointmentProposalUtil(getWorkTime());
+		AppointmentScheduler resourcesUtil = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
 		Date when = DateUtil.date(2016, 7, 24, 11, 30, 0);
 		Date to = DateUtil.date(2016, 7, 24, 12, 45, 0);
 		List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentTypes,

@@ -1,11 +1,16 @@
 package ehc.bo.test;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import ehc.bo.Resource;
 import ehc.bo.impl.Appointment;
 import ehc.bo.impl.AppointmentDao;
+import ehc.bo.impl.AppointmentScheduleData;
+import ehc.bo.impl.AppointmentScheduler;
 import ehc.bo.impl.AppointmentStateValue;
+import ehc.bo.impl.HealthPoint;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
@@ -51,17 +56,22 @@ public class CancelAppointment extends RootTestCase {
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
 		Date from = DateUtil.date(2016, 4, 20, 10, 0, 0);
 		Date to = DateUtil.date(2016, 4, 20, 10, 30, 0);
+		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		treatmentTypes.add(treatmentType);
 		
-		Appointment appointment = new Appointment(executor, from, to, treatmentType, person);
 		
 		List<Physician> physicians = physicianDao.getAll();
 		List<Room> rooms = roomDao.getAll();
 		
 		Physician physician = physicians.get(0);
 		Room room = rooms.get(0);	
-		appointment.addResource(physician);
-		appointment.addResource(room);
-		
+		List<Resource> resources = new ArrayList<>();
+		resources.add(physician);
+		resources.add(room);
+		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
+		AppointmentScheduleData appointmentScheduleData = new AppointmentScheduleData(from, to, resources);
+		Appointment appointment = appointmentScheduler.getAppointment(executor, appointmentScheduleData, treatmentTypes, person);
+	/*	Appointment appointment = new Appointment(executor, from, to, person);*/
 		addAppointment(appointment);
 		HibernateUtil.commitTransaction();	
 	}

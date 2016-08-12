@@ -1,20 +1,18 @@
 package ehc.bo.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "resource_type")
 @Inheritance(strategy=InheritanceType.JOINED)  
 public class ResourceType extends ModifiableObject {
-	List<TreatmentType> treatmentTypes;
+	/*List<TreatmentType> treatmentTypes;*/
+	private TreatmentType treatmentType;
 	
 	public ResourceType() {
 		super();
@@ -22,20 +20,15 @@ public class ResourceType extends ModifiableObject {
 	
 	public ResourceType(User executor) {
 		super(executor);
-		treatmentTypes = new ArrayList<>();
-	}
-
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "resourceTypes")
-	public List<TreatmentType> getTreatmentTypes() {
-		return treatmentTypes;
-	}
-
-	public void setTreatmentTypes(List<TreatmentType> treatmentTypes) {
-		this.treatmentTypes = treatmentTypes;
 	}
 	
-	public void addTreatmentType(TreatmentType treatmentType) {
-		getTreatmentTypes().add(treatmentType);
+	@ManyToOne
+	@JoinColumn(name = "treatment_type_id")
+	public TreatmentType getTreatmentType() {
+		return treatmentType;
 	}
-	
+
+	public void setTreatmentType(TreatmentType treatmentType) {
+		this.treatmentType = treatmentType;
+	}	
 }

@@ -10,19 +10,11 @@ import ehc.bo.Resource;
 
 public class AppointmentProposal {
 	Map<ResourceType, SortedSet<Resource>> resources = new HashMap<>();
-    TreatmentType treatmentType;
     List<TreatmentType> treatmentTypes;
    
     Date from;
     Date to;
      
-	public AppointmentProposal(Map<ResourceType, SortedSet<Resource>> resources, TreatmentType treatmentType, Date from, Date to) {
-		super();
-		this.resources = resources;
-		this.treatmentType = treatmentType;
-		this.from = from;
-		this.to = to;
-	}
 	
 	public AppointmentProposal(Map<ResourceType, SortedSet<Resource>> resources, List<TreatmentType> treatmentTypes, Date from, Date to) {
 		super();
@@ -38,12 +30,12 @@ public class AppointmentProposal {
 	public void setResources(Map<ResourceType, SortedSet<Resource>> resources) {
 		this.resources = resources;
 	}
-	public TreatmentType getTreatmentType() {
+/*	public TreatmentType getTreatmentType() {
 		return treatmentType;
 	}
 	public void setTreatmentType(TreatmentType treatmentType) {
 		this.treatmentType = treatmentType;
-	}
+	}*/
 	public Date getFrom() {
 		return from;
 	}
@@ -66,12 +58,10 @@ public class AppointmentProposal {
 	}
 
 	public void addTreatmentType(TreatmentType treatmentType) {
-		
+		getTreatmentTypes().add(treatmentType);		
 	}
 	
 	public void addTreatmentTypes(List<TreatmentType> treatmentTypes) {
 		getTreatmentTypes().addAll(treatmentTypes);		
-	}
-
-    
+	}  
 }

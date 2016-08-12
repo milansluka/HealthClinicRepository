@@ -65,4 +65,27 @@ public class ResourceTypeWithSkills extends ResourceType {
 	public boolean containsSkills(List<Skill> skills) {		
 		return getSkills().containsAll(skills);
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((skills == null) ? 0 : skills.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof ResourceTypeWithSkills)) {
+			return false;		
+		}
+		ResourceTypeWithSkills resourceType = (ResourceTypeWithSkills)obj;
+		if (resourceType.getSkills().size() != getSkills().size()) {
+			return false;
+		}
+		
+		return getSkills().containsAll(resourceType.getSkills());
+	}
+	
+	
 }

@@ -5,7 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import ehc.bo.impl.AppointmentProposal;
-import ehc.bo.impl.AppointmentProposalUtil;
+import ehc.bo.impl.AppointmentScheduler;
+import ehc.bo.impl.HealthPoint;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
@@ -24,7 +25,7 @@ public class ScheduleAppointmentForGivenTime_TimeAfterWorkTime_ScheduleForNextTi
 	private Date to = DateUtil.date(2016, 7, 14, 18, 20, 0);
 	private TreatmentTypeDao treatmentTypeDao = TreatmentTypeDao.getInstance();
 	private IndividualDao individualDao = IndividualDao.getInstance();
-	private AppointmentProposalUtil resourcesUtil;
+	private AppointmentScheduler resourcesUtil;
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -46,20 +47,11 @@ public class ScheduleAppointmentForGivenTime_TimeAfterWorkTime_ScheduleForNextTi
 			HibernateUtil.commitTransaction();
 
 		}
-
-	/*	List<Day> days = new ArrayList<Day>();
-		days.add(new Day("Nedeľa", 7, 0, 18, 0));
-		days.add(new Day("Pondelok", 7, 0, 18, 0));
-		days.add(new Day("Utorok", 8, 30, 18, 0));
-		days.add(new Day("Streda", 9, 0, 14, 0));
-		days.add(new Day("Štvrtok", 7, 30, 18, 0));
-		days.add(new Day("Piatok", 7, 0, 18, 0));
-		days.add(new Day("Sobota", 7, 0, 18, 0));*/
 		
 		HibernateUtil.beginTransaction();
 		WorkTime workTime = getWorkTime();
 		HibernateUtil.commitTransaction();
-		resourcesUtil = new AppointmentProposalUtil(workTime);
+		resourcesUtil = new AppointmentScheduler(workTime, HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
 	}
 
 	protected void tearDown() throws Exception {

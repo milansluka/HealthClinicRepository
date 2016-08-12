@@ -12,13 +12,14 @@ import ehc.bo.impl.Appointment;
 import ehc.bo.impl.AppointmentDao;
 import ehc.bo.impl.AppointmentProposal;
 import ehc.bo.impl.AppointmentStateValue;
+import ehc.bo.impl.HealthPoint;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
 import ehc.bo.impl.Money;
 import ehc.bo.impl.Physician;
 import ehc.bo.impl.ResourceType;
-import ehc.bo.impl.AppointmentProposalUtil;
+import ehc.bo.impl.AppointmentScheduler;
 import ehc.bo.impl.Treatment;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;
@@ -65,7 +66,7 @@ public class MorphAppointmentToExecutedTreatments extends RootTestCase {
 		WorkTime workTime = getWorkTime();
 		HibernateUtil.commitTransaction();
 
-		AppointmentProposalUtil resourcesUtil = new AppointmentProposalUtil(workTime);
+		AppointmentScheduler resourcesUtil = new AppointmentScheduler(workTime, HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
 
 		// appointment from 7:30 to 8:30
 		Date when = DateUtil.date(2016, 7, 7, 7, 30, 0);
@@ -90,7 +91,7 @@ public class MorphAppointmentToExecutedTreatments extends RootTestCase {
 			resources.add(entry.getValue().first());
 		}
 
-		Appointment appointment = new Appointment(executor, when, to, treatmentType, individual);
+		Appointment appointment = new Appointment(executor, when, to, individual);
 		appointment.addResources(resources);
 		appointmentId = addAppointment(appointment);
 		HibernateUtil.commitTransaction();

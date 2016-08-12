@@ -5,7 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import ehc.bo.impl.AppointmentProposal;
-import ehc.bo.impl.AppointmentProposalUtil;
+import ehc.bo.impl.AppointmentScheduler;
+import ehc.bo.impl.HealthPoint;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
@@ -24,7 +25,7 @@ public class ScheduleAppointmentForGivenTime_TimeBeforeWorkTime_ScheduleForNextT
 	private Date to = DateUtil.date(2016, 7, 14, 8, 20, 0);
 	private TreatmentTypeDao treatmentTypeDao = TreatmentTypeDao.getInstance();
 	private IndividualDao individualDao = IndividualDao.getInstance();
-	private AppointmentProposalUtil resourcesUtil;
+	private AppointmentScheduler resourcesUtil;
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -50,7 +51,7 @@ public class ScheduleAppointmentForGivenTime_TimeBeforeWorkTime_ScheduleForNextT
 		HibernateUtil.beginTransaction();
 		WorkTime workTime = getWorkTime();
 		HibernateUtil.commitTransaction();
-		resourcesUtil = new AppointmentProposalUtil(workTime);
+		resourcesUtil = new AppointmentScheduler(workTime, HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
 	}
 
 	protected void tearDown() throws Exception {

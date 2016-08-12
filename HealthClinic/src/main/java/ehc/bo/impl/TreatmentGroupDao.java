@@ -7,20 +7,20 @@ import org.hibernate.Session;
 
 import ehc.hibernate.HibernateUtil;
 
-public class TreatmentTypeDao {
-	private static TreatmentTypeDao instance = new TreatmentTypeDao();
+public class TreatmentGroupDao {
+	private static TreatmentGroupDao instance = new TreatmentGroupDao();
 	
-	private TreatmentTypeDao() {
+	private TreatmentGroupDao() {
 	}
 
-	public static TreatmentTypeDao getInstance() {
+	public static TreatmentGroupDao getInstance() {
 		return instance;
 	}
 	
-	public TreatmentType findById(long id) {
+	public TreatmentGroup findById(long id) {
 		Session session = HibernateUtil.getCurrentSession();
 
-		String hql = "FROM TreatmentType t WHERE t.id = :id";
+		String hql = "FROM TreatmentGroup t WHERE t.id = :id";
 		Query query = session.createQuery(hql).setParameter("id", id);		
 		List results = query.list();
 		
@@ -28,14 +28,14 @@ public class TreatmentTypeDao {
 			return null;
 		}
 		
-		TreatmentType treatmentType = (TreatmentType)results.get(0);	
-		return treatmentType;
+		TreatmentGroup treatmentGroup = (TreatmentGroup)results.get(0);	
+		return treatmentGroup;
 	} 
 	
-	public TreatmentType findByName(String name) {
+	public TreatmentGroup findByName(String name) {
 		Session session = HibernateUtil.getCurrentSession();
 
-		String hql = "FROM TreatmentType t WHERE t.name = :name";
+		String hql = "FROM TreatmentGroup t WHERE t.name = :name";
 		Query query = session.createQuery(hql).setParameter("name", name);
 		List results = query.list();
 		
@@ -43,8 +43,9 @@ public class TreatmentTypeDao {
 			return null;
 		}
 		
-		TreatmentType treatmentType = (TreatmentType)results.get(0);
+		TreatmentGroup treatmentGroup = (TreatmentGroup)results.get(0);
 	
-		return treatmentType;
+		return treatmentGroup;
 	}
+
 }

@@ -9,13 +9,10 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
 
-import ehc.bo.Resource;
-
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED) 
 public class Skill extends ModifiableObject {
 	String name;
-/*	List<PhysicianType> physicianTypes = new ArrayList<PhysicianType>();*/
 	List<ResourceTypeWithSkills> resourceTypes = new ArrayList<>();
 	
 	protected Skill() {
@@ -49,10 +46,6 @@ public class Skill extends ModifiableObject {
 	}
 	
 	public void removeResourceType(ResourceTypeWithSkills resourceType) {
-	/*	if (resource == null) {
-			return;
-		}
-		getResources().remove(resource);*/
 		resourceType.removeSkill(this);	
 	}
 	

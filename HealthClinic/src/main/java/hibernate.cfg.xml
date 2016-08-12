@@ -53,6 +53,7 @@
 		<mapping class="ehc.bo.impl.Attachment" />
 		<mapping class="ehc.bo.impl.Treatment" />
 		<mapping class="ehc.bo.impl.TreatmentType" />
+		<mapping class="ehc.bo.impl.TreatmentGroup" />
 		<mapping class="ehc.bo.impl.Physician" />
 		<mapping class="ehc.bo.impl.PhysicianType" />
 		<mapping class="ehc.bo.impl.Skill" />

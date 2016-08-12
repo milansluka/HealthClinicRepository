@@ -22,14 +22,6 @@ public class WorkTime extends ModifiableObject {
 
 	protected WorkTime() {
 		super();
-/*		days.add(new Day("Nedeľa", 7, 0, 18, 0));
-		days.add(new Day("Pondelok", 7, 0, 18, 0));
-		days.add(new Day("Utorok", 8, 30, 18, 0));
-		days.add(new Day("Streda", 9, 0, 14, 0));
-		days.add(new Day("Štvrtok", 7, 30, 18, 0));
-		days.add(new Day("Piatok", 7, 0, 18, 0));
-		days.add(new Day("Sobota", 7, 0, 18, 0));
-	}*/
 	}
 
 	public WorkTime(User executor) {

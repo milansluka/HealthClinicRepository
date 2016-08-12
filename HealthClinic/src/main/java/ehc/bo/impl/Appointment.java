@@ -27,7 +27,6 @@ public class Appointment extends BaseObject {
 	Date to;
 	AppointmentState state;
 	Individual individual;
-	/* TreatmentType treatmentType; */
 	List<TreatmentType> treatmentTypes = new ArrayList<>();
 	List<Resource> resources = new ArrayList<>();
 	List<Treatment> executedTreatments = new ArrayList<>();
@@ -39,23 +38,23 @@ public class Appointment extends BaseObject {
 		super();
 	}
 
-	public Appointment(User executor, Date from, Date to, TreatmentType treatmentType, Individual individual) {
+/*	public Appointment(User executor, Date from, Date to, TreatmentType treatmentType, Individual individual) {
 		super(executor);
 		this.from = from;
 		this.to = to;
-		/* assignTreatmentType(treatmentType); */
+		 assignTreatmentType(treatmentType); 
 		addTreatmentType(treatmentType);
 		assignIndividual(individual);
 		state = new AppointmentState(executor);
 		state.setAppointment(this);
-	}
+	}*/
 
-	public Appointment(User executor, Date from, Date to, List<TreatmentType> treatmentTypes, Individual individual) {
+	public Appointment(User executor, Date from, Date to, Individual individual) {
 		super(executor);
 		this.from = from;
 		this.to = to;
 		/* assignTreatmentType(treatmentType); */
-		addTreatmentTypes(treatmentTypes);
+		/*addTreatmentTypes(treatmentTypes);*/
 		assignIndividual(individual);
 		state = new AppointmentState(executor);
 		state.setAppointment(this);
@@ -244,8 +243,8 @@ public class Appointment extends BaseObject {
 	}
 
 	public void prepareForDeleting() {
-		/* removeResources(); */
-		/* removeIndividual(); */
+		 removeResources(); 
+		 removeIndividual(); 
 		removeFromNext();
 		removeFromPrevious();
 	}

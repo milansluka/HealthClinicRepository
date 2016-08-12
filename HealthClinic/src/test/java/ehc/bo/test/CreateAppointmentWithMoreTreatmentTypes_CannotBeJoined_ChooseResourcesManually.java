@@ -4,8 +4,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import ehc.bo.Resource;
 import ehc.bo.impl.Appointment;
 import ehc.bo.impl.AppointmentDao;
+import ehc.bo.impl.AppointmentProposal;
+import ehc.bo.impl.AppointmentScheduleData;
+import ehc.bo.impl.AppointmentScheduler;
+import ehc.bo.impl.HealthPoint;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
@@ -15,7 +20,7 @@ import ehc.bo.impl.User;
 import ehc.hibernate.HibernateUtil;
 import ehc.util.DateUtil;
 
-public class CreateAppointmentWithMoreTreatmentTypes_CannotBeJoined_Exception extends RootTestCase {
+public class CreateAppointmentWithMoreTreatmentTypes_CannotBeJoined_ChooseResourcesManually extends RootTestCase {
 	private IndividualDao individualDao = IndividualDao.getInstance();
 	private TreatmentTypeDao treatmentTypeDao = TreatmentTypeDao.getInstance();
 	private AppointmentDao appointmentDao = AppointmentDao.getInstance();
@@ -48,12 +53,32 @@ public class CreateAppointmentWithMoreTreatmentTypes_CannotBeJoined_Exception ex
 		List<TreatmentType> treatmentTypes = new ArrayList<>();
 		treatmentTypes.add(treatmentType);
 		treatmentTypes.add(treatmentType2);
-		Appointment appointment = new Appointment(executor, from, to, treatmentTypes, individual);
-		long id = addAppointment(appointment);
-		HibernateUtil.commitTransaction();
 		
+		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
+		List<AppointmentProposal> appointmentProposals = appointmentScheduler.getAppointmentProposals(from, to, treatmentTypes, 1);
+		
+		//treatments can not be joined to one appointment - it is recommended to create
+		//two appointments, or if possible, manually choose resources, that can be used
+		//for both treatments 
+		long appointmentId = -1;
+		if (appointmentProposals == null) {
+			//choose resources manually
+			List<Resource> resources = new ArrayList<>();
+			Individual physicianPerson = individualDao.findByFirstAndLastName("Mária", "Petrášová");
+			resources.add(physicianPerson.getReservableSourceRoles().get(0));
+			
+			List<AppointmentScheduleData> appointmentScheduleDatas = appointmentScheduler.getAppointmentScheduleData(from, to, treatmentTypes, resources, 1);
+			
+			if (appointmentScheduleDatas != null) {
+				AppointmentScheduleData appointmentScheduleData = appointmentScheduleDatas.get(0);
+				Appointment appointment = appointmentScheduler.getAppointment(executor, appointmentScheduleData, treatmentTypes, individual);
+				appointmentId = addAppointment(appointment);
+			}
+		}
+		HibernateUtil.commitTransaction();
+	
 		HibernateUtil.beginTransaction();
-		appointment = appointmentDao.findById(id);
+		Appointment appointment = appointmentDao.findById(appointmentId);
 
 		assertTrue(appointment.getTreatmentTypes().get(0).getName().equals("Odstraňovanie pigmentov chrbát"));
 		

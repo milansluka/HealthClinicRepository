@@ -30,6 +30,8 @@ import ehc.bo.impl.RoomDao;
 import ehc.bo.impl.RoomType;
 import ehc.bo.impl.Skill;
 import ehc.bo.impl.SkillDao;
+import ehc.bo.impl.TreatmentGroup;
+import ehc.bo.impl.TreatmentGroupDao;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;
 import ehc.bo.impl.User;
@@ -45,6 +47,7 @@ public class RootTestCase extends TestCase {
 	private List<Long> physicianIds = new ArrayList<Long>();
 	private List<Long> nurseIds = new ArrayList<Long>();
 	private List<Long> treatmentTypeIds = new ArrayList<Long>();
+	private List<Long> treatmentGroupIds = new ArrayList<Long>();
 	private List<Long> individualIds = new ArrayList<Long>();
 	private List<Long> waitingIndividualIds = new ArrayList<Long>();
 	private List<Long> appointmentIds = new ArrayList<Long>();
@@ -418,7 +421,18 @@ public class RootTestCase extends TestCase {
 
 		HibernateUtil.beginTransaction();
 		TreatmentType treatmentType = treatmentTypeDao.findById(id);
+	/*	treatmentType.prepareForDeleting();*/
+/*		HibernateUtil.saveOrUpdate(treatmentType);*/
 		HibernateUtil.delete(treatmentType);
+		HibernateUtil.commitTransaction();
+	}
+	
+	private void removeTreatmentGroup(long id) {
+		TreatmentGroupDao treatmentGroupDao = TreatmentGroupDao.getInstance();
+
+		HibernateUtil.beginTransaction();
+		TreatmentGroup treatmentGroup = treatmentGroupDao.findById(id);
+		HibernateUtil.delete(treatmentGroup);
 		HibernateUtil.commitTransaction();
 	}
 	
@@ -462,6 +476,7 @@ public class RootTestCase extends TestCase {
 		
 		List<String> treatmentTypeNames2 = new ArrayList<>();
 		treatmentTypeNames2.add("Odstraňovanie pigmentov chrbát");
+		treatmentTypeNames2.add("Odstraňovanie pigmentov celá tvár");
 		
 		List<String> treatmentTypeNames3 = new ArrayList<>();
 		treatmentTypeNames3.add("OxyGeneo - tvár");
@@ -539,6 +554,12 @@ public class RootTestCase extends TestCase {
 		} 
 	}
 	
+	private void removeTreatmentGroups() {
+		for (long id : treatmentGroupIds) {
+			removeTreatmentGroup(id);
+		} 
+	}
+	
 	private void removeIndividuals() {
 		for (long id : individualIds) {
 			removeIndividual(id);
@@ -573,27 +594,23 @@ public class RootTestCase extends TestCase {
 				&& treatmentType != null;
 	}
 	
-	protected void addTreatmentType(String name, String category, List<ResourceType> resourceTypes, int duration) {
+	protected void addTreatmentType(String name, List<ResourceType> resourceTypes, int duration, TreatmentGroup treatmentGroup) {
 /*		HibernateUtil.beginTransaction();*/
 		
 		Login login = new Login();
 		User executor = login.login("admin", "admin");
-		TreatmentType treatmentType = new TreatmentType(executor, name, category, new Money(50), 0.1, duration);
+		TreatmentType treatmentType = new TreatmentType(executor, name, new Money(50), 0.1, duration, treatmentGroup);
 		
 		for (ResourceType resourceType : resourceTypes) {
 			treatmentType.addResourceType(resourceType);		
 		}
-		
-	
-		
-		HibernateUtil.saveOrUpdate(treatmentType);	
-		HibernateUtil.merge(treatmentType);
-		long id = treatmentType.getId();
+
+		long id = (long)HibernateUtil.save(treatmentType);
 		treatmentTypeIds.add(id);	
 		/*HibernateUtil.commitTransaction();*/	
 	}
 
-	protected void addTreatmentType(String name, String category, String price, double provision, int duration) {
+	protected void addTreatmentType(String name, String price, double provision, int duration, TreatmentGroup treatmentGroup) {
 		HibernateUtil.beginTransaction();
 		Login login = new Login();
 		User executor = login.login("admin", "admin");
@@ -601,20 +618,31 @@ public class RootTestCase extends TestCase {
 		PhysicianType physicianType = new PhysicianType(executor);
 		NurseType nurseType = new NurseType(executor);
 		RoomType roomType = new RoomType(executor);
-		TreatmentType treatmentType = new TreatmentType(executor, name, category, new Money(new BigDecimal(price)), provision, duration);
+		TreatmentType treatmentType = new TreatmentType(executor, name, new Money(new BigDecimal(price)), provision, duration, treatmentGroup);
 		treatmentType.addResourceType(physicianType);
 		treatmentType.addResourceType(nurseType);
 		treatmentType.addResourceType(roomType);
-
-		long id = (long)HibernateUtil.save(treatmentType);
 		
-		treatmentTypeIds.add(id);
+		treatmentGroup.addTreatmentType(treatmentType);
+		HibernateUtil.saveOrUpdate(treatmentGroup);
+	/*	long id = (long)HibernateUtil.saveOrUpdate(treatmentGroup);*/
+/*		long id = treatmentGroup.getId();
+		treatmentTypeIds.add(id);*/
 		
 		HibernateUtil.commitTransaction();
 	}
 	
+	protected TreatmentGroup addTreatmentGroup(String name) {
+		Login login = new Login();
+		User executor = login.login("admin", "admin");
+		TreatmentGroup treatmentGroup = new TreatmentGroup(executor, name);
+		long id = (long)HibernateUtil.save(treatmentGroup);
+        treatmentGroupIds.add(id);
+        
+        return treatmentGroup;
+	}
+	
 	protected Skill getSkill(String skillName) {
-	/*	HibernateUtil.beginTransaction();*/
 		Skill skill = skillDao.findByName(skillName);
 		
 		if (skill == null) {
@@ -622,7 +650,6 @@ public class RootTestCase extends TestCase {
 		}
 		
 		Hibernate.initialize(skill.getResourceTypes());	
-	/*	HibernateUtil.commitTransaction();*/
 		
 		return skill;
 	}
@@ -652,6 +679,13 @@ public class RootTestCase extends TestCase {
 		resourceTypes1.add(nurseType1);
 		resourceTypes1.add(roomType1);
 		resourceTypes1.add(deviceType1);
+		
+		TreatmentGroup treatmentGroup = new TreatmentGroup(executor, "Odstránenie pigmentových škvŕn");
+		
+		long treatmentGroupId = (long)HibernateUtil.save(treatmentGroup);
+		treatmentGroupIds.add(treatmentGroupId);
+		
+		addTreatmentType("Odstraňovanie pigmentov chrbát", resourceTypes1, 60*60, treatmentGroup);
 		HibernateUtil.commitTransaction();
 		
 		HibernateUtil.beginTransaction();
@@ -671,12 +705,38 @@ public class RootTestCase extends TestCase {
 		resourceTypes2.add(nurseType2);
 		resourceTypes2.add(roomType2);
 		resourceTypes2.add(deviceType2);
+		
+		TreatmentGroup treatmentGroup2 = new TreatmentGroup(executor, "OxyGeneo");
+		treatmentGroupId = (long)HibernateUtil.save(treatmentGroup2);
+		treatmentGroupIds.add(treatmentGroupId);
+		
+		addTreatmentType("OxyGeneo - tvár", resourceTypes2, 60*60, treatmentGroup2);
 		HibernateUtil.commitTransaction();
 		
 		HibernateUtil.beginTransaction();
-		addTreatmentType("Odstraňovanie pigmentov chrbát", "Odstránenie pigmentových škvŕn", resourceTypes1, 60*60);
-		addTreatmentType("OxyGeneo - tvár", "OxyGeneo", resourceTypes2, 60*60);
+		login = new Login();
+		executor = login.login("admin", "admin");
+		List<ResourceType> resourceTypes3 = new ArrayList<>();
+		PhysicianType physicianType3 = new PhysicianType(executor);
+	    NurseType nurseType3 = new NurseType(executor);
+		RoomType roomType3 = new RoomType(executor);
+		DeviceType deviceType3 = new DeviceType(executor, "laser");
+		
+		physicianType3.addSkill(getSkill("test skill3"));
+		
+		resourceTypes3.add(physicianType3);
+		resourceTypes3.add(nurseType3);
+		resourceTypes3.add(roomType3);
+		resourceTypes3.add(deviceType3);
+				
+		addTreatmentType("Odstraňovanie pigmentov celá tvár", resourceTypes3, 60*60, treatmentGroup);
 		HibernateUtil.commitTransaction();
+			
+/*		HibernateUtil.beginTransaction();
+		TreatmentTypeDao treatmentTypeDao = TreatmentTypeDao.getInstance();
+		TreatmentType treatmentType = treatmentTypeDao.findByName("Odstraňovanie pigmentov chrbát");
+		assertTrue(treatmentType.getResourceTypes().size() == 4);
+		HibernateUtil.commitTransaction();*/
 	}
 
 	protected void setUpSystem() {
@@ -697,7 +757,8 @@ public class RootTestCase extends TestCase {
 		removeNurses();
 		removeWaitingIndividuals();
 		removeIndividuals();
-		removeTreatmentTypes();
+	/*	removeTreatmentTypes();*/
+		removeTreatmentGroups();
 		removeSkills();
 		removeWorkTimes();
 	}

@@ -66,10 +66,11 @@ public class ResourceIsNotAvailable extends RootTestCase {
 		User executor = login.login("admin", "admin");
 		Individual individual = individualDao.findByFirstAndLastName(personFirstName, personLastName);
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);	
-		
+		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		treatmentTypes.add(treatmentType);
 		
 		//appointment from 7:00 to 8:00
-		Appointment appointment = new Appointment(executor, DateUtil.date(2016, 7, 7, 7, 0, 0), DateUtil.date(2016, 7, 7, 8, 0, 0), treatmentType, individual);
+		Appointment appointment = new Appointment(executor, DateUtil.date(2016, 7, 7, 7, 0, 0), DateUtil.date(2016, 7, 7, 8, 0, 0), individual);
 		
 		HibernateUtil.commitTransaction();
 		

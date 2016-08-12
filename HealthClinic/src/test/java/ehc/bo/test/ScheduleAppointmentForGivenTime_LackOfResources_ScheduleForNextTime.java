@@ -9,11 +9,13 @@ import java.util.SortedSet;
 import ehc.bo.Resource;
 import ehc.bo.impl.Appointment;
 import ehc.bo.impl.AppointmentProposal;
+import ehc.bo.impl.AppointmentScheduleData;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
 import ehc.bo.impl.ResourceType;
-import ehc.bo.impl.AppointmentProposalUtil;
+import ehc.bo.impl.AppointmentScheduler;
+import ehc.bo.impl.HealthPoint;
 import ehc.bo.impl.Room;
 import ehc.bo.impl.RoomDao;
 import ehc.bo.impl.TreatmentType;
@@ -71,7 +73,7 @@ public class ScheduleAppointmentForGivenTime_LackOfResources_ScheduleForNextTime
 		WorkTime workTime = getWorkTime();
 		HibernateUtil.commitTransaction();
 
-		AppointmentProposalUtil resourcesUtil = new AppointmentProposalUtil(workTime);
+		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(workTime, HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
 
 		// appointment from 7:30 to 8:30
 		Date when = DateUtil.date(2016, 7, 7, 7, 30, 0);
@@ -87,7 +89,7 @@ public class ScheduleAppointmentForGivenTime_LackOfResources_ScheduleForNextTime
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
 		List<TreatmentType> treatmentTypes = new ArrayList<>();
 		treatmentTypes.add(treatmentType);
-		List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentTypes, 1);
+		List<AppointmentProposal> appointmentProposals = appointmentScheduler.getAppointmentProposals(when, to, treatmentTypes, 1);
 
 		AppointmentProposal appointmentProposal = appointmentProposals.get(0);
 		/*Date from = DateUtil.date(2016, 7, 7, 7, 30, 0);*/
@@ -98,9 +100,11 @@ public class ScheduleAppointmentForGivenTime_LackOfResources_ScheduleForNextTime
 			resources.add(entry.getValue().first());
 		}
 
-		Appointment appointment = new Appointment(executor, when, to, treatmentType, individual);
+	/*	Appointment appointment = new Appointment(executor, when, to, individual);*/
+		Appointment appointment = appointmentScheduler.getAppointment(executor, 
+				new AppointmentScheduleData(when, to, resources), treatmentTypes, individual);
 		/*appointment.addTreatmentType(treatmentType);*/
-		appointment.addResources(resources);
+	/*	appointment.addResources(resources);*/
 		addAppointment(appointment);
 		HibernateUtil.commitTransaction();
 	}
@@ -119,19 +123,21 @@ public class ScheduleAppointmentForGivenTime_LackOfResources_ScheduleForNextTime
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
 		List<TreatmentType> treatmentTypes = new ArrayList<>();
 		treatmentTypes.add(treatmentType);
-		AppointmentProposalUtil resourcesUtil = new AppointmentProposalUtil(getWorkTime());
-		List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentTypes, 1);
+		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
+		List<AppointmentProposal> appointmentProposals = appointmentScheduler.getAppointmentProposals(when, to, treatmentTypes, 1);
 		int countOfResources = getCountOfResources();
 
 		Room room = roomDao.findByName("test room 1");
-	/*	ResourceImpl resource = new ResourceImpl(executor);*/
-
-		/*Date to = DateUtil.date(2016, 7, 7, 9, 0, 0);*/
-		boolean roomIsNotAvailable = !room.isAvailable(when, to);
-
 		AppointmentProposal appointmentProposal = appointmentProposals.get(0);
-		Date expectedDate = DateUtil.date(2016, 7, 7, 8, 30, 0);	
-		Appointment appointment = new Appointment(executor, appointmentProposal.getFrom(), appointmentProposal.getTo(), appointmentProposal.getTreatmentType(), person);
+		
+		List<Resource> resources = new ArrayList<>();
+		for (Entry<ResourceType, SortedSet<Resource>> entry : appointmentProposal.getResources().entrySet()) {
+			resources.add(entry.getValue().first());
+		}
+	
+		Date expectedDate = DateUtil.date(2016, 7, 7, 8, 30, 0);
+		AppointmentScheduleData appointmentScheduleData = new AppointmentScheduleData(appointmentProposal.getFrom(), appointmentProposal.getTo(), resources);
+		Appointment appointment = appointmentScheduler.getAppointment(executor, appointmentScheduleData, treatmentTypes, person);
 		addAppointment(appointment);
 		HibernateUtil.commitTransaction();
 

@@ -144,7 +144,6 @@ Create table "treatment_type"
 	"id" BigSerial NOT NULL,
 	"name" Varchar(200) NOT NULL,
 	"info" Text,
-	"category" Varchar(1024) NOT NULL,
 	"created_on" Timestamp NOT NULL,
 	"modified_on" Timestamp,
 	"created_by" Bigint NOT NULL,
@@ -153,6 +152,17 @@ Create table "treatment_type"
 	"duration" Integer NOT NULL,
 	"treatment_group_id" Bigint,
 	"default_provision" Double precision NOT NULL,
+ primary key ("id")
+) Without Oids;
+
+Create table "treatment_group"
+(
+	"id" BigSerial NOT NULL,
+	"name" Varchar(256) NOT NULL,
+	"created_on" Timestamp NOT NULL,
+	"modified_on" Timestamp,
+	"created_by" Bigint NOT NULL,
+	"modified_by" Bigint,
  primary key ("id")
 ) Without Oids;
 
@@ -322,6 +332,7 @@ Create table "device_type"
 Create table "resource_type"
 (
 	"id" BigSerial NOT NULL,
+	"treatment_type_id" Bigint,
 	"modified_by" Bigint,
 	"created_by" Bigint NOT NULL,
 	"created_on" Timestamp NOT NULL,
@@ -333,13 +344,6 @@ Create table "resource_type_with_skills"
 (
 	"id" Bigint NOT NULL,
  primary key ("id")
-) Without Oids;
-
-Create table "resource_type_assignment"
-(
-	"resource_type_id" Bigint NOT NULL,
-	"treatment_type_id" Bigint NOT NULL,
- primary key ("resource_type_id","treatment_type_id")
 ) Without Oids;
 
 Create table "resource"
@@ -475,6 +479,12 @@ Alter table "treatment_type" add  foreign key ("created_by") references "system_
 
 Alter table "treatment_type" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
 
+Alter table "treatment_type" add  foreign key ("treatment_group_id") references "treatment_group" ("id") on update restrict on delete restrict;
+
+Alter table "treatment_group" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+
+Alter table "treatment_group" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+
 Alter table "resource" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
 
 Alter table "resource" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
@@ -555,6 +565,8 @@ Alter table "resource_type" add  foreign key ("created_by") references "system_u
 
 Alter table "resource_type" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
 
+Alter table "resource_type" add  foreign key ("treatment_type_id") references "treatment_type" ("id") on update restrict on delete restrict;
+
 Alter table "resource_type_with_skills" add  foreign key ("id") references "resource_type" ("id") on update restrict on delete restrict;
 
 Alter table "resource_treatment" add  foreign key ("resource_id") references "resource" ("id") on update restrict on delete restrict;
@@ -564,10 +576,6 @@ Alter table "resource_treatment" add  foreign key ("treatment_id") references "t
 Alter table "skill" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
 
 Alter table "skill" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
-
-Alter table "resource_type_assignment" add  foreign key ("treatment_type_id") references "treatment_type" ("id") on update restrict on delete restrict;
-
-Alter table "resource_type_assignment" add  foreign key ("resource_type_id") references "resource_type" ("id") on update restrict on delete restrict;
 
 Alter table "appointment_resource" add  foreign key ("appointment_id") references "appointment" ("id") on update restrict on delete restrict;
 

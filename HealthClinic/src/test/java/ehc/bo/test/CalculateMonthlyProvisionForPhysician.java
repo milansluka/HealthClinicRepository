@@ -8,7 +8,10 @@ import java.util.List;
 import ehc.bo.Resource;
 import ehc.bo.impl.Appointment;
 import ehc.bo.impl.AppointmentDao;
+import ehc.bo.impl.AppointmentScheduleData;
+import ehc.bo.impl.AppointmentScheduler;
 import ehc.bo.impl.AppointmentStateValue;
+import ehc.bo.impl.HealthPoint;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
@@ -45,12 +48,6 @@ public class CalculateMonthlyProvisionForPhysician extends RootTestCase {
 		HibernateUtil.saveOrUpdate(physician);
 		HibernateUtil.commitTransaction();
 		
-		//add some people
-	
-		/*Individual person = new Individual(executor, "Janko", "Mrkvicka");*/
-	/*	addIndividual("Janko", "Mrkvicka");*/
-		/*HibernateUtil.save(person);*/
-		
 		//add appointments
 		HibernateUtil.beginTransaction();
 		
@@ -64,8 +61,9 @@ public class CalculateMonthlyProvisionForPhysician extends RootTestCase {
 		List<Resource> resources = new ArrayList<>();
 		Individual physicianPerson = individualDao.findByFirstAndLastName("Mária", "Petrášová");
 		resources.add(physicianPerson.getReservableSourceRoles().get(0));
-		Appointment appointment = new Appointment(executor, from, to, treatmentTypes, individual);
-		appointment.addResources(resources);
+		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
+		AppointmentScheduleData appointmentScheduleData = new AppointmentScheduleData(from, to, resources);
+		Appointment appointment = appointmentScheduler.getAppointment(executor, appointmentScheduleData, treatmentTypes, individual);
 		long appId = addAppointment(appointment);
 		appointmentIds.add(appId);
 		
@@ -79,8 +77,8 @@ public class CalculateMonthlyProvisionForPhysician extends RootTestCase {
 		resources = new ArrayList<>();
 		physicianPerson = individualDao.findByFirstAndLastName("Mária", "Petrášová");
 		resources.add(physicianPerson.getReservableSourceRoles().get(0));
-		appointment = new Appointment(executor, from, to, treatmentTypes, individual);
-		appointment.addResources(resources);
+		appointmentScheduleData = new AppointmentScheduleData(from, to, resources);
+		appointment = appointmentScheduler.getAppointment(executor, appointmentScheduleData, treatmentTypes, individual);
 		appId = addAppointment(appointment);
 		appointmentIds.add(appId);
 		HibernateUtil.commitTransaction();

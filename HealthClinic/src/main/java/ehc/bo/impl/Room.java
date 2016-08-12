@@ -46,7 +46,7 @@ public class Room extends ResourceImpl {
 			return false;		
 		}
 		RoomType roomType = (RoomType)resourceType;		
-		return getType().containsTreatmentType(roomType.getTreatmentTypes().get(0));
+		return getType().containsTreatmentType(roomType.getTreatmentType());
 	} 
 
     

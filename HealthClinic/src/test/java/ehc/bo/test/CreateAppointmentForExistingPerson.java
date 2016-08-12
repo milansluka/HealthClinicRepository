@@ -1,11 +1,15 @@
 package ehc.bo.test;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import ehc.bo.Resource;
 import ehc.bo.impl.Appointment;
 import ehc.bo.impl.AppointmentDao;
+import ehc.bo.impl.AppointmentScheduleData;
+import ehc.bo.impl.AppointmentScheduler;
+import ehc.bo.impl.HealthPoint;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
@@ -61,33 +65,28 @@ public class CreateAppointmentForExistingPerson extends RootTestCase {
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
 		Date from = DateUtil.date(2016, 4, 20, 10, 0, 0);
 		Date to = DateUtil.date(2016, 4, 20, 10, 30, 0);
-		
-	/*	ResourcesUtil allocator = new ResourcesUtil();*/
-		
-		
-	/*	Physician physician = allocator.findPhysician(from, to, treatmentType);
-		Nurse nurse = allocator.findNurse();
-		Room room = allocator.findRoom();*/
-		
-		Appointment appointment = new Appointment(executor, from, to, treatmentType, person);
+		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		treatmentTypes.add(treatmentType);
 		
 		List<Physician> physicians = physicianDao.getAll();
 		List<Room> rooms = roomDao.getAll();
-		
 		Physician physician = physicians.get(0);
 		Individual physicianPerson = (Individual)physician.getSource();
 		String physicianFirstName = physicianPerson.getFirstName();
 		String physicianLastName = physicianPerson.getName();
 		Room room = rooms.get(0);
+		List<Resource> resources = new ArrayList<>();
+		resources.add(physician);
+		resources.add(room);
 		
-		appointment.addResource(physician);
-		appointment.addResource(room);
+		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
+        AppointmentScheduleData appointmentScheduleData = new AppointmentScheduleData(from, to, resources);
+		Appointment appointment = appointmentScheduler.getAppointment(executor, appointmentScheduleData, treatmentTypes, person);
 		
 		long appointmentId = addAppointment(appointment);
 		HibernateUtil.commitTransaction();
 		
-		HibernateUtil.beginTransaction();
-		
+		HibernateUtil.beginTransaction();	
 		AppointmentDao appointmentDao = AppointmentDao.getInstance();
 		Appointment persistedAppointment = appointmentDao.findById(appointmentId);
 		
