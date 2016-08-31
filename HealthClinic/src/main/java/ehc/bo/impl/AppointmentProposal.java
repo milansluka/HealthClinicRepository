@@ -9,7 +9,7 @@ import java.util.SortedSet;
 import ehc.bo.Resource;
 
 public class AppointmentProposal {
-	Map<ResourceType, SortedSet<Resource>> resources = new HashMap<>();
+	Map<ResourceType, SortedSet<Resource>> availableResources = new HashMap<>();
     List<TreatmentType> treatmentTypes;
    
     Date from;
@@ -17,17 +17,17 @@ public class AppointmentProposal {
      
 	public AppointmentProposal(Map<ResourceType, SortedSet<Resource>> resources, List<TreatmentType> treatmentTypes, Date from, Date to) {
 		super();
-		this.resources = resources;
+		this.availableResources = resources;
 		this.treatmentTypes = treatmentTypes;
 		this.from = from;
 		this.to = to;
 	}
 	
 	public Map<ResourceType, SortedSet<Resource>> getResources() {
-		return resources;
+		return availableResources;
 	}
 	public void setResources(Map<ResourceType, SortedSet<Resource>> resources) {
-		this.resources = resources;
+		this.availableResources = resources;
 	}
 
 	public Date getFrom() {

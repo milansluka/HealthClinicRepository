@@ -1,5 +1,7 @@
 package ehc.bo.impl;
 
+//TestAndG.dot
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +32,6 @@ public class Party extends ModifiableObject implements Comparable<Party> {
 		this.name = name;
 	}
 
-	/*@OneToMany(mappedBy = "source", orphanRemoval = true)*/
 	@OneToMany(mappedBy = "source", cascade = CascadeType.ALL)
 	public List<PartyRole> getSourceRoles() {
 		return sourceRoles;
@@ -40,7 +41,6 @@ public class Party extends ModifiableObject implements Comparable<Party> {
 		this.sourceRoles = roles;
 	}
 
-/*	@OneToMany(mappedBy = "target", orphanRemoval = true)*/
 	@OneToMany(mappedBy = "target", cascade = CascadeType.ALL)
 	public List<PartyRole> getTargetRoles() {
 		return targetRoles;
@@ -91,7 +91,6 @@ public class Party extends ModifiableObject implements Comparable<Party> {
 			return;
 
 		targetRoles.add(role);
-		/* role.setTarget(this); */
 	}
 
 	public void addSourceRole(PartyRole role) {
@@ -99,7 +98,6 @@ public class Party extends ModifiableObject implements Comparable<Party> {
 			return;
 
 		sourceRoles.add(role);
-		/* role.setSource(this); */
 	}
 
 	public void addReservableTargetRole(ResourcePartyRole role) {

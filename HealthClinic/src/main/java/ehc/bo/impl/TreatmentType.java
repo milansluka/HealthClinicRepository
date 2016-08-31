@@ -24,6 +24,8 @@ public class TreatmentType extends BaseObject {
 	/* double price; */
 	Money price;
 	double defaultProvision;
+	
+	//duration in seconds
 	int duration;
 	TreatmentGroup treatmentGroup;
 	List<ResourceType> resourceTypes = new ArrayList<>();

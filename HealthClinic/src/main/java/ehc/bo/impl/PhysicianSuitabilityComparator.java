@@ -22,23 +22,5 @@ public class PhysicianSuitabilityComparator implements Comparator<Physician> {
 			}
 		}
 		return ret;
-		
-/*		if (ret == 0) {
-			Party party1 = physician1.getSource();
-			Party party2 = physician2.getSource();
-			ret = party1.getReservableSourceRoles().size() - party2.getReservableSourceRoles().size();
-			
-			if (ret == 0) {
-				ret = party1.getName().compareTo(party2.getName()); 
-			    
-				if (ret == 0) {
-					ret = (int)(party1.getId() - party2.getId());
-					return ret;
-				}
-				return ret;
-			}		
-			return ret;
-		}	
-		return ret;*/
 	}
 }

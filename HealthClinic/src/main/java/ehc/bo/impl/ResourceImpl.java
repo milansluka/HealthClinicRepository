@@ -76,6 +76,6 @@ public abstract class ResourceImpl extends ModifiableObject implements Resource 
 
 	public boolean isCollision(Date from1, Date to1, Date from2, Date to2) {
 
-		return from1.after(from2) && from1.before(to2) || to1.after(from2) && to1.before(to2);
+		return (from1.after(from2) || from1.equals(from2)) && from1.before(to2) || to1.after(from2) && to1.before(to2);
 	}
 }

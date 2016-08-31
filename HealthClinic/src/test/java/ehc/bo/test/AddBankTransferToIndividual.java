@@ -1,14 +1,12 @@
 package ehc.bo.test;
 
 import ehc.bo.impl.BankTransfer;
-import ehc.bo.impl.CreditCard;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
 import ehc.bo.impl.PaymentChannel;
 import ehc.bo.impl.User;
 import ehc.hibernate.HibernateUtil;
-import ehc.util.DateUtil;
 
 public class AddBankTransferToIndividual extends RootTestCase {
 	   private IndividualDao individualDao = IndividualDao.getInstance();

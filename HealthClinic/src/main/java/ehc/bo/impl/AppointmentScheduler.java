@@ -15,7 +15,8 @@ import ehc.util.DateUtil;
 public class AppointmentScheduler {
 	public static final String TREATMENTS_CANNOT_BE_JOINED_MSG = "Treatments can not be planned in one appointment, it is recommended to create more appointments";
 	public static final String INSUFFICIENT_DIFFERENCE_BETWEEN_FROM_AND_TO_MSG = "Treatment type duration is longer than set duration";
-
+    
+	
 	private PhysicianDao physicianDao = PhysicianDao.getInstance();
 	private NurseDao nurseDao = NurseDao.getInstance();
 	private DeviceDao deviceDao = DeviceDao.getInstance();
@@ -41,12 +42,16 @@ public class AppointmentScheduler {
 	private Date moveFromIfOutOfWorkTime(Date from, Date to) {
 		Date startWorkTime = workTime.getStartWorkTime(from);
 		Date endWorkTime = workTime.getEndWorkTime(to);
+		int duration = (int)getAppointmentDuration(from, to);
+		
 		if (from.before(startWorkTime)) {
 			return startWorkTime;
 		} else if (to.after(endWorkTime)) {
 			Date nextDay = DateUtil.addDays(from, 1);
-			startWorkTime = workTime.getStartWorkTime(nextDay);
-			return startWorkTime;
+			Date nextFrom = workTime.getStartWorkTime(nextDay);
+			Date nextTo = DateUtil.addSeconds(nextFrom, duration);
+			
+			return moveFromIfOutOfWorkTime(nextFrom, nextTo);
 		}
 		return from;
 	}
@@ -96,11 +101,9 @@ public class AppointmentScheduler {
 				appointmentScheduleDatas.add(new AppointmentScheduleData(from, to, resources));
 				givenAppointmentScheduleData++;
 			}
-
 			from = DateUtil.addSeconds(from, timeGridInMinutes * 60);
 			to = DateUtil.addSeconds(to, timeGridInMinutes * 60);
 		}
-
 		return appointmentScheduleDatas;
 	}
 
@@ -124,9 +127,9 @@ public class AppointmentScheduler {
 		}
 		return null;
 	}
-
+	
 	public List<AppointmentProposal> getAppointmentProposals(Date from, Date to, List<TreatmentType> treatmentTypes,
-			int count) {
+			Date limitDate, int count) {
 		if (!canBeCombinedIntoOneAppointment(treatmentTypes)) {
 			setMessage(TREATMENTS_CANNOT_BE_JOINED_MSG);
 			return null;
@@ -137,13 +140,14 @@ public class AppointmentScheduler {
 			return null;
 		}
 
+		long appointmentDuration = getAppointmentDuration(from, to);
 		from = moveFromIfOutOfWorkTime(from, to);
-		to = DateUtil.addSeconds(from, (int) getAppointmentDuration(from, to));
+		to = DateUtil.addSeconds(from, (int) appointmentDuration);
 
 		int proposedAppointments = 0;
 		List<AppointmentProposal> appointmentProposals = new ArrayList<>();
 
-		while (proposedAppointments < count) {
+		while (proposedAppointments < count && to.before(limitDate)) {
 			Map<ResourceType, SortedSet<Resource>> resources = getResources(from, to,
 					treatmentTypes);
 
@@ -155,15 +159,25 @@ public class AppointmentScheduler {
 
 			from = DateUtil.addSeconds(from, timeGridInMinutes * 60);
 			to = DateUtil.addSeconds(to, timeGridInMinutes * 60);
+			from = moveFromIfOutOfWorkTime(from, to);
+			to = DateUtil.addSeconds(from, (int) appointmentDuration);
 		}
 
-		return appointmentProposals;
+		return appointmentProposals;	
+	}
+
+	public List<AppointmentProposal> getAppointmentProposals(Date from, Date to, List<TreatmentType> treatmentTypes,
+			int count) {
+		Date limitDate = DateUtil.addDays(DateUtil.now(), HealthPoint.COUNT_OF_DAYS_FROM_NOW_WHEN_APPOINTMENTS_CAN_BE_CREATED);
+		return getAppointmentProposals(from, to, treatmentTypes, limitDate, count);
 	}
 	
 	private SortedSet<Resource> findSuitableRooms(List<TreatmentType> treatmentTypes, Date from, Date to) {
 		TreatmentType treatmentType = treatmentTypes.get(0);
 		List<RoomType> roomTypes = treatmentType.getPossibleRoomTypes();
         List<RoomType> roomTypesCopy = new ArrayList<>(roomTypes);
+        
+        //find suitable rooms (each such a room that each treatment can be executed in)
 		for (int i = 1; i < treatmentTypes.size(); i++) {
 			TreatmentType treatmentType2 = treatmentTypes.get(i);
 			for (int j = 0; j < roomTypesCopy.size(); j++) {
@@ -172,11 +186,15 @@ public class AppointmentScheduler {
 					roomTypes.remove(roomType);
 				}
 			}
-		}		
+		}	
+		//create ordered set from suitable rooms that are available
 		TreeSet<Resource> rooms = new TreeSet(new RoomSuitabilityComparator()); 		
 		if (roomTypes.size() > 0) {
 			for (RoomType roomType : roomTypes) {
-				rooms.add(roomType.getRoom());
+				Room room = roomType.getRoom();
+				if (room.isAvailable(from, to)) {
+					rooms.add(roomType.getRoom());		
+				}	
 			}
 		}	
 		return rooms;

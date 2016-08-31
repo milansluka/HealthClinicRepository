@@ -17,6 +17,8 @@ import javax.persistence.Transient;
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED) 
 public class Payment extends ModifiableObject {
+	
+	//M:N
 	private Appointment appointment;
     private List<Treatment> treatments = new ArrayList<>();
     private Money paidAmount;
