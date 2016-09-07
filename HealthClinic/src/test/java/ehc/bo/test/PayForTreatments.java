@@ -79,7 +79,7 @@ public class PayForTreatments extends RootTestCase {
 		Money paidAmount = new Money();
 		
 		for (Treatment treatment : appointment.getExecutedTreatments()) {
-			paidAmount.add(treatment.getPrice());
+			paidAmount = paidAmount.add(treatment.getPrice());
 		}
 		
 		long paymentId = -1;

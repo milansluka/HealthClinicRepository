@@ -1,10 +1,8 @@
 package ehc.bo.impl;
 
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "nurse_type")
 public class NurseType extends ResourceTypeWithSkills {
 String name;
 	protected NurseType() {

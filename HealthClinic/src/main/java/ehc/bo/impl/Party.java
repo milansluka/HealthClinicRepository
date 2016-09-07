@@ -1,7 +1,5 @@
 package ehc.bo.impl;
 
-//TestAndG.dot
-
 import java.util.ArrayList;
 import java.util.List;
 

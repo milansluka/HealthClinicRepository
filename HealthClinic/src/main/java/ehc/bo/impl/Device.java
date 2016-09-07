@@ -23,7 +23,7 @@ public class Device extends ResourceImpl {
 	}
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "device_type_id")
+	@JoinColumn(name = "devicetype")
 	public DeviceType getType() {
 		return type;
 	}
@@ -46,7 +46,6 @@ public class Device extends ResourceImpl {
 		}
 		DeviceType deviceType = (DeviceType)resourceType;
 		return getType().getName().equals(deviceType.getName());
-		/*return getType().containsTreatmentType(deviceType.getTreatmentTypes().get(0));*/
 	}
 
 }

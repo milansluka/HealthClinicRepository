@@ -111,7 +111,7 @@ public class CalculateMonthlyProvisionForPhysician extends RootTestCase {
 			if (treatment.getFrom().after(from) && treatment.getTo().before(to)) {
 				TreatmentType treatmentType = treatment.getTreatmentType();
 				double provisionPercentage = physician.getProvisionFromTreatmentType(treatmentType);
-				provisionPerMonth.add(treatment.getPrice().getPercentage(provisionPercentage));
+				provisionPerMonth =  provisionPerMonth.add(treatment.getPrice().getPercentage(provisionPercentage));
 			}		
 		}
 		

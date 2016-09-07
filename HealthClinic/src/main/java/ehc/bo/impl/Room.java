@@ -9,7 +9,6 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @Entity
 @PrimaryKeyJoinColumn(name = "id")
 public class Room extends ResourceImpl {
-	/*List<Device> devices;*/
     String name;
     RoomType type;
       
@@ -24,7 +23,7 @@ public class Room extends ResourceImpl {
 	}
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "room_type_id")
+	@JoinColumn(name = "roomtype")
 	public RoomType getType() {
 		return type;
 	}

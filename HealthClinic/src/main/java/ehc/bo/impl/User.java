@@ -5,7 +5,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "system_user")
+@Table(name = "systemuser")
 @PrimaryKeyJoinColumn(name="id") 
 public class User extends PartyRole {
 /*	List<PermissionProfile> permissionProfiles;*/
@@ -23,17 +23,6 @@ public class User extends PartyRole {
 		this.name = name;
 		this.password = password;
 	}
-
-/*	@ManyToMany
-	@JoinTable(name = "assigned_permission_profile", joinColumns = @JoinColumn(name = "user_id") , inverseJoinColumns = @JoinColumn(name = "permission_profile_id") )
-	public List<PermissionProfile> getPermissionProfiles() {
-		return permissionProfiles;
-	}
-
-	public void setPermissionProfiles(List<PermissionProfile> permissionProfiles) {
-		this.permissionProfiles = permissionProfiles;
-	}*/
-	
 
 	public String getName() {
 		return name;
@@ -58,11 +47,5 @@ public class User extends PartyRole {
 		
 	}
 	
-/*	public void assignPermissionProfile(PermissionProfile permissionProfile) {
-		if (permissionProfile != null) {
-			permissionProfile.getUsers().add(this);
-			getPermissionProfiles().addAll(permissionProfiles);
-		}
-	}*/
 	
 }

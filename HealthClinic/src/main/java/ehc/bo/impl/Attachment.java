@@ -41,7 +41,7 @@ public class Attachment extends ModifiableObject {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "treatment_id")
+	@JoinColumn(name = "treatment")
 	public Treatment getTreatment() {
 		return treatment;
 	}

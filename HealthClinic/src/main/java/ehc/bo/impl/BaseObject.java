@@ -39,8 +39,7 @@ public class BaseObject {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "created_by", nullable = false)
-/*	@JoinColumn(name = "created_by",nullable = false, updatable = false, insertable = true)*/
+	@JoinColumn(name = "createdby", nullable = false)
 	public User getCreatedBy() {
 		return createdBy;
 	}
@@ -49,7 +48,7 @@ public class BaseObject {
 		this.createdBy = createdBy;
 	}
 
-	@Column(name = "created_on")
+	@Column(name = "createdon")
 	public Date getCreatedOn() {
 		return createdOn;
 	}

@@ -114,7 +114,9 @@ public class MorphAppointmentToExecutedTreatments extends RootTestCase {
 		HibernateUtil.beginTransaction();
 		appointment = appointmentDao.findById(appointmentId);
 		Money money = new Money(new BigDecimal("50.0"));
-		assertTrue(appointment.getExecutedTreatments().get(0).getPrice().equals(money));
+		
+		assertEquals(money, appointment.getExecutedTreatments().get(0).getPrice());
+		assertEquals(DateUtil.date(2016, 7, 7, 7, 30, 0), appointment.getExecutedTreatments().get(0).getFrom());
 		HibernateUtil.commitTransaction();
 	}
 

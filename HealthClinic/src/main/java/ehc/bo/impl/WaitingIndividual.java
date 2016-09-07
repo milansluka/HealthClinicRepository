@@ -11,7 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "waiting_list")
+@Table(name = "waitinglist")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class WaitingIndividual extends ModifiableObject {
 	Individual individual;
@@ -32,7 +32,7 @@ public class WaitingIndividual extends ModifiableObject {
 	}
 
 	@OneToOne
-	@JoinColumn(name = "individual_id")
+	@JoinColumn(name = "individual")
 	public Individual getIndividual() {
 		return individual;
 	}
@@ -42,7 +42,7 @@ public class WaitingIndividual extends ModifiableObject {
 	}
 
 	@OneToOne
-	@JoinColumn(name = "treatment_type_id")
+	@JoinColumn(name = "treatmenttype")
 	public TreatmentType getTreatmentType() {
 		return treatmentType;
 	}

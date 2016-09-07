@@ -1,12 +1,9 @@
 package ehc.bo.impl;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "company")
 @PrimaryKeyJoinColumn(name = "id")
 public class Company extends Party {
 	private String registrationNumber;
@@ -19,7 +16,6 @@ public class Company extends Party {
 		super(executor, name);
 	}
 
-	@Column(name = "registration_number")
 	public String getRegistrationNumber() {
 		return registrationNumber;
 	}

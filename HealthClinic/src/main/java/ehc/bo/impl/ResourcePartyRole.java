@@ -9,18 +9,16 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "resource_party_role")
 public abstract class ResourcePartyRole extends ResourceImpl {
 	Party source;
 	Party target;
 	List<ExecutorProvision> treatmentTypeProvisions = new ArrayList<>();
+	List<ExecutorAccount> executorAccounts = new ArrayList<>();
 
 	protected ResourcePartyRole() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public ResourcePartyRole(User executor, Party source, Party target) {
@@ -41,6 +39,15 @@ public abstract class ResourcePartyRole extends ResourceImpl {
 
 	public void setTreatmentTypeProvisions(List<ExecutorProvision> treatmentTypeProvisions) {
 		this.treatmentTypeProvisions = treatmentTypeProvisions;
+	}
+	
+    @OneToMany(mappedBy = "executor", cascade = CascadeType.ALL)
+	public List<ExecutorAccount> getExecutorAccounts() {
+		return executorAccounts;
+	}
+
+	public void setExecutorAccounts(List<ExecutorAccount> executorAccounts) {
+		this.executorAccounts = executorAccounts;
 	}
 
 	@ManyToOne
@@ -69,6 +76,10 @@ public abstract class ResourcePartyRole extends ResourceImpl {
 		}
 		ExecutorProvision executorProvision = new ExecutorProvision(executor, this, treatmentType, provisionAmount);
 		treatmentTypeProvisions.add(executorProvision);
+	}
+	
+	public void addExecutorAccount(ExecutorAccount executorAccount) {
+		getExecutorAccounts().add(executorAccount);
 	}
 	
 	

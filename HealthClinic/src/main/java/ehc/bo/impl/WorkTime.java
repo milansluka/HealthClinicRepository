@@ -10,12 +10,10 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 import ehc.util.DateUtil;
 
 @Entity
-@Table(name = "work_time")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class WorkTime extends ModifiableObject {
 	List<Day> days = new ArrayList<Day>();

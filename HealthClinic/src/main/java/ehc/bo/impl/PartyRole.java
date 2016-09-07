@@ -8,7 +8,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "party_role")
 @Inheritance(strategy=InheritanceType.JOINED)  
 public class PartyRole extends ModifiableObject {
 	Party source;

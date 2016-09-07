@@ -10,7 +10,6 @@ import javax.persistence.OneToMany;
 public class PermissionProfile {
 	int id;
 	List<Permission> permissions;
-/*	List<User> users;*/
 	String name;
 	
 	@Id
@@ -20,14 +19,6 @@ public class PermissionProfile {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-/*	@ManyToMany(mappedBy = "permissionProfiles") 
-	public List<User> getUsers() {
-		return users;
-	}
-	public void setUsers(List<User> users) {
-		this.users = users;
-	}*/
 	
 	@OneToMany(mappedBy = "permissionProfile")
 	public List<Permission> getPermissions() {

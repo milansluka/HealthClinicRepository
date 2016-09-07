@@ -9,7 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "executor_treatment_type")
+@Table(name = "executor_treatmenttype")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class ExecutorProvision extends ModifiableObject {
 	private ResourcePartyRole executor;
@@ -37,7 +37,7 @@ public class ExecutorProvision extends ModifiableObject {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "executor_id")
+	@JoinColumn(name = "executor")
 	public ResourcePartyRole getExecutor() {
 		return executor;
 	}
@@ -46,7 +46,7 @@ public class ExecutorProvision extends ModifiableObject {
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "treatment_type_id")
+	@JoinColumn(name = "treatmenttype")
 	public TreatmentType getTreatmentType() {
 		return treatmentType;
 	}

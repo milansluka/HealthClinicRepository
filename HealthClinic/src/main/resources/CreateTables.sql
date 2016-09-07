@@ -5,28 +5,57 @@ set schema 'dbo';
 Create table "attachment"
 (
 	"id" BigSerial NOT NULL,
-	"treatment_id" Bigint NOT NULL,
+	"treatment" Bigint NOT NULL,
 	"name" Varchar(1024) NOT NULL,
 	"path" Varchar(2048) NOT NULL,
-	"created_on" Timestamp NOT NULL,
-	"modified_on" Timestamp,
-	"created_by" Bigint NOT NULL,
-	"modified_by" Bigint,
+	"createdon" Timestamp NOT NULL,
+	"modifiedon" Timestamp,
+	"createdby" Bigint NOT NULL,
+	"modifiedby" Bigint,
  primary key ("id")
 ) Without Oids;
 
-Create table "communication_channel"
+Create table "executoraccount"
 (
 	"id" BigSerial NOT NULL,
-	"valid_from" Timestamp NOT NULL,
-	"valid_to" Timestamp,
+	"executor" Bigint NOT NULL,
+	"from" Timestamp NOT NULL,
+	"to" Timestamp NOT NULL,
+	"createdby" Bigint NOT NULL,
+	"createdon" Timestamp NOT NULL,
+ primary key ("id")
+) Without Oids;
+
+Create table "accountitem"
+(
+	"id" BigSerial NOT NULL,
+	"paymentchannel" Bigint NOT NULL,
+	"executoraccount" Bigint NOT NULL,
+	"from" Timestamp NOT NULL,
+	"to" Timestamp NOT NULL,
+	"treatmenttypename" Varchar(512) NOT NULL,
+	"executorprovision" Double precision NOT NULL,
+	"subjectfirstname" Varchar(256) NOT NULL,
+	"subjectlastname" Varchar(256) NOT NULL,
+	"treatmentprice" Bigint NOT NULL,
+	"withdph" Boolean NOT NULL,
+	"createdby" Bigint NOT NULL,
+	"createdon" Timestamp NOT NULL,
+ primary key ("id")
+) Without Oids;
+
+Create table "communicationchannel"
+(
+	"id" BigSerial NOT NULL,
+	"validfrom" Timestamp NOT NULL,
+	"validto" Timestamp,
 	"value" Varchar(512) NOT NULL,
 	"discriminator" Integer NOT NULL,
-    "created_on" Timestamp NOT NULL,
-	"modified_on" Timestamp,
-	"created_by" Bigint NOT NULL,
-	"modified_by" Bigint,
-	"party_id" Bigint NOT NULL,
+    "createdon" Timestamp NOT NULL,
+	"modifiedon" Timestamp,
+	"createdby" Bigint NOT NULL,
+	"modifiedby" Bigint,
+	"party" Bigint NOT NULL,
  primary key ("id")
 ) Without Oids;
 
@@ -38,7 +67,7 @@ Create table "money"
 	 primary key ("id")
 ) Without Oids;
 
-Create table "system_user"
+Create table "systemuser"
 (
 	"name" Varchar(64) NOT NULL UNIQUE,
 	"password" Varchar(128) NOT NULL,
@@ -46,24 +75,24 @@ Create table "system_user"
  primary key ("id")
 ) Without Oids;
 
-Create table "waiting_list"
+Create table "waitinglist"
 (
 	"id" BigSerial NOT NULL,
-	"treatment_type_id" Bigint NOT NULL,
-	"individual_id" Bigint NOT NULL,
+	"treatmenttype" Bigint NOT NULL,
+	"individual" Bigint NOT NULL,
 	"from" Timestamp NOT NULL,
 	"to" Timestamp NOT NULL,
-	"created_on" Timestamp NOT NULL,
-	"modified_on" Timestamp,
-	"created_by" Bigint NOT NULL,
-	"modified_by" Bigint,
+	"createdon" Timestamp NOT NULL,
+	"modifiedon" Timestamp,
+	"createdby" Bigint NOT NULL,
+	"modifiedby" Bigint,
  primary key ("id")
 ) Without Oids;
 
 Create table "permission"
 (
 	"id" BigSerial NOT NULL,
-	"permission_profile_id" Bigint NOT NULL,
+	"permissionprofile" Bigint NOT NULL,
 	"type" Varchar(256) NOT NULL UNIQUE,
  primary key ("id")
 ) Without Oids;
@@ -73,109 +102,109 @@ Create table "appointment"
 	"id" BigSerial NOT NULL,
 	"previous" Bigint,
 	"next" Bigint,
-	"created_by" Bigint NOT NULL,
+	"createdby" Bigint NOT NULL,
 	"from" Timestamp NOT NULL,
 	"to" Timestamp NOT NULL,
-	"created_on" Timestamp NOT NULL,
-	"individual_id" Bigint NOT NULL,
+	"createdon" Timestamp NOT NULL,
+	"individual" Bigint NOT NULL,
  primary key ("id")
 ) Without Oids;
 
-Create table "appointment_state"
+Create table "appointmentstate"
 (
 	"id" BigSerial NOT NULL,
-	"modified_by" Bigint,
-	"created_by" Bigint NOT NULL,
-	"created_on" Timestamp NOT NULL,
+	"modifiedby" Bigint,
+	"createdby" Bigint NOT NULL,
+	"createdon" Timestamp NOT NULL,
 	"value" Varchar(128) NOT NULL,
-	"modified_on" Timestamp,
+	"modifiedon" Timestamp,
  primary key ("id")
 ) Without Oids;
 
-Create table "appointment_treatment_type"
+Create table "appointment_treatmenttype"
 (
-	"appointment_id" Bigint NOT NULL,
-	"treatment_type_id" Bigint NOT NULL,
- primary key ("appointment_id","treatment_type_id")
+	"appointment" Bigint NOT NULL,
+	"treatmenttype" Bigint NOT NULL,
+ primary key ("appointment","treatmenttype")
 ) Without Oids;
 
 
 Create table "individual"
 (
-	"first_name" Varchar(128) NOT NULL,
+	"firstname" Varchar(128) NOT NULL,
 	"id" Bigint NOT NULL,
 	"birthdate" Timestamp,
  primary key ("id")
 ) Without Oids;
 
 
-Create table "assigned_permission_profile"
+Create table "assignedpermissionprofile"
 (
-	"permission_profile_id" Bigint NOT NULL,
+	"permissionprofile" Bigint NOT NULL,
 	"id" Bigint NOT NULL,
- primary key ("permission_profile_id","id")
+ primary key ("permissionprofile","id")
 ) Without Oids;
 
 Create table "treatment"
 (
 	"id" BigSerial NOT NULL,
-	"appointment_id" Bigint NOT NULL,
-	"treatment_type_id" Bigint NOT NULL,
-    "payment_id" Bigint,
+	"appointment" Bigint NOT NULL,
+	"treatmenttype" Bigint NOT NULL,
+    "payment" Bigint,
 	"price" Bigint NOT NULL,
     "from" Timestamp NOT NULL,
 	"to" Timestamp NOT NULL,
-	"modified_by" Bigint,
-    "modified_on" Timestamp,
-	"created_by" Bigint NOT NULL,
-	"created_on" Timestamp NOT NULL,
+	"modifiedby" Bigint,
+    "modifiedon" Timestamp,
+	"createdby" Bigint NOT NULL,
+	"createdon" Timestamp NOT NULL,
  primary key ("id")
 ) Without Oids;
 
 Create table "resource_treatment"
 (
-	"resource_id" Bigint NOT NULL,
-	"treatment_id" Bigint NOT NULL,
- primary key ("resource_id","treatment_id")
+	"resource" Bigint NOT NULL,
+	"treatment" Bigint NOT NULL,
+ primary key ("resource","treatment")
 ) Without Oids;
 
-Create table "treatment_type"
+Create table "treatmenttype"
 (
 	"id" BigSerial NOT NULL,
 	"name" Varchar(200) NOT NULL,
 	"info" Text,
-	"created_on" Timestamp NOT NULL,
-	"modified_on" Timestamp,
-	"created_by" Bigint NOT NULL,
-	"modified_by" Bigint,
+	"createdon" Timestamp NOT NULL,
+	"modifiedon" Timestamp,
+	"createdby" Bigint NOT NULL,
+	"modifiedby" Bigint,
 	"price" Bigint NOT NULL,
 	"duration" Integer NOT NULL,
-	"treatment_group_id" Bigint,
-	"default_provision" Double precision NOT NULL,
+	"treatmentgroup" Bigint,
+	"defaultprovision" Double precision NOT NULL,
  primary key ("id")
 ) Without Oids;
 
-Create table "treatment_group"
+Create table "treatmentgroup"
 (
 	"id" BigSerial NOT NULL,
 	"name" Varchar(256) NOT NULL,
-	"created_on" Timestamp NOT NULL,
-	"modified_on" Timestamp,
-	"created_by" Bigint NOT NULL,
-	"modified_by" Bigint,
+	"createdon" Timestamp NOT NULL,
+	"modifiedon" Timestamp,
+	"createdby" Bigint NOT NULL,
+	"modifiedby" Bigint,
  primary key ("id")
 ) Without Oids;
 
-Create table "executor_treatment_type"
+Create table "executor_treatmenttype"
 (
     "id" BigSerial NOT NULL,
-	"executor_id" Bigint NOT NULL,
-	"treatment_type_id" Bigint NOT NULL,
+	"executor" Bigint NOT NULL,
+	"treatmenttype" Bigint NOT NULL,
 	"provision" Double precision NOT NULL,
-	"created_by" Bigint NOT NULL,
-	"modified_by" Bigint,
-	"created_on" Timestamp NOT NULL,
-	"modified_on" Timestamp,
+	"createdby" Bigint NOT NULL,
+	"modifiedby" Bigint,
+	"createdon" Timestamp NOT NULL,
+	"modifiedon" Timestamp,
  primary key ("id")
 ) Without Oids;
 
@@ -189,12 +218,12 @@ Create table "patient"
 Create table "physician"
 (
 	"id" Bigint NOT NULL,
-	"physician_type_id" Bigint NOT NULL,
+	"physiciantype" Bigint NOT NULL,
  primary key ("id")
 ) Without Oids;
 
 
-Create table "physician_type"
+Create table "physiciantype"
 (
 	"id" BigSerial NOT NULL,
  primary key ("id")
@@ -203,11 +232,11 @@ Create table "physician_type"
 Create table "nurse"
 (
 	"id" Bigint NOT NULL,
-	"nurse_type_id" Bigint NOT NULL,
+	"nursetype" Bigint NOT NULL,
  primary key ("id")
 ) Without Oids;
 
-Create table "nurse_type"
+Create table "nursetype"
 (
 	"id" BigSerial NOT NULL,
  primary key ("id")
@@ -216,34 +245,34 @@ Create table "nurse_type"
 Create table "skill"
 (
 	"id" BigSerial NOT NULL,
-	"created_by" Bigint NOT NULL,
+	"createdby" Bigint NOT NULL,
 	"name" Varchar(256) NOT NULL,
-	"created_on" Timestamp NOT NULL Default CURRENT_DATE,
-	"modified_by" Bigint,
-	"modified_on" Timestamp,
+	"createdon" Timestamp NOT NULL Default CURRENT_DATE,
+	"modifiedby" Bigint,
+	"modifiedon" Timestamp,
  primary key ("id")
 ) Without Oids;
 
 
-Create table "skill_assignment"
+Create table "skillassignment"
 (
-	"resource_type_with_skills_id" Bigint NOT NULL,
-	"skill_id" Bigint NOT NULL,
- primary key ("resource_type_with_skills_id","skill_id")
+	"resourcetypewithskills" Bigint NOT NULL,
+	"skill" Bigint NOT NULL,
+ primary key ("resourcetypewithskills","skill")
 ) Without Oids;
 
-Create table "room_type_treatment_type"
+Create table "roomtype_treatmenttype"
 (
-	"treatment_type_id" Bigint NOT NULL,
-	"room_type_id" Bigint NOT NULL,
- primary key ("treatment_type_id","room_type_id")
+	"treatmenttype" Bigint NOT NULL,
+	"roomtype" Bigint NOT NULL,
+ primary key ("treatmenttype","roomtype")
 ) Without Oids;
 
-Create table "device_type_treatment_type"
+Create table "devicetype_treatmenttype"
 (
-	"device_type_id" Bigint NOT NULL,
-	"treatment_type_id" Bigint NOT NULL,
- primary key ("device_type_id","treatment_type_id")
+	"devicetype" Bigint NOT NULL,
+	"treatmenttype" Bigint NOT NULL,
+ primary key ("devicetype","treatmenttype")
 ) Without Oids;
 
 Create table "receptionist"
@@ -256,7 +285,7 @@ Create table "receptionist"
 Create table "company"
 (
 	"id" Bigint NOT NULL,
-	"registration_number" Varchar(256) NOT NULL,
+	"registrationnumber" Varchar(256) NOT NULL,
  primary key ("id")
 ) Without Oids;
 
@@ -265,27 +294,27 @@ Create table "party"
 (
 	"id" BigSerial NOT NULL,
 	"name" Varchar(256) NOT NULL,
-    "modified_by" Bigint,
-	"created_by" Bigint NOT NULL,
-    "created_on" Timestamp NOT NULL,
-	"modified_on" Timestamp,
+    "modifiedby" Bigint,
+	"createdby" Bigint NOT NULL,
+    "createdon" Timestamp NOT NULL,
+	"modifiedon" Timestamp,
  primary key ("id")
 ) Without Oids;
 
 
-Create table "party_role"
+Create table "partyrole"
 (
 	"id" BigSerial NOT NULL,
 	"target" Bigint NOT NULL,
 	"source" Bigint NOT NULL,
-	"created_on" Timestamp NOT NULL Default CURRENT_DATE,
-	"modified_on" Timestamp,
-	"created_by" Bigint NOT NULL,
-	"modified_by" Bigint,
+	"createdon" Timestamp NOT NULL Default CURRENT_DATE,
+	"modifiedon" Timestamp,
+	"createdby" Bigint NOT NULL,
+	"modifiedby" Bigint,
  primary key ("id")
 ) Without Oids;
 
-Create table "resource_party_role"
+Create table "resourcepartyrole"
 (
 	"id" Bigint NOT NULL,
 	"target" Bigint NOT NULL,
@@ -293,7 +322,7 @@ Create table "resource_party_role"
  primary key ("id")
 ) Without Oids;
 
-Create table "permission_profile"
+Create table "permissionprofile"
 (
 	"id" BigSerial NOT NULL,
 	"name" Varchar(256) NOT NULL,
@@ -302,13 +331,13 @@ Create table "permission_profile"
 
 Create table "room"
 (
-	"room_type_id" Bigint NOT NULL,
+	"roomtype" Bigint NOT NULL,
 	"name" Varchar(256) NOT NULL,
 	"id" Bigint NOT NULL,
  primary key ("id")
 ) Without Oids;
 
-Create table "room_type"
+Create table "roomtype"
 (
 	"id" BigSerial NOT NULL,
  primary key ("id")
@@ -318,29 +347,29 @@ Create table "device"
 (
 	"name" Varchar(512) NOT NULL,
 	"id" Bigint NOT NULL,
-	"device_type_id" Bigint NOT NULL,
+	"devicetype" Bigint NOT NULL,
  primary key ("id")
 ) Without Oids;
 
-Create table "device_type"
+Create table "devicetype"
 (
 	"id" Bigint NOT NULL,
 	"name" Varchar(512) NOT NULL,
  primary key ("id")
 ) Without Oids;
 
-Create table "resource_type"
+Create table "resourcetype"
 (
 	"id" BigSerial NOT NULL,
-	"treatment_type_id" Bigint,
-	"modified_by" Bigint,
-	"created_by" Bigint NOT NULL,
-	"created_on" Timestamp NOT NULL,
-	"modified_on" Timestamp,
+	"treatmenttype" Bigint,
+	"modifiedby" Bigint,
+	"createdby" Bigint NOT NULL,
+	"createdon" Timestamp NOT NULL,
+	"modifiedon" Timestamp,
  primary key ("id")
 ) Without Oids;
 
-Create table "resource_type_with_skills"
+Create table "resourcetypewithskills"
 (
 	"id" Bigint NOT NULL,
  primary key ("id")
@@ -349,68 +378,68 @@ Create table "resource_type_with_skills"
 Create table "resource"
 (
 	"id" BigSerial NOT NULL,
-	"modified_by" Bigint,
-	"created_by" Bigint NOT NULL,
-	"created_on" Timestamp NOT NULL,
-	"modified_on" Timestamp,
+	"modifiedby" Bigint,
+	"createdby" Bigint NOT NULL,
+	"createdon" Timestamp NOT NULL,
+	"modifiedon" Timestamp,
  primary key ("id")
 ) Without Oids;
 
 Create table "appointment_resource"
 (
-	"resource_id" Bigint NOT NULL,
-	"appointment_id" Bigint NOT NULL,
- primary key ("resource_id","appointment_id")
+	"resource" Bigint NOT NULL,
+	"appointment" Bigint NOT NULL,
+ primary key ("resource","appointment")
 ) Without Oids;
 
 Create table "payment"
 (
 	"id" BigSerial NOT NULL,
-	"appointment_id" Bigint NOT NULL,
-	"paid_amount" Bigint NOT NULL,
-	"payment_channel_id" Bigint NOT NULL,
-	"modified_by" Bigint,
-	"created_by" Bigint NOT NULL,
-	"created_on" Timestamp NOT NULL,
-	"modified_on" Timestamp,
+	"appointment" Bigint NOT NULL,
+	"paidamount" Bigint NOT NULL,
+	"paymentchannel" Bigint NOT NULL,
+	"modifiedby" Bigint,
+	"createdby" Bigint NOT NULL,
+	"createdon" Timestamp NOT NULL,
+	"modifiedon" Timestamp,
  primary key ("id")
 ) Without Oids;
 
-Create table "payment_channel"
+Create table "paymentchannel"
 (
 	"id" BigSerial NOT NULL,
-	"party_id" Bigint NOT NULL,
-	"modified_by" Bigint,
-	"created_by" Bigint NOT NULL,
-	"created_on" Timestamp NOT NULL,
-	"modified_on" Timestamp,
+	"party" Bigint NOT NULL,
+	"modifiedby" Bigint,
+	"createdby" Bigint NOT NULL,
+	"createdon" Timestamp NOT NULL,
+	"modifiedon" Timestamp,
 	
  primary key ("id")
 ) Without Oids;
 
-Create table "credit_card"
+Create table "creditcard"
 (
 	"id" Bigint NOT NULL,
-	"card_number" Varchar(32) NOT NULL,
-	"card_expiry" Timestamp NOT NULL,
+	"cardnumber" Varchar(32) NOT NULL,
+	"cardexpiry" Timestamp NOT NULL,
  primary key ("id")
 ) Without Oids;
 
-Create table "bank_transfer"
+Create table "banktransfer"
 (
 	"id" Bigint NOT NULL,
-	"account_number" Char(8) NOT NULL,
-	"sort_code" Char(6) NOT NULL,
+	"accountnumber" Char(8) NOT NULL,
+	"sortcode" Char(6) NOT NULL,
  primary key ("id")
 ) Without Oids;
 
-Create table "work_time"
+Create table "worktime"
 (
 	"id" BigSerial NOT NULL,
-	"modified_by" Bigint,
-	"created_by" Bigint NOT NULL,
-    "created_on" Timestamp NOT NULL,
-	"modified_on" Timestamp,
+	"modifiedby" Bigint,
+	"createdby" Bigint NOT NULL,
+    "createdon" Timestamp NOT NULL,
+	"modifiedon" Timestamp,
  primary key ("id")
 ) Without Oids;
 
@@ -418,13 +447,13 @@ Create table "day"
 (
 	"id" BigSerial NOT NULL,
 	"name" Varchar(126) NOT NULL,
-	"start_work_time" Integer NOT NULL,
-	"end_work_time" Integer NOT NULL,
-	"work_time_id" Bigint NOT NULL,
-	"modified_by" Bigint,
-	"created_by" Bigint NOT NULL,
-	"created_on" Timestamp NOT NULL,
-	"modified_on" Timestamp,
+	"startworktime" Integer NOT NULL,
+	"endworktime" Integer NOT NULL,
+	"worktime" Bigint NOT NULL,
+	"modifiedby" Bigint,
+	"createdby" Bigint NOT NULL,
+	"createdon" Timestamp NOT NULL,
+	"modifiedon" Timestamp,
  primary key ("id")
 ) Without Oids;
 
@@ -450,211 +479,223 @@ DECLARE
 	
 BEGIN
   -- inserting admin (default user)
-  insert into party_role (created_on, created_by, source, target) values(CURRENT_DATE, -1, -1, -1)
+  insert into partyrole (createdon, createdby, source, target) values(CURRENT_DATE, -1, -1, -1)
   RETURNING id INTO user_id;
-  insert into system_user (name, "password", id) 
+  insert into systemuser (name, "password", id) 
   values ((select "value" from config where name = 'default_user_name'), (select "value" from config where name = 'default_user_password'), user_id);
-  update party_role set created_by = user_id where id = user_id;
+  update partyrole set createdby = user_id where id = user_id;
   
   -- inserting owner company
-  insert into party (name, created_on, created_by) values ((select "value" from config where name = 'default_company_name'), CURRENT_DATE, user_id)
+  insert into party (name, createdon, createdby) values ((select "value" from config where name = 'default_company_name'), CURRENT_DATE, user_id)
   RETURNING id INTO company_id;
-  insert into company (registration_number, id) values ('00000000', company_id);
+  insert into company (registrationnumber, id) values ('00000000', company_id);
 
   -- inserting individual representing admin user
-  insert into party (name, created_on, created_by) values ((select "value" from config where name = 'default_user_name'), CURRENT_DATE, user_id)
+  insert into party (name, createdon, createdby) values ((select "value" from config where name = 'default_user_name'), CURRENT_DATE, user_id)
   RETURNING id INTO individual_id;
-  insert into individual (first_name, id) values ((select "value" from config where name = 'default_user_name'), individual_id);  
+  insert into individual (firstname, id) values ((select "value" from config where name = 'default_user_name'), individual_id);  
 
   -- update target and source for party_role (default user)
-  update party_role set target = company_id, source = individual_id where id = user_id;
+  update partyrole set target = company_id, source = individual_id where id = user_id;
   
 END $$;
 
 /* Create Foreign Keys */
 
-Alter table "assigned_permission_profile" add  foreign key ("id") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "assignedpermissionprofile" add  foreign key ("id") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "appointment" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "appointment" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "treatment" add  foreign key ("appointment_id") references "appointment" ("id") on update restrict on delete restrict;
+Alter table "treatment" add  foreign key ("appointment") references "appointment" ("id") on update restrict on delete restrict;
 
-Alter table "treatment" add  foreign key ("treatment_type_id") references "treatment_type" ("id") on update restrict on delete restrict;
+Alter table "treatment" add  foreign key ("treatmenttype") references "treatmenttype" ("id") on update restrict on delete restrict;
 
-Alter table "treatment" add  foreign key ("payment_id") references "payment" ("id") on update restrict on delete restrict;
+Alter table "treatment" add  foreign key ("payment") references "payment" ("id") on update restrict on delete restrict;
 
-Alter table "treatment_type" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "treatmenttype" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "treatment_type" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "treatmenttype" add  foreign key ("modifiedby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "treatment_type" add  foreign key ("treatment_group_id") references "treatment_group" ("id") on update restrict on delete restrict;
+Alter table "treatmenttype" add  foreign key ("treatmentgroup") references "treatmentgroup" ("id") on update restrict on delete restrict;
 
-Alter table "treatment_group" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "treatmentgroup" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "treatment_group" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "treatmentgroup" add  foreign key ("modifiedby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "resource" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "resource" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "resource" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "resource" add  foreign key ("modifiedby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "party_role" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "partyrole" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "party_role" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "partyrole" add  foreign key ("modifiedby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "resource_party_role" add  foreign key ("id") references "resource" ("id") on update restrict on delete restrict;
+Alter table "resourcepartyrole" add  foreign key ("id") references "resource" ("id") on update restrict on delete restrict;
 
-Alter table "resource_party_role" add  foreign key ("source") references "party" ("id") on update restrict on delete restrict;
+Alter table "resourcepartyrole" add  foreign key ("source") references "party" ("id") on update restrict on delete restrict;
 
-Alter table "resource_party_role" add  foreign key ("target") references "party" ("id") on update restrict on delete restrict;
+Alter table "resourcepartyrole" add  foreign key ("target") references "party" ("id") on update restrict on delete restrict;
 
-Alter table "appointment" add  foreign key ("individual_id") references "individual" ("id") on update restrict on delete restrict;
+Alter table "appointment" add  foreign key ("individual") references "individual" ("id") on update restrict on delete restrict;
 
 Alter table "appointment" add  foreign key ("next") references "appointment" ("id") on update restrict on delete restrict;
 
 Alter table "appointment" add  foreign key ("previous") references "appointment" ("id") on update restrict on delete restrict;
 
-Alter table "appointment_state" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "appointmentstate" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "appointment_state" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "appointmentstate" add  foreign key ("modifiedby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "appointment_state" add  foreign key ("id") references "appointment" ("id") on update restrict on delete restrict;
+Alter table "appointmentstate" add  foreign key ("id") references "appointment" ("id") on update restrict on delete restrict;
 
-Alter table "party_role" add  foreign key ("source") references "party" ("id") on update restrict on delete restrict;
+Alter table "partyrole" add  foreign key ("source") references "party" ("id") on update restrict on delete restrict;
 
-Alter table "party_role" add  foreign key ("target") references "party" ("id") on update restrict on delete restrict;
+Alter table "partyrole" add  foreign key ("target") references "party" ("id") on update restrict on delete restrict;
 
 Alter table "individual" add  foreign key ("id") references "party" ("id") on update restrict on delete restrict;
 
 Alter table "company" add  foreign key ("id") references "party" ("id") on update restrict on delete restrict;
 
-Alter table "physician" add  foreign key ("id") references "resource_party_role" ("id") on update restrict on delete restrict;
+Alter table "physician" add  foreign key ("id") references "resourcepartyrole" ("id") on update restrict on delete restrict;
 
-Alter table "physician" add  foreign key ("physician_type_id") references "physician_type" ("id") on update restrict on delete restrict;
+Alter table "physician" add  foreign key ("physiciantype") references "physiciantype" ("id") on update restrict on delete restrict;
 
-Alter table "nurse" add  foreign key ("id") references "resource_party_role" ("id") on update restrict on delete restrict;
+Alter table "nurse" add  foreign key ("id") references "resourcepartyrole" ("id") on update restrict on delete restrict;
 
-Alter table "nurse" add  foreign key ("nurse_type_id") references "nurse_type" ("id") on update restrict on delete restrict;
+Alter table "nurse" add  foreign key ("nursetype") references "nursetype" ("id") on update restrict on delete restrict;
 
-Alter table "receptionist" add  foreign key ("id") references "party_role" ("id") on update restrict on delete restrict;
+Alter table "receptionist" add  foreign key ("id") references "partyrole" ("id") on update restrict on delete restrict;
 
-Alter table "patient" add  foreign key ("id") references "party_role" ("id") on update restrict on delete restrict;
+Alter table "patient" add  foreign key ("id") references "partyrole" ("id") on update restrict on delete restrict;
 
-Alter table "system_user" add  foreign key ("id") references "party_role" ("id") on update restrict on delete restrict;
+Alter table "systemuser" add  foreign key ("id") references "partyrole" ("id") on update restrict on delete restrict;
 
-Alter table "assigned_permission_profile" add  foreign key ("permission_profile_id") references "permission_profile" ("id") on update restrict on delete restrict;
+Alter table "assignedpermissionprofile" add  foreign key ("permissionprofile") references "permissionprofile" ("id") on update restrict on delete restrict;
 
-Alter table "permission" add  foreign key ("permission_profile_id") references "permission_profile" ("id") on update restrict on delete restrict;
+Alter table "permission" add  foreign key ("permissionprofile") references "permissionprofile" ("id") on update restrict on delete restrict;
 
-Alter table "room_type_treatment_type" add  foreign key ("room_type_id") references "room_type" ("id") on update restrict on delete restrict;
+Alter table "roomtype_treatmenttype" add  foreign key ("roomtype") references "roomtype" ("id") on update restrict on delete restrict;
 
-Alter table "room_type_treatment_type" add  foreign key ("treatment_type_id") references "treatment_type" ("id") on update restrict on delete restrict;
+Alter table "roomtype_treatmenttype" add  foreign key ("treatmenttype") references "treatmenttype" ("id") on update restrict on delete restrict;
 
-Alter table "device_type_treatment_type" add  foreign key ("device_type_id") references "device_type" ("id") on update restrict on delete restrict;
+Alter table "devicetype_treatmenttype" add  foreign key ("devicetype") references "devicetype" ("id") on update restrict on delete restrict;
 
-Alter table "device_type_treatment_type" add  foreign key ("treatment_type_id") references "treatment_type" ("id") on update restrict on delete restrict;
+Alter table "devicetype_treatmenttype" add  foreign key ("treatmenttype") references "treatmenttype" ("id") on update restrict on delete restrict;
 
-Alter table "skill_assignment" add  foreign key ("skill_id") references "skill" ("id") on update restrict on delete restrict;
+Alter table "skillassignment" add  foreign key ("skill") references "skill" ("id") on update restrict on delete restrict;
 
-Alter table "skill_assignment" add  foreign key ("resource_type_with_skills_id") references "resource_type_with_skills" ("id") on update restrict on delete restrict;
+Alter table "skillassignment" add  foreign key ("resourcetypewithskills") references "resourcetypewithskills" ("id") on update restrict on delete restrict;
 
-Alter table "room" add  foreign key ("room_type_id") references "room_type" ("id") on update restrict on delete restrict;
+Alter table "room" add  foreign key ("roomtype") references "roomtype" ("id") on update restrict on delete restrict;
 
-Alter table "device" add  foreign key ("device_type_id") references "device_type" ("id") on update restrict on delete restrict;
+Alter table "device" add  foreign key ("devicetype") references "devicetype" ("id") on update restrict on delete restrict;
 
-Alter table "nurse_type" add  foreign key ("id") references "resource_type" ("id") on update restrict on delete restrict;
+Alter table "nursetype" add  foreign key ("id") references "resourcetype" ("id") on update restrict on delete restrict;
 
-Alter table "physician_type" add  foreign key ("id") references "resource_type" ("id") on update restrict on delete restrict;
+Alter table "physiciantype" add  foreign key ("id") references "resourcetype" ("id") on update restrict on delete restrict;
 
-Alter table "room_type" add  foreign key ("id") references "resource_type" ("id") on update restrict on delete restrict;
+Alter table "roomtype" add  foreign key ("id") references "resourcetype" ("id") on update restrict on delete restrict;
 
-Alter table "device_type" add  foreign key ("id") references "resource_type" ("id") on update restrict on delete restrict;
+Alter table "devicetype" add  foreign key ("id") references "resourcetype" ("id") on update restrict on delete restrict;
 
-Alter table "resource_type" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "resourcetype" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "resource_type" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "resourcetype" add  foreign key ("modifiedby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "resource_type" add  foreign key ("treatment_type_id") references "treatment_type" ("id") on update restrict on delete restrict;
+Alter table "resourcetype" add  foreign key ("treatmenttype") references "treatmenttype" ("id") on update restrict on delete restrict;
 
-Alter table "resource_type_with_skills" add  foreign key ("id") references "resource_type" ("id") on update restrict on delete restrict;
+Alter table "resourcetypewithskills" add  foreign key ("id") references "resourcetype" ("id") on update restrict on delete restrict;
 
-Alter table "resource_treatment" add  foreign key ("resource_id") references "resource" ("id") on update restrict on delete restrict;
+Alter table "resource_treatment" add  foreign key ("resource") references "resource" ("id") on update restrict on delete restrict;
 
-Alter table "resource_treatment" add  foreign key ("treatment_id") references "treatment" ("id") on update restrict on delete restrict;
+Alter table "resource_treatment" add  foreign key ("treatment") references "treatment" ("id") on update restrict on delete restrict;
 
-Alter table "skill" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "skill" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "skill" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "skill" add  foreign key ("modifiedby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "appointment_resource" add  foreign key ("appointment_id") references "appointment" ("id") on update restrict on delete restrict;
+Alter table "appointment_resource" add  foreign key ("appointment") references "appointment" ("id") on update restrict on delete restrict;
 
-Alter table "appointment_resource" add  foreign key ("resource_id") references "resource" ("id") on update restrict on delete restrict;
+Alter table "appointment_resource" add  foreign key ("resource") references "resource" ("id") on update restrict on delete restrict;
 
-Alter table "appointment_treatment_type" add  foreign key ("treatment_type_id") references "treatment_type" ("id") on update restrict on delete restrict;
+Alter table "appointment_treatmenttype" add  foreign key ("treatmenttype") references "treatmenttype" ("id") on update restrict on delete restrict;
 
-Alter table "appointment_treatment_type" add  foreign key ("appointment_id") references "appointment" ("id") on update restrict on delete restrict;
+Alter table "appointment_treatmenttype" add  foreign key ("appointment") references "appointment" ("id") on update restrict on delete restrict;
 
 Alter table "room" add  foreign key ("id") references "resource" ("id") on update restrict on delete restrict;
 
 Alter table "device" add  foreign key ("id") references "resource" ("id") on update restrict on delete restrict;
 
-Alter table "party" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "party" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "party" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "party" add  foreign key ("modifiedby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "waiting_list" add  foreign key ("individual_id") references "individual" ("id") on update restrict on delete restrict;
+Alter table "waitinglist" add  foreign key ("individual") references "individual" ("id") on update restrict on delete restrict;
 
-Alter table "waiting_list" add  foreign key ("treatment_type_id") references "treatment_type" ("id") on update restrict on delete restrict;
+Alter table "waitinglist" add  foreign key ("treatmenttype") references "treatmenttype" ("id") on update restrict on delete restrict;
 
-Alter table "waiting_list" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "waitinglist" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "waiting_list" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "waitinglist" add  foreign key ("modifiedby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "executor_treatment_type" add  foreign key ("treatment_type_id") references "treatment_type" ("id") on update restrict on delete restrict;
+Alter table "executor_treatmenttype" add  foreign key ("treatmenttype") references "treatmenttype" ("id") on update restrict on delete restrict;
 
-Alter table "executor_treatment_type" add  foreign key ("executor_id") references "resource_party_role" ("id") on update restrict on delete restrict;
+Alter table "executor_treatmenttype" add  foreign key ("executor") references "resourcepartyrole" ("id") on update restrict on delete restrict;
 
-Alter table "payment" add  foreign key ("appointment_id") references "appointment" ("id") on update restrict on delete restrict;
+Alter table "payment" add  foreign key ("appointment") references "appointment" ("id") on update restrict on delete restrict;
 
-Alter table "payment" add  foreign key ("payment_channel_id") references "payment_channel" ("id") on update restrict on delete restrict;
+Alter table "payment" add  foreign key ("paymentchannel") references "paymentchannel" ("id") on update restrict on delete restrict;
 
-Alter table "payment" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "payment" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "payment" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "payment" add  foreign key ("modifiedby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "attachment" add  foreign key ("treatment_id") references "treatment" ("id") on update restrict on delete restrict;
+Alter table "attachment" add  foreign key ("treatment") references "treatment" ("id") on update restrict on delete restrict;
 
-Alter table "attachment" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "attachment" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "attachment" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "attachment" add  foreign key ("modifiedby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "communication_channel" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "communicationchannel" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "communication_channel" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "communicationchannel" add  foreign key ("modifiedby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "communication_channel" add  foreign key ("party_id") references "party" ("id") on update restrict on delete restrict;
+Alter table "communicationchannel" add  foreign key ("party") references "party" ("id") on update restrict on delete restrict;
 
-Alter table "payment_channel" add  foreign key ("party_id") references "party" ("id") on update restrict on delete restrict;
+Alter table "paymentchannel" add  foreign key ("party") references "party" ("id") on update restrict on delete restrict;
 
-Alter table "payment_channel" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "paymentchannel" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "payment_channel" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "paymentchannel" add  foreign key ("modifiedby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "bank_transfer" add  foreign key ("id") references "payment_channel" ("id") on update restrict on delete restrict;
+Alter table "banktransfer" add  foreign key ("id") references "paymentchannel" ("id") on update restrict on delete restrict;
 
-Alter table "credit_card" add  foreign key ("id") references "payment_channel" ("id") on update restrict on delete restrict;
+Alter table "creditcard" add  foreign key ("id") references "paymentchannel" ("id") on update restrict on delete restrict;
 
-Alter table "day" add  foreign key ("work_time_id") references "work_time" ("id") on update restrict on delete restrict;
+Alter table "day" add  foreign key ("worktime") references "worktime" ("id") on update restrict on delete restrict;
 
-Alter table "day" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "day" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "day" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "day" add  foreign key ("modifiedby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "work_time" add  foreign key ("created_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "worktime" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "work_time" add  foreign key ("modified_by") references "system_user" ("id") on update restrict on delete restrict;
+Alter table "worktime" add  foreign key ("modifiedby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "payment" add  foreign key ("paid_amount") references "money" ("id") on update restrict on delete restrict;
+Alter table "payment" add  foreign key ("paidamount") references "money" ("id") on update restrict on delete restrict;
 
-Alter table "treatment_type" add  foreign key ("price") references "money" ("id") on update restrict on delete restrict;
+Alter table "treatmenttype" add  foreign key ("price") references "money" ("id") on update restrict on delete restrict;
 
 Alter table "treatment" add  foreign key ("price") references "money" ("id") on update restrict on delete restrict;
+
+Alter table "accountitem" add  foreign key ("treatmentprice") references "money" ("id") on update restrict on delete restrict;
+
+Alter table "accountitem" add  foreign key ("paymentchannel") references "paymentchannel" ("id") on update restrict on delete restrict;
+
+Alter table "accountitem" add  foreign key ("executoraccount") references "executoraccount" ("id") on update restrict on delete restrict;
+
+Alter table "accountitem" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
+
+Alter table "executoraccount" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
+
+Alter table "executoraccount" add  foreign key ("executor") references "resourcepartyrole" ("id") on update restrict on delete restrict;

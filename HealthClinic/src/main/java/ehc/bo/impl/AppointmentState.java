@@ -10,7 +10,6 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "appointment_state")
 @Inheritance(strategy=InheritanceType.JOINED) 
 public class AppointmentState extends ModifiableObject {
 	AppointmentStateValue value = AppointmentStateValue.NEW;

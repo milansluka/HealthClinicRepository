@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "communication_channel")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "discriminator")
 public class CommunicationChannel extends ModifiableObject {
@@ -34,7 +33,7 @@ public class CommunicationChannel extends ModifiableObject {
 	
 	
     @ManyToOne
-    @JoinColumn(name = "party_id")
+    @JoinColumn(name = "party")
 	public Party getParty() {
 		return party;
 	}
@@ -43,7 +42,6 @@ public class CommunicationChannel extends ModifiableObject {
 		this.party = party;
 	}
 
-	@Column(name = "valid_from")
 	public Date getValidFrom() {
 		return validFrom;
 	}
@@ -52,7 +50,6 @@ public class CommunicationChannel extends ModifiableObject {
 		this.validFrom = validFrom;
 	}
 
-	@Column(name = "valid_to")
 	public Date getValidTo() {
 		return validTo;
 	}
@@ -68,13 +65,5 @@ public class CommunicationChannel extends ModifiableObject {
 	public void setValue(String value) {
 		this.value = value;
 	}
-	
-/*	public void assignParty(Party party) {
-		if (party == null) {
-			return;
-		}
-		setParty(party);
-		party.addCommunicationChannel(this);
-	}*/
 
 }

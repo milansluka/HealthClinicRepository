@@ -16,15 +16,13 @@ public class ModifiableObject extends BaseObject {
 
 	protected ModifiableObject() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	public ModifiableObject(User executor) {
 		super(executor);
-		// TODO Auto-generated constructor stub
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "modified_by")
+	@JoinColumn(name = "modifiedby")
 	public User getModifiedBy() {
 		return modifiedBy;
 	}
@@ -32,7 +30,7 @@ public class ModifiableObject extends BaseObject {
 		this.modifiedBy = modifiedBy;
 	}
 	
-	@Column(name = "modified_on")
+	@Column(name = "modifiedon")
 	public Date getModifiedOn() {
 		return modifiedOn;
 	}

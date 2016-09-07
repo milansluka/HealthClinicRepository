@@ -1,6 +1,5 @@
 package ehc.bo.impl;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -11,15 +10,10 @@ import javax.persistence.ManyToOne;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Day extends ModifiableObject {
-/*	String name;
-	Date from;
-	Date to;*/
-	/*private int dayOfWeek;*/
 	private String name;
 	private int startWorkTime;
 	private int endWorkTime;
 	private WorkTime workTime;
-/*	private Calendar c;*/
 	
 	protected Day() {
 		super();
@@ -39,7 +33,6 @@ public class Day extends ModifiableObject {
 		this.name = name;
 	}
 	
-	@Column(name = "start_work_time")
 	public int getStartWorkTime() {
 		return startWorkTime;
 	}
@@ -47,7 +40,6 @@ public class Day extends ModifiableObject {
 		this.startWorkTime = from;
 	}
 	
-	@Column(name = "end_work_time")
 	public int getEndWorkTime() {
 		return endWorkTime;
 	}
@@ -56,7 +48,7 @@ public class Day extends ModifiableObject {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "work_time_id")
+	@JoinColumn(name = "worktime")
 	public WorkTime getWorkTime() {
 		return workTime;
 	}

@@ -39,13 +39,13 @@ public class Treatment extends ModifiableObject {
 		super(executor);
 		addAppointment(appointment);
 		addTreatmentType(treatmentType);
-		this.price = price;
+		this.price = new Money(price);
 		this.from = from;
 		this.to = to;
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "appointment_id")
+	@JoinColumn(name = "appointment")
 	public Appointment getAppointment() {
 		return appointment;
 	}
@@ -55,7 +55,7 @@ public class Treatment extends ModifiableObject {
 	}
 		
 	@ManyToOne
-	@JoinColumn(name = "treatment_type_id")
+	@JoinColumn(name = "treatmenttype")
 	public TreatmentType getTreatmentType() {
 		return treatmentType;
 	}
@@ -65,7 +65,7 @@ public class Treatment extends ModifiableObject {
 	}
 	
     @ManyToOne
-    @JoinColumn(name = "payment_id")
+    @JoinColumn(name = "payment")
 	public Payment getPayment() {
 		return payment;
 	}
@@ -75,8 +75,8 @@ public class Treatment extends ModifiableObject {
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, targetEntity = ResourceImpl.class)
-	@JoinTable(name = "resource_treatment", joinColumns = {@JoinColumn(name = "treatment_id")},
-	inverseJoinColumns = {@JoinColumn(name = "resource_id")})
+	@JoinTable(name = "resource_treatment", joinColumns = {@JoinColumn(name = "treatment")},
+	inverseJoinColumns = {@JoinColumn(name = "resource")})
 	public List<Resource> getResources() {
 		return resources;
 	}
@@ -93,16 +93,6 @@ public class Treatment extends ModifiableObject {
 	public void setAttachments(List<Attachment> attachments) {
 		this.attachments = attachments;
 	}
-	
-	
-
-/*	public double getPrice() {
-		return price;
-	}
-	
-	public void setPrice(double price) {
-		this.price = price;
-	}*/
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "price")

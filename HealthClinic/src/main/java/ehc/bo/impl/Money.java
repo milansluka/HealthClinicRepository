@@ -19,6 +19,11 @@ public class Money {
 	public Money() {
 		this(0);
 	}
+	
+	public Money(Money money) {
+		amount = money.getAmount();
+		currency = money.getCurrency();
+	}
 
 	public Money(double amount) {
 		this(new BigDecimal(amount));
@@ -65,10 +70,11 @@ public class Money {
 		this.currency = currency;
 	}
 
-	public void add(Money money) {
+	public Money add(Money money) {
 		if (getCurrency().equals(money.getCurrency())) {
-			setAmount(getAmount().add(money.getAmount()));
+			return new Money(getAmount().add(money.getAmount()));
 		}
+		return null;
 	}
 
 	public Money multiply(Money money) {

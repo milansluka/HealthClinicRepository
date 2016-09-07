@@ -28,18 +28,14 @@ public class RoomDao {
 	/*	HibernateUtil.beginTransaction();*/
 
 		Session session = HibernateUtil.getCurrentSession();
-
-		String hql = "FROM Room r WHERE r.name = :name";
-		Query query = session.createQuery(hql);
-		query.setParameter("name", name);
-		List results = query.list();
+		String hql = "FROM Room r WHERE r.name = :name";	
+		List results = session.createQuery(hql).setParameter("name", name).list();
 		
 		if (results.isEmpty()) {
 			return null;
 		}
 		
-		Room room = (Room)results.get(0);	
-		
+		Room room = (Room)results.get(0);			
 	/*	HibernateUtil.commitTransaction();	*/	
 		return room;
 	} 
@@ -47,8 +43,7 @@ public class RoomDao {
 	public List<Room> getAll() {
 		Session session = HibernateUtil.getCurrentSession();
 		String hql = "FROM Room";
-		Query query = session.createQuery(hql);
-		List results = query.list();	
+		List results =  session.createQuery(hql).list();	
 		return results;
 	}
 

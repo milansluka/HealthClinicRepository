@@ -20,7 +20,6 @@ import ehc.bo.impl.TreatmentTypeDao;
 import ehc.bo.impl.User;
 import ehc.bo.impl.WaitingIndividual;
 import ehc.bo.impl.WaitingIndividualDao;
-import ehc.bo.impl.WorkTime;
 import ehc.hibernate.HibernateUtil;
 import ehc.util.DateUtil;
 

@@ -2,13 +2,10 @@ package ehc.bo.impl;
 
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "device_type")
 @PrimaryKeyJoinColumn(name="id") 
 public class DeviceType extends ResourceType {
-	/*private List<TreatmentType> possibleTreatmentTypes = new ArrayList<TreatmentType>();*/
 	private String name;
 	
 	protected DeviceType() {

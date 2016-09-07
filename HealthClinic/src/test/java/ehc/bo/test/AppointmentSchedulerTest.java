@@ -127,7 +127,7 @@ public class AppointmentSchedulerTest extends RootTestCase {
 		HibernateUtil.commitTransaction();
 	}
 	
-	@Test(dataProvider = "appointmentParams", priority = 3)
+	@Test(dataProvider = "appointmentParams", priority = 3, groups = {"setup"})
 	public void createAppointment(String customerFirstName, String customerLastName, String wantedTreatmentName, Date when, Date expectedWhen, Date expectedTo) {
 		HibernateUtil.beginTransaction();
 		Login login = new Login();

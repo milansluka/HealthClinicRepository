@@ -5,13 +5,10 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "resource_type")
 @Inheritance(strategy=InheritanceType.JOINED)  
 public class ResourceType extends ModifiableObject {
-	/*List<TreatmentType> treatmentTypes;*/
 	private TreatmentType treatmentType;
 	
 	public ResourceType() {
@@ -23,7 +20,7 @@ public class ResourceType extends ModifiableObject {
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "treatment_type_id")
+	@JoinColumn(name = "treatmenttype")
 	public TreatmentType getTreatmentType() {
 		return treatmentType;
 	}

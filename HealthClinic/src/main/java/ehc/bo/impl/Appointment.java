@@ -14,7 +14,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cascade;
@@ -22,7 +21,6 @@ import org.hibernate.annotations.Cascade;
 import ehc.bo.Resource;
 
 @Entity
-@Table(name = "appointment")
 public class Appointment extends BaseObject {
 	Date from;
 	Date to;
@@ -50,7 +48,7 @@ public class Appointment extends BaseObject {
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, targetEntity = ResourceImpl.class)
 	@JoinTable(name = "appointment_resource", joinColumns = {
-			@JoinColumn(name = "appointment_id") }, inverseJoinColumns = { @JoinColumn(name = "resource_id") })
+			@JoinColumn(name = "appointment") }, inverseJoinColumns = { @JoinColumn(name = "resource") })
 	public List<Resource> getResources() {
 		return resources;
 	}
@@ -126,7 +124,7 @@ public class Appointment extends BaseObject {
 
 	@ManyToOne
 	@Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-	@JoinColumn(name = "individual_id")
+	@JoinColumn(name = "individual")
 	public Individual getIndividual() {
 		return individual;
 	}
@@ -136,8 +134,8 @@ public class Appointment extends BaseObject {
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-	@JoinTable(name = "appointment_treatment_type", joinColumns = {
-			@JoinColumn(name = "appointment_id") }, inverseJoinColumns = { @JoinColumn(name = "treatment_type_id") })
+	@JoinTable(name = "appointment_treatmenttype", joinColumns = {
+			@JoinColumn(name = "appointment") }, inverseJoinColumns = { @JoinColumn(name = "treatmenttype") })
 	public List<TreatmentType> getTreatmentTypes() {
 		return treatmentTypes;
 	}
@@ -168,12 +166,6 @@ public class Appointment extends BaseObject {
 			addTreatmentType(treatmentType);
 		}
 	}
-
-	/*
-	 * public void assignTreatmentType(TreatmentType treatmentType) { if
-	 * (treatmentType != null) { setTreatmentType(treatmentType);
-	 * treatmentType.addAppointment(this); } }
-	 */
 
 	public void assignIndividual(Individual individual) {
 		if (individual != null) {

@@ -9,13 +9,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 @Entity
-@Table(name = "resource_type_with_skills")
 @PrimaryKeyJoinColumn(name = "id")
 public class ResourceTypeWithSkills extends ResourceType {
 	List<Skill> skills;
@@ -31,8 +29,8 @@ public class ResourceTypeWithSkills extends ResourceType {
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@Cascade({CascadeType.MERGE, CascadeType.SAVE_UPDATE})
-	@JoinTable(name = "skill_assignment", joinColumns = {@JoinColumn(name = "resource_type_with_skills_id")},
-	inverseJoinColumns = {@JoinColumn(name = "skill_id")})
+	@JoinTable(name = "skillassignment", joinColumns = {@JoinColumn(name = "resourcetypewithskills")},
+	inverseJoinColumns = {@JoinColumn(name = "skill")})
 	public List<Skill> getSkills() {
 		return skills;
 	}

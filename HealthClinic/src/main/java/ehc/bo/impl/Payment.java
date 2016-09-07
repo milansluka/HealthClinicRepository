@@ -37,7 +37,7 @@ public class Payment extends ModifiableObject {
 	}
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "paid_amount")
+	@JoinColumn(name = "paidamount")
 	public Money getPaidAmount() {
 		return paidAmount;
 	}
@@ -47,7 +47,7 @@ public class Payment extends ModifiableObject {
 	}
 
 	@ManyToOne
-    @JoinColumn(name = "appointment_id")
+    @JoinColumn(name = "appointment")
 	public Appointment getAppointment() {
 		return appointment;
 	}
@@ -62,7 +62,7 @@ public class Payment extends ModifiableObject {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "payment_channel_id")
+	@JoinColumn(name = "paymentchannel")
 	public PaymentChannel getPaymentChannel() {
 		return paymentChannel;
 	}

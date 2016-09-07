@@ -19,7 +19,7 @@ public class Nurse extends ResourcePartyRole {
 	}
 		
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "nurse_type_id")
+	@JoinColumn(name = "nursetype")
 	public NurseType getType() {
 		return type;
 	}
@@ -40,17 +40,4 @@ public class Nurse extends ResourcePartyRole {
 		NurseType nurseType = (NurseType)resourceType;		
 		return getType().containsSkills(nurseType.getSkills());
 	}
-
-
-/*	@Override
-	public boolean isAvailable(Date from, Date to) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isSuitable(ResourceType resourceType) {
-		// TODO Auto-generated method stub
-		return false;
-	}*/
 }

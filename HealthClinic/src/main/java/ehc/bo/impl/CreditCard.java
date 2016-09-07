@@ -2,13 +2,10 @@ package ehc.bo.impl;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "credit_card")
 @PrimaryKeyJoinColumn(name = "id")
 public class CreditCard extends PaymentChannel {
 	private String cardNumber;
@@ -24,7 +21,6 @@ public class CreditCard extends PaymentChannel {
 		this.cardExpiry = cardExpiry;
 	}
 	
-	@Column(name = "card_number")
 	public String getCardNumber() {
 		return cardNumber;
 	}
@@ -32,7 +28,6 @@ public class CreditCard extends PaymentChannel {
 		this.cardNumber = cardNumber;
 	}
 	
-	@Column(name = "card_expiry")
 	public Date getCardExpiry() {
 		return cardExpiry;
 	}

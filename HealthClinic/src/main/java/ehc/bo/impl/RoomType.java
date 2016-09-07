@@ -10,10 +10,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "room_type")
 @PrimaryKeyJoinColumn(name="id") 
 public class RoomType extends ResourceType {
 	List<TreatmentType> possibleTreatmentTypes = new ArrayList<TreatmentType>();
@@ -28,8 +26,8 @@ public class RoomType extends ResourceType {
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "room_type_treatment_type", joinColumns = {@JoinColumn(name = "room_type_id")},
-	inverseJoinColumns = {@JoinColumn(name = "treatment_type_id")})
+	@JoinTable(name = "roomtype_treatmenttype", joinColumns = {@JoinColumn(name = "roomtype")},
+	inverseJoinColumns = {@JoinColumn(name = "treatmenttype")})
 	public List<TreatmentType> getPossibleTreatmentTypes() {
 		return possibleTreatmentTypes;
 	}

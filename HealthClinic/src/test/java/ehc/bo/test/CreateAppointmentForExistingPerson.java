@@ -102,10 +102,14 @@ public class CreateAppointmentForExistingPerson extends RootTestCase {
 			}		
 		}
 		
-		HibernateUtil.commitTransaction();
-		
+		Date expectedFrom = DateUtil.date(2016, 4, 20, 10, 0, 0);
+		assertEquals(expectedFrom, persistedAppointment.getFrom());
+		assertTrue(expectedFrom.equals(persistedAppointment.getFrom()));
+		assertEquals(DateUtil.date(2016, 4, 20, 10, 30, 0), persistedAppointment.getTo());
 		assertTrue(appointmentPhysicianFirstName.equals(physicianFirstName) && 
 				appointmentPhysicianLastName.equals(physicianLastName));
+		
+		HibernateUtil.commitTransaction();
 	}
 
 	protected void tearDown() throws Exception {

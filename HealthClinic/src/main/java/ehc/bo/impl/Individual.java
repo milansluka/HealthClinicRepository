@@ -36,7 +36,6 @@ public class Individual extends Party {
 		this.appointments = appointments;
 	}
 
-	@Column(name = "first_name")
 	public String getFirstName() {
 		return firstName;
 	}
@@ -44,7 +43,6 @@ public class Individual extends Party {
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-
 
 	public void addAppointment(Appointment appointment) {
 		getAppointments().add(appointment);

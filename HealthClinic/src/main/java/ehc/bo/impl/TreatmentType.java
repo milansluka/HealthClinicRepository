@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -12,16 +11,12 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "treatment_type")
 public class TreatmentType extends BaseObject {
 
 	String name;
 	String info;
-/*	String category;*/
-	/* double price; */
 	Money price;
 	double defaultProvision;
 	
@@ -61,7 +56,7 @@ public class TreatmentType extends BaseObject {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "treatment_group_id")
+	@JoinColumn(name = "treatmentgroup")
 	public TreatmentGroup getTreatmentGroup() {
 		return treatmentGroup;
 	}
@@ -70,13 +65,6 @@ public class TreatmentType extends BaseObject {
 		this.treatmentGroup = treatmentGroup;
 	}
 
-	/*
-	 * @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	 * 
-	 * @JoinTable(name = "resource_type_assignment", joinColumns =
-	 * {@JoinColumn(name = "treatment_type_id")}, inverseJoinColumns =
-	 * {@JoinColumn(name = "resource_type_id")})
-	 */
 	@OneToMany(mappedBy = "treatmentType", cascade = CascadeType.ALL)
 	public List<ResourceType> getResourceTypes() {
 		return resourceTypes;
@@ -113,13 +101,6 @@ public class TreatmentType extends BaseObject {
 		this.executorProvisions = executorProvisions;
 	}
 
-	/*
-	 * public double getPrice() { return price; }
-	 * 
-	 * public void setPrice(double price) { this.price = price; }
-	 */
-
-	@Column(name = "default_provision")
 	public double getDefaultProvision() {
 		return defaultProvision;
 	}
@@ -177,22 +158,7 @@ public class TreatmentType extends BaseObject {
 		getExecutedTreatments().add(treatment);
 	}
 
-	/*
-	 * public void removeResourceType(ResourceType resourceType) {
-	 * resourceType.removeTreatmentType(this); }
-	 */
-
 	public void removeResourceType(ResourceType resourceType) {
 		getResourceTypes().remove(resourceType);
 	}
-
-	// private void removeResourceTypes() {
-	// for (ResourceType resourceType : getResourceTypes()) {
-	// resourceType.removeFromTreatmentTypes();
-	// }
-	// }
-
-	/*
-	 * public void prepareForDeleting() { removeResourceTypes(); }
-	 */
 }

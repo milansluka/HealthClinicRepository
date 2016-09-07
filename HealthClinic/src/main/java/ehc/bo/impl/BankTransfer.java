@@ -1,12 +1,9 @@
 package ehc.bo.impl;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "bank_transfer")
 @PrimaryKeyJoinColumn(name = "id")
 public class BankTransfer extends PaymentChannel {
 	private String sortCode;
@@ -21,7 +18,6 @@ public class BankTransfer extends PaymentChannel {
 		this.accountNumber = accountNumber;
 	}
 	
-	@Column(name = "sort_code")
 	public String getSortCode() {
 		return sortCode;
 	}
@@ -29,7 +25,6 @@ public class BankTransfer extends PaymentChannel {
 		this.sortCode = sortCode;
 	}
 	
-	@Column(name = "account_number")
 	public String getAccountNumber() {
 		return accountNumber;
 	}

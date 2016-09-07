@@ -9,7 +9,10 @@ import java.util.SortedSet;
 import org.hibernate.Hibernate;
 
 import ehc.bo.Resource;
+import ehc.bo.impl.Appointment;
+import ehc.bo.impl.AppointmentDao;
 import ehc.bo.impl.AppointmentProposal;
+import ehc.bo.impl.AppointmentScheduleData;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
@@ -32,6 +35,7 @@ public class ScheduleAppointmentForGivenTime_AllResourcesAvailable_Success exten
 	private Date to = DateUtil.date(2016, 7, 7, 9, 20, 0);
 	private TreatmentTypeDao treatmentTypeDao = TreatmentTypeDao.getInstance();
 	private IndividualDao individualDao = IndividualDao.getInstance();
+	private AppointmentDao appointmentDao = AppointmentDao.getInstance();
 	
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -63,22 +67,35 @@ public class ScheduleAppointmentForGivenTime_AllResourcesAvailable_Success exten
 		Individual person = individualDao.findByFirstAndLastName(personFirstName, personLastName);
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
 		Hibernate.initialize(treatmentType.getResourceTypes());
-		List<ResourceType> resourceTypes = treatmentType.getResourceTypes();
 		List<TreatmentType> treatmentTypes = new ArrayList<>();
 		treatmentTypes.add(treatmentType);
 		
 		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
         List<AppointmentProposal> appointmentProposals = appointmentScheduler.getAppointmentProposals(when, to, treatmentTypes, 1);
-        HibernateUtil.commitTransaction();
+      
         
-        AppointmentProposal appointmentProposal = appointmentProposals.get(0); 
-        
-     /*   assertTrue(appointmentProposal.getFrom().equals(when));*/  
+        AppointmentProposal appointmentProposal = appointmentProposals.get(0);   
             
         Map<ResourceType, SortedSet<Resource>> resources = appointmentProposal.getResources();
         
         assertTrue(appointmentProposal.getFrom().equals(when) && 
-        		appointmentProposal.getResources().size() == 4);      
+        		appointmentProposal.getResources().size() == 4); 
+        
+        List<Resource> resourceList = new ArrayList<>();
+        
+        for (Map.Entry<ResourceType, SortedSet<Resource>> entry : resources.entrySet()) {
+        	resourceList.add(entry.getValue().first());	
+        }
+        
+        AppointmentScheduleData appointmentScheduleData = new AppointmentScheduleData(when, to, resourceList);
+        Appointment appointment = appointmentScheduler.getAppointment(executor, appointmentScheduleData, treatmentTypes, person);
+        long appointmentId = addAppointment(appointment);
+        HibernateUtil.commitTransaction();
+        
+        HibernateUtil.beginTransaction();
+        appointment = appointmentDao.findById(appointmentId);
+        assertEquals(4, appointment.getResources().size());
+        HibernateUtil.commitTransaction();
 	}
 	
 	protected void tearDown() throws Exception {

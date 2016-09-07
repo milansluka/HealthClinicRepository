@@ -21,7 +21,7 @@ public class Physician extends ResourcePartyRole {
 	}
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "physician_type_id")
+	@JoinColumn(name = "physiciantype")
 	public PhysicianType getType() {
 		return type;
 	}

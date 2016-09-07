@@ -9,7 +9,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "treatment_group")
+@Table(name = "treatmentgroup")
 public class TreatmentGroup extends ModifiableObject {
 	private String name;
 	private List<TreatmentType> treatmentTypes = new ArrayList<>();
