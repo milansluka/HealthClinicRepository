@@ -11,6 +11,7 @@ import ehc.bo.impl.Treatment;
 @MappedSuperclass
 public interface Resource {
 	boolean isAvailable(Date from, Date to);
+	boolean isNotBusy(Date from, Date to);
 	boolean isSuitable(ResourceType resourceType);
 	void addAppointment(Appointment appointment);
 	void removeAppointment(Appointment appointment);

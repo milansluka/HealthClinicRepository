@@ -124,4 +124,8 @@ public class Money {
 		return false;
 	}
 
+	@Override
+	public String toString() {
+		return "" + amount + " " + currency.toString();
+	}
 }

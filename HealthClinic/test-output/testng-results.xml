@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results skipped="0" failed="0" total="1" passed="1">
+<testng-results skipped="0" failed="0" total="2" passed="2">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="13067" started-at="2016-09-07T19:16:59Z" finished-at="2016-09-07T19:17:12Z">
+  <suite name="Default suite" duration-ms="13463" started-at="2016-09-09T11:04:34Z" finished-at="2016-09-09T11:04:48Z">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="13067" started-at="2016-09-07T19:16:59Z" finished-at="2016-09-07T19:17:12Z">
+    <test name="Default test" duration-ms="13463" started-at="2016-09-09T11:04:34Z" finished-at="2016-09-09T11:04:48Z">
       <class name="ehc.bo.test.AccountingTest">
-        <test-method status="PASS" signature="beforeClass()[pri:0, instance:null(ehc.bo.test.AccountingTest)]" name="beforeClass" is-config="true" duration-ms="9670" started-at="2016-09-07T21:16:59Z" finished-at="2016-09-07T21:17:09Z">
+        <test-method status="PASS" signature="beforeClass()[pri:0, instance:null(ehc.bo.test.AccountingTest)]" name="beforeClass" is-config="true" duration-ms="9876" started-at="2016-09-09T13:04:34Z" finished-at="2016-09-09T13:04:44Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- beforeClass -->
-        <test-method status="PASS" signature="createExecutorAccount()[pri:0, instance:null(ehc.bo.test.AccountingTest)]" name="createExecutorAccount" duration-ms="241" started-at="2016-09-07T21:17:09Z" finished-at="2016-09-07T21:17:09Z">
+        <test-method status="PASS" signature="createExecutorAccount()[pri:0, instance:null(ehc.bo.test.AccountingTest)]" name="createExecutorAccount" duration-ms="213" started-at="2016-09-09T13:04:44Z" finished-at="2016-09-09T13:04:44Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createExecutorAccount -->
-        <test-method status="PASS" signature="afterClass()[pri:0, instance:null(ehc.bo.test.AccountingTest)]" name="afterClass" is-config="true" duration-ms="3121" started-at="2016-09-07T21:17:09Z" finished-at="2016-09-07T21:17:12Z">
+        <test-method status="PASS" signature="generatePDF()[pri:0, instance:null(ehc.bo.test.AccountingTest)]" name="generatePDF" duration-ms="628" started-at="2016-09-09T13:04:44Z" finished-at="2016-09-09T13:04:45Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- generatePDF -->
+        <test-method status="PASS" signature="afterClass()[pri:0, instance:null(ehc.bo.test.AccountingTest)]" name="afterClass" is-config="true" duration-ms="2696" started-at="2016-09-09T13:04:45Z" finished-at="2016-09-09T13:04:48Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- afterClass -->

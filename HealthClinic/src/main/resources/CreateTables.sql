@@ -34,7 +34,8 @@ Create table "accountitem"
 	"from" Timestamp NOT NULL,
 	"to" Timestamp NOT NULL,
 	"treatmenttypename" Varchar(512) NOT NULL,
-	"executorprovision" Double precision NOT NULL,
+	"treatmentgroupname" Varchar(512) NOT NULL,
+	"executorprovisionpercentage" Double precision NOT NULL,
 	"subjectfirstname" Varchar(256) NOT NULL,
 	"subjectlastname" Varchar(256) NOT NULL,
 	"treatmentprice" Bigint NOT NULL,
@@ -378,6 +379,8 @@ Create table "resourcetypewithskills"
 Create table "resource"
 (
 	"id" BigSerial NOT NULL,
+	"availablefrom" Timestamp,
+	"availableto" Timestamp,
 	"modifiedby" Bigint,
 	"createdby" Bigint NOT NULL,
 	"createdon" Timestamp NOT NULL,
@@ -409,11 +412,23 @@ Create table "paymentchannel"
 (
 	"id" BigSerial NOT NULL,
 	"party" Bigint NOT NULL,
+	"paymentchanneltype" Varchar(128) NOT NULL,
 	"modifiedby" Bigint,
 	"createdby" Bigint NOT NULL,
 	"createdon" Timestamp NOT NULL,
-	"modifiedon" Timestamp,
-	
+	"modifiedon" Timestamp,	
+ primary key ("id")
+) Without Oids;
+
+Create table "voucher"
+(
+	"id" BigSerial NOT NULL,
+	"patient" Bigint NOT NULL,
+	"createdby" Bigint NOT NULL,
+	"createdon" Timestamp NOT NULL,
+	"price" Bigint NOT NULL,
+	"value" Bigint NOT NULL,
+	"expirationdate" Timestamp NOT NULL,
  primary key ("id")
 ) Without Oids;
 

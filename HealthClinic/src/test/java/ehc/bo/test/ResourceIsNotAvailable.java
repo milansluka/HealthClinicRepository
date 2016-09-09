@@ -109,7 +109,7 @@ public class ResourceIsNotAvailable extends RootTestCase {
 		Date to2 = DateUtil.date(2016, 7, 7, 8, 30, 0);
 		
 		Room room = roomDao.findByName("test room 1");	
-		boolean roomIsNotAvailable = !room.isAvailable(from2, to2);	
+		boolean roomIsNotAvailable = !room.isNotBusy(from2, to2);	
 		HibernateUtil.commitTransaction();
 			
 		assertTrue(roomIsNotAvailable);			

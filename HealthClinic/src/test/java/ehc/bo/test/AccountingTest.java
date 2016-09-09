@@ -1,11 +1,14 @@
 package ehc.bo.test;
 
+import java.io.IOException;
 import java.util.Date;
 
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import com.itextpdf.text.DocumentException;
 
 import ehc.bo.impl.AccountItem;
 import ehc.bo.impl.AccountUtil;
@@ -146,21 +149,23 @@ public class AccountingTest extends RootTestCase {
 		ExecutorAccount executorAccount2 = executor.getExecutorAccounts().get(1);
 		Assert.assertNotNull(executorAccount);
 		Assert.assertNotNull(executorAccount2);
-		Money provisionSum = new Money();
-		for (AccountItem accountItem : executorAccount.getAccountItems()) {
-			provisionSum = provisionSum
-					.add(accountItem.getTreatmentPrice().getPercentage(accountItem.getExecutorProvision()));
-		}	
-		Assert.assertEquals(new Money(25), provisionSum);
-		
-		provisionSum = new Money();
-		for (AccountItem accountItem : executorAccount2.getAccountItems()) {
-			provisionSum = provisionSum
-					.add(accountItem.getTreatmentPrice().getPercentage(accountItem.getExecutorProvision()));
-		}	
-		Assert.assertEquals(new Money(10), provisionSum);
-		
-		
+		Assert.assertEquals(new Money(25), executorAccount.getProvisionsSum());	
+		Assert.assertEquals(new Money(10), executorAccount2.getProvisionsSum());	
 		HibernateUtil.commitTransaction();
+	}
+	
+	@Test
+	public void generatePDF() {
+		HibernateUtil.beginTransaction();
+		Individual individual = individualDao.findByFirstAndLastName("Marika", "Piršelová");
+		Physician executor = (Physician) individual.getReservableSourceRoles().get(0);
+		ExecutorAccount executorAccount = executor.getExecutorAccounts().get(0);
+		try {
+		executorAccount.generatePDF();
+		} catch (IOException e) {
+			
+		} catch (DocumentException de) {
+			
+		}
 	}
 }

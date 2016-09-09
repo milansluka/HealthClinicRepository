@@ -73,7 +73,7 @@ public class AppointmentScheduler {
 
 	private boolean areResourcesAvailable(Date from, Date to, List<Resource> resources) {
 		for (Resource resource : resources) {
-			if (!resource.isAvailable(from, to)) {
+			if (!resource.isNotBusy(from, to)) {
 				return false;
 			}
 		}
@@ -192,7 +192,7 @@ public class AppointmentScheduler {
 		if (roomTypes.size() > 0) {
 			for (RoomType roomType : roomTypes) {
 				Room room = roomType.getRoom();
-				if (room.isAvailable(from, to)) {
+				if (room.isNotBusy(from, to)) {
 					rooms.add(roomType.getRoom());		
 				}	
 			}
@@ -233,7 +233,7 @@ public class AppointmentScheduler {
 
 		for (Resource resource : resources) {
 			if (resource.isSuitable(resourceType)) {
-				if (resource.isAvailable(from, to)) {
+				if (resource.isNotBusy(from, to)) {
 					suitableResources.add(resource);
 				}
 			}

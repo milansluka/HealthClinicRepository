@@ -17,8 +17,10 @@ import ehc.bo.Resource;
 @Table(name = "resource")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class ResourceImpl extends ModifiableObject implements Resource {
-	List<Appointment> resourceAppointments = new ArrayList<Appointment>();
-	List<Treatment> treatments = new ArrayList<>();
+	private List<Appointment> resourceAppointments = new ArrayList<Appointment>();
+	private List<Treatment> treatments = new ArrayList<>();
+	private Date availableFrom;
+	private Date availableTo;
 
 	protected ResourceImpl() {
 		super();
@@ -40,7 +42,7 @@ public abstract class ResourceImpl extends ModifiableObject implements Resource 
 	public void addAppointment(Appointment appointment) {
 		getResourceAppointments().add(appointment);
 	}
-	
+
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "resources")
 	public List<Treatment> getTreatments() {
 		return treatments;
@@ -50,25 +52,47 @@ public abstract class ResourceImpl extends ModifiableObject implements Resource 
 		this.treatments = treatments;
 	}
 
+	public Date getAvailableFrom() {
+		return availableFrom;
+	}
+
+	public void setAvailableFrom(Date availableFrom) {
+		this.availableFrom = availableFrom;
+	}
+
+	public Date getAvailableTo() {
+		return availableTo;
+	}
+
+	public void setAvailableTo(Date availableTo) {
+		this.availableTo = availableTo;
+	}
+
 	@Override
 	public void removeAppointment(Appointment appointment) {
 		getResourceAppointments().remove(appointment);
 	}
-	
+
 	public void addTreatment(Treatment treatment) {
 		getTreatments().add(treatment);
 	}
 
 	@Override
-	public boolean isAvailable(Date from, Date to) {
+	public boolean isNotBusy(Date from, Date to) {
 		for (Appointment appointment : getResourceAppointments()) {
 			if (appointment.getState().getValue() == AppointmentStateValue.NEW) {
 				if (isCollision(from, to, appointment.getFrom(), appointment.getTo())) {
 					return false;
-				}			
-			}		
+				}
+			}
 		}
 		return true;
+	}
+
+	@Override
+	public boolean isAvailable(Date from, Date to) {
+		return (from.after(getAvailableFrom()) || from.equals(getAvailableFrom()))
+				&& (to.before(getAvailableTo()) || to.equals(getAvailableTo()));
 	}
 
 	@Override

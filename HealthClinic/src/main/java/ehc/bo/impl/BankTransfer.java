@@ -13,7 +13,7 @@ public class BankTransfer extends PaymentChannel {
 		super();
 	}
 	public BankTransfer(User executor, Party party, String sortCode, String accountNumber) {
-		super(executor, party);
+		super(executor, party, PaymentChannelType.BANK_TRANSFER);
 		this.sortCode = sortCode;
 		this.accountNumber = accountNumber;
 	}

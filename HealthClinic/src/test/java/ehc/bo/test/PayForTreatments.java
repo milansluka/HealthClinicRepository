@@ -18,6 +18,7 @@ import ehc.bo.impl.Login;
 import ehc.bo.impl.Money;
 import ehc.bo.impl.Payment;
 import ehc.bo.impl.PaymentChannel;
+import ehc.bo.impl.PaymentChannelType;
 import ehc.bo.impl.PaymentDao;
 import ehc.bo.impl.Treatment;
 import ehc.bo.impl.TreatmentType;
@@ -85,7 +86,7 @@ public class PayForTreatments extends RootTestCase {
 		long paymentId = -1;
 		
 		Individual individual = individualDao.findByFirstAndLastName("Janko", "Mrkvicka");
-        PaymentChannel paymentChannel = new PaymentChannel(executor, individual);
+        PaymentChannel paymentChannel = new PaymentChannel(executor, individual, PaymentChannelType.CASH);
         HibernateUtil.save(paymentChannel);
 		
 		Payment payment = new Payment(executor, appointment, appointment.getExecutedTreatments(), 

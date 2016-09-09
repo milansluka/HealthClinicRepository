@@ -99,7 +99,7 @@ public abstract class ResourcePartyRole extends ResourceImpl {
 	}
 
 	@Override
-	public boolean isAvailable(Date from, Date to) {
+	public boolean isNotBusy(Date from, Date to) {
 		for (ResourcePartyRole partyRole : getSource().getReservableSourceRoles()) {
 			for (Appointment appointment : partyRole.getResourceAppointments()) {
 				if (appointment.getState().getValue() == AppointmentStateValue.NEW) {

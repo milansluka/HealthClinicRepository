@@ -8,6 +8,7 @@
           <include name="afterClass"/>
           <include name="createExecutorAccount"/>
           <include name="beforeClass"/>
+          <include name="generatePDF"/>
         </methods>
       </class> <!-- ehc.bo.test.AccountingTest -->
     </classes>

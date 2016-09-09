@@ -10,6 +10,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -19,12 +20,12 @@ public class AccountItem extends BaseObject {
 	private Date to;
 	private Money treatmentPrice;
 	private PaymentChannel paymentChannel;
-/*	private Individual subject;*/
-	private double executorProvision;
+	private double executorProvisionPercentage;
 	
 	private String subjectFirstName;
 	private String subjectLastName;
 	private String treatmentTypeName;
+	private String treatmentGroupName;
 	private boolean withDph;
 	
 	private ExecutorAccount executorAccount;
@@ -36,13 +37,14 @@ public class AccountItem extends BaseObject {
 	public AccountItem(User accountItemCreator, Treatment treatment, ResourcePartyRole executor, ExecutorAccount executorAccount, boolean withDPH) {
 		super(accountItemCreator);
 		this.treatmentTypeName = treatment.getTreatmentType().getName();
+		this.treatmentGroupName = treatment.getTreatmentType().getTreatmentGroup().getName();
 		this.from = treatment.getFrom();
 		this.to = treatment.getTo();
 		this.treatmentPrice = new Money(treatment.getPrice());
 		this.paymentChannel = treatment.getPayment().getPaymentChannel();
 		this.subjectFirstName = treatment.getAppointment().getIndividual().getFirstName();
 		this.subjectLastName = treatment.getAppointment().getIndividual().getName();
-		this.executorProvision = executor.getProvisionFromTreatmentType(treatment.getTreatmentType());
+		this.executorProvisionPercentage = executor.getProvisionFromTreatmentType(treatment.getTreatmentType());
 		this.executorAccount = executorAccount;
 		this.withDph = withDPH;
 	}
@@ -79,6 +81,14 @@ public class AccountItem extends BaseObject {
 
 	public void setTreatmentTypeName(String treatmentTypeName) {
 		this.treatmentTypeName = treatmentTypeName;
+	}
+
+	public String getTreatmentGroupName() {
+		return treatmentGroupName;
+	}
+
+	public void setTreatmentGroupName(String treatmentGroupName) {
+		this.treatmentGroupName = treatmentGroupName;
 	}
 
 	@Column(name = "\"from\"")
@@ -119,12 +129,17 @@ public class AccountItem extends BaseObject {
 		this.paymentChannel = paymentChannel;
 	}
 
-	public double getExecutorProvision() {
-		return executorProvision;
+	public double getExecutorProvisionPercentage() {
+		return executorProvisionPercentage;
 	}
 
-	public void setExecutorProvision(double executorProvision) {
-		this.executorProvision = executorProvision;
+	public void setExecutorProvisionPercentage(double executorProvisionPercentage) {
+		this.executorProvisionPercentage = executorProvisionPercentage;
+	}
+	
+	@Transient
+	public Money getExecutorProvisionAmount() {
+		return new Money(treatmentPrice.getPercentage(getExecutorProvisionPercentage()));	
 	}
 
 	public boolean isWithDPH() {

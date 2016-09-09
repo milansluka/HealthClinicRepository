@@ -79,6 +79,7 @@
 		<mapping class="ehc.bo.impl.Money" />
 		<mapping class="ehc.bo.impl.ExecutorAccount" />
 		<mapping class="ehc.bo.impl.AccountItem" />
+		<mapping class="ehc.bo.impl.Voucher" />
 		<!-- <mapping class="ehc.bo.impl.Device" /> -->
 		<!-- <mapping class="ehc.bo.impl.UserRight" /> <mapping class="ehc.bo.impl.Person" 
 			/> <mapping class="ehc.bo.impl.Appointment" /> <mapping class="ehc.bo.impl.Intervention" 

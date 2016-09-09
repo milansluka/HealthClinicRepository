@@ -16,7 +16,7 @@ public class CreditCard extends PaymentChannel {
 	}
 	
 	public CreditCard(User executor, Party party, String cardNumber, Date cardExpiry) {
-		super(executor, party);
+		super(executor, party, PaymentChannelType.CREDIT_CARD);
 		this.cardNumber = cardNumber;
 		this.cardExpiry = cardExpiry;
 	}
