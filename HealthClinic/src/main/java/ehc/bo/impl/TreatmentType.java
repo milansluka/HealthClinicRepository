@@ -117,7 +117,7 @@ public class TreatmentType extends BaseObject {
 		this.duration = duration;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "treatmentTypes")
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "plannedTreatmentTypes")
 	public List<Appointment> getAppointments() {
 		return appointments;
 	}

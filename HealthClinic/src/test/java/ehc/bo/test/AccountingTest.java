@@ -10,9 +10,8 @@ import org.testng.annotations.Test;
 
 import com.itextpdf.text.DocumentException;
 
-import ehc.bo.impl.AccountItem;
 import ehc.bo.impl.AccountUtil;
-import ehc.bo.impl.ExecutorAccount;
+import ehc.bo.impl.ExecutorReceipt;
 import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
@@ -84,21 +83,21 @@ public class AccountingTest extends RootTestCase {
 		int month = 8;
 
 		// create appointments
-		createAppointment("Lukáš", "Trnka", "OxyGeneo - tvár", DateUtil.date(year, month, 1, 13, 0, 0),
+		createAppointment2("Lukáš", "Trnka", "OxyGeneo - tvár", DateUtil.date(year, month, 1, 13, 0, 0),
 				DateUtil.date(year, month, 1, 13, 0, 0), DateUtil.date(year, month, 1, 13, 30, 0));
-		createAppointment("Michaela", "Holienčíková", "OxyGeneo - tvár", DateUtil.date(year, month, 1, 17, 30, 0),
+		createAppointment2("Michaela", "Holienčíková", "OxyGeneo - tvár", DateUtil.date(year, month, 1, 17, 30, 0),
 				DateUtil.date(year, month, 1, 17, 30, 0), DateUtil.date(year, month, 1, 18, 0, 0));
-		createAppointment("Ondrej", "Štalmach", "OxyGeneo - tvár", DateUtil.date(year, month, 2, 8, 30, 0),
+		createAppointment2("Ondrej", "Štalmach", "OxyGeneo - tvár", DateUtil.date(year, month, 2, 8, 30, 0),
 				DateUtil.date(year, month, 2, 8, 30, 0), DateUtil.date(year, month, 2, 9, 0, 0));
-		createAppointment("Karol", "Kubanda", "OxyGeneo - tvár", DateUtil.date(year, month, 1, 7, 0, 0),
+		createAppointment2("Karol", "Kubanda", "OxyGeneo - tvár", DateUtil.date(year, month, 1, 7, 0, 0),
 				DateUtil.date(year, month, 1, 7, 0, 0), DateUtil.date(year, month, 1, 7, 30, 0));
-		createAppointment("Jana", "Pavlanská", "OxyGeneo - tvár", DateUtil.date(year, month, 1, 7, 15, 0),
+		createAppointment2("Jana", "Pavlanská", "OxyGeneo - tvár", DateUtil.date(year, month, 1, 7, 15, 0),
 				DateUtil.date(year, month, 1, 7, 30, 0), DateUtil.date(year, month, 1, 8, 0, 0));
 
-		createAppointment("František", "Zicho", "OxyGeneo - tvár", DateUtil.date(year, 9, 1, 7, 15, 0),
+		createAppointment2("František", "Zicho", "OxyGeneo - tvár", DateUtil.date(year, 9, 1, 7, 15, 0),
 				DateUtil.date(year, month, 1, 7, 30, 0), DateUtil.date(year, 9, 1, 8, 0, 0));
 
-		createAppointment("Tomáš", "Krivko", "OxyGeneo - tvár", DateUtil.date(year, 9, 7, 7, 15, 0),
+		createAppointment2("Tomáš", "Krivko", "OxyGeneo - tvár", DateUtil.date(year, 9, 7, 7, 15, 0),
 				DateUtil.date(year, month, 1, 7, 30, 0), DateUtil.date(year, 9, 7, 8, 0, 0));
 
 		// create treatments
@@ -131,7 +130,7 @@ public class AccountingTest extends RootTestCase {
 		Physician executor = (Physician) individual.getReservableSourceRoles().get(0);
 
 		AccountUtil accountUtil = new AccountUtil();
-		ExecutorAccount executorAccount = accountUtil.createAccount(accountCreator, executor, from, to);
+		ExecutorReceipt executorAccount = accountUtil.createAccount(accountCreator, executor, from, to);
 		HibernateUtil.save(executorAccount);
 
 		// create account from 1.9.2016 to 31.9.2016
@@ -146,7 +145,7 @@ public class AccountingTest extends RootTestCase {
 		individual = individualDao.findByFirstAndLastName(physicianFirstName, physicianLastName);
 		executor = (Physician) individual.getReservableSourceRoles().get(0);
 		executorAccount = executor.getExecutorAccounts().get(0);
-		ExecutorAccount executorAccount2 = executor.getExecutorAccounts().get(1);
+		ExecutorReceipt executorAccount2 = executor.getExecutorAccounts().get(1);
 		Assert.assertNotNull(executorAccount);
 		Assert.assertNotNull(executorAccount2);
 		Assert.assertEquals(new Money(25), executorAccount.getProvisionsSum());	
@@ -159,7 +158,7 @@ public class AccountingTest extends RootTestCase {
 		HibernateUtil.beginTransaction();
 		Individual individual = individualDao.findByFirstAndLastName("Marika", "Piršelová");
 		Physician executor = (Physician) individual.getReservableSourceRoles().get(0);
-		ExecutorAccount executorAccount = executor.getExecutorAccounts().get(0);
+		ExecutorReceipt executorAccount = executor.getExecutorAccounts().get(0);
 		try {
 		executorAccount.generatePDF();
 		} catch (IOException e) {

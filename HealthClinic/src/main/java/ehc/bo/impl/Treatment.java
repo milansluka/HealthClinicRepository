@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 import ehc.bo.Resource;
 
@@ -26,10 +27,12 @@ public class Treatment extends ModifiableObject {
 	private Date to;
 	private Appointment appointment;
 	private TreatmentType treatmentType;
-	private Payment payment;
+/*	private Payment payment;*/
 	private List<Resource> resources = new ArrayList<>();
 	private List<Attachment> attachments = new ArrayList<>();
 	private Money price;
+	private PatientBillItem patientBillItem;
+/*	private PatientReceiptItem patientReceiptItem;*/
 	
 	protected Treatment() {
 		super();
@@ -64,7 +67,9 @@ public class Treatment extends ModifiableObject {
 		this.treatmentType = treatmentType;
 	}
 	
-    @ManyToOne
+	
+	
+ /*   @ManyToOne
     @JoinColumn(name = "payment")
 	public Payment getPayment() {
 		return payment;
@@ -72,6 +77,15 @@ public class Treatment extends ModifiableObject {
 
 	public void setPayment(Payment payment) {
 		this.payment = payment;
+	}*/
+
+	@OneToOne(mappedBy = "treatment")
+	public PatientBillItem getPatientBillItem() {
+		return patientBillItem;
+	}
+
+	public void setPatientBillItem(PatientBillItem patientBillItem) {
+		this.patientBillItem = patientBillItem;
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, targetEntity = ResourceImpl.class)
@@ -122,6 +136,18 @@ public class Treatment extends ModifiableObject {
 		this.to = to;
 	}
 	
+	
+/*	@OneToOne(mappedBy = "treatment")*/
+/*	@OneToOne
+	@JoinColumn(name = "patientreceiptitem")
+	public PatientReceiptItem getPatientReceiptItem() {
+		return patientReceiptItem;
+	}
+
+	public void setPatientReceiptItem(PatientReceiptItem patientReceiptItem) {
+		this.patientReceiptItem = patientReceiptItem;
+	}*/
+
 	public void addResource(Resource resource) {
 		if (resource == null) {
 			return;
@@ -148,5 +174,13 @@ public class Treatment extends ModifiableObject {
 		}
 		this.treatmentType = treatmentType;
 		treatmentType.addTreatment(this);
+	}
+	
+	@Transient
+	public boolean isPaid() {
+		if (getPatientBillItem() == null) {
+			return false;
+		}
+		return getPatientBillItem().isPaid();
 	}
 }

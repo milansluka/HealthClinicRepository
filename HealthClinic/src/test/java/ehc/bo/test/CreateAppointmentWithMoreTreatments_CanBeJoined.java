@@ -74,8 +74,8 @@ public class CreateAppointmentWithMoreTreatments_CanBeJoined extends RootTestCas
 		HibernateUtil.beginTransaction();
 		appointment = appointmentDao.findById(id);
 
-		assertTrue(appointment.getTreatmentTypes().get(0).getName().equals("Odstraňovanie pigmentov chrbát") &&
-				appointment.getTreatmentTypes().get(1).getName().equals("Odstraňovanie pigmentov celá tvár"));
+		assertTrue(appointment.getPlannedTreatmentTypes().get(0).getName().equals("Odstraňovanie pigmentov chrbát") &&
+				appointment.getPlannedTreatmentTypes().get(1).getName().equals("Odstraňovanie pigmentov celá tvár"));
 		
 		HibernateUtil.commitTransaction();
 	}

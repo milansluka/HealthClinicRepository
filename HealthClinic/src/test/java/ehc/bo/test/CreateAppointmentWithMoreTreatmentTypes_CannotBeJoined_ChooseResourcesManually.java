@@ -80,7 +80,7 @@ public class CreateAppointmentWithMoreTreatmentTypes_CannotBeJoined_ChooseResour
 		HibernateUtil.beginTransaction();
 		Appointment appointment = appointmentDao.findById(appointmentId);
 
-		assertTrue(appointment.getTreatmentTypes().get(0).getName().equals("Odstraňovanie pigmentov chrbát"));
+		assertTrue(appointment.getPlannedTreatmentTypes().get(0).getName().equals("Odstraňovanie pigmentov chrbát"));
 		
 		HibernateUtil.commitTransaction();
 	}

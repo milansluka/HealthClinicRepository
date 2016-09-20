@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Hibernate;
+
 import ehc.bo.Resource;
 import ehc.bo.impl.Appointment;
 import ehc.bo.impl.AppointmentDao;
@@ -16,6 +18,10 @@ import ehc.bo.impl.Individual;
 import ehc.bo.impl.IndividualDao;
 import ehc.bo.impl.Login;
 import ehc.bo.impl.Money;
+import ehc.bo.impl.PatientBill;
+import ehc.bo.impl.PatientBillItem;
+import ehc.bo.impl.PatientReceipt;
+import ehc.bo.impl.PatientReceiptDao;
 import ehc.bo.impl.Payment;
 import ehc.bo.impl.PaymentChannel;
 import ehc.bo.impl.PaymentChannelType;
@@ -31,6 +37,7 @@ public class PayForTreatments extends RootTestCase {
 	private TreatmentTypeDao treatmentTypeDao = TreatmentTypeDao.getInstance();
 	private IndividualDao individualDao = IndividualDao.getInstance();
 	private AppointmentDao appointmentDao = AppointmentDao.getInstance();
+	private PatientReceiptDao patientReceiptDao = PatientReceiptDao.getInstance();
 	private List<Long> appointmentIds = new ArrayList<>();
 
 	protected void setUp() throws Exception {
@@ -63,7 +70,7 @@ public class PayForTreatments extends RootTestCase {
 		//execute treatments	
 		HibernateUtil.beginTransaction();
 		Appointment appointment2 = appointmentDao.findById(appId);
-		Treatment treatment = new Treatment(executor, appointment2, appointment2.getTreatmentTypes().get(0), new Money(new BigDecimal("80.0")), appointment2.getFrom(), appointment2.getTo());
+		Treatment treatment = new Treatment(executor, appointment2, appointment2.getPlannedTreatmentTypes().get(0), new Money(new BigDecimal("80.0")), appointment2.getFrom(), appointment2.getTo());
 		appointment.setState(executor, AppointmentStateValue.CONFIRMED);
 		treatment.addResource(appointment2.getResources().get(0));
 		HibernateUtil.save(treatment);
@@ -89,10 +96,23 @@ public class PayForTreatments extends RootTestCase {
         PaymentChannel paymentChannel = new PaymentChannel(executor, individual, PaymentChannelType.CASH);
         HibernateUtil.save(paymentChannel);
 		
-		Payment payment = new Payment(executor, appointment, appointment.getExecutedTreatments(), 
+        PatientBill patientBill = new PatientBill(executor, paidAmount, 0.19, appointment);
+        for (Treatment treatment : appointment.getExecutedTreatments()) {
+        	patientBill.addItem(new PatientBillItem(executor, treatment.getTreatmentType().getName(), treatment.getPrice(), treatment)); 	
+        }
+        HibernateUtil.save(patientBill);
+         
+		Payment payment = new Payment(executor, appointment.getPatientBill().getItems(), 
 				paymentChannel, paidAmount);
+		
+		long receiptId = -1;
+		
 		if (payment.isSufficient()) {
-			paymentId = (long)HibernateUtil.save(payment);		
+			paymentId = (long)HibernateUtil.save(payment);	
+			PatientReceipt patientReceipt = new PatientReceipt(executor, "Mária", "Petrášová", appointment, payment.getPaymentChannel().getType());
+			patientReceipt.addPaidBills(payment.getBillItemsToPay());
+			Hibernate.initialize(patientReceipt.getItems());
+			receiptId = (long)HibernateUtil.save(patientReceipt);
 		}
 	
 		HibernateUtil.commitTransaction();
@@ -101,7 +121,9 @@ public class PayForTreatments extends RootTestCase {
 		PaymentDao paymentDao = PaymentDao.getInstance();
 		payment = paymentDao.findById(paymentId);
 		appointment = appointmentDao.findById(appointmentIds.get(0));
+		PatientReceipt patientReceipt = patientReceiptDao.findById(receiptId);
 		assertTrue(payment.getPaidAmount().equals(paidAmount) && appointment.isPayed());
+		assertEquals(paidAmount, patientReceipt.getTotalPayedPrice());
 		HibernateUtil.commitTransaction();
 	}
 

@@ -87,7 +87,7 @@ public class CalculateMonthlyProvisionForPhysician extends RootTestCase {
 		HibernateUtil.beginTransaction();
 		for (long id : appointmentIds) {
 			Appointment appointment2 = appointmentDao.findById(id);
-			Treatment treatment = new Treatment(executor, appointment2, appointment2.getTreatmentTypes().get(0), 
+			Treatment treatment = new Treatment(executor, appointment2, appointment2.getPlannedTreatmentTypes().get(0), 
 					new Money(new BigDecimal("80.0")), appointment2.getFrom(), appointment2.getTo());
 			appointment.setState(executor, AppointmentStateValue.CONFIRMED);
 			treatment.addResource(appointment2.getResources().get(0));

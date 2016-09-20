@@ -77,8 +77,12 @@
 		<mapping class="ehc.bo.impl.Day" />
 		<mapping class="ehc.bo.impl.WorkTime" />
 		<mapping class="ehc.bo.impl.Money" />
-		<mapping class="ehc.bo.impl.ExecutorAccount" />
-		<mapping class="ehc.bo.impl.AccountItem" />
+		<mapping class="ehc.bo.impl.ExecutorReceipt" />
+		<mapping class="ehc.bo.impl.ExecutorReceiptItem" />
+		<mapping class="ehc.bo.impl.PatientBill" />
+		<mapping class="ehc.bo.impl.PatientBillItem" />
+		<mapping class="ehc.bo.impl.PatientReceipt" />
+		<mapping class="ehc.bo.impl.PatientReceiptItem" />
 		<mapping class="ehc.bo.impl.Voucher" />
 		<!-- <mapping class="ehc.bo.impl.Device" /> -->
 		<!-- <mapping class="ehc.bo.impl.UserRight" /> <mapping class="ehc.bo.impl.Person" 

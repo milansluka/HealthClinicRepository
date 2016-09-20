@@ -29,6 +29,10 @@ import ehc.bo.impl.Money;
 import ehc.bo.impl.Nurse;
 import ehc.bo.impl.NurseDao;
 import ehc.bo.impl.NurseType;
+import ehc.bo.impl.PatientBill;
+import ehc.bo.impl.PatientBillItem;
+import ehc.bo.impl.PatientReceipt;
+import ehc.bo.impl.PatientReceiptItem;
 import ehc.bo.impl.Payment;
 import ehc.bo.impl.PaymentChannel;
 import ehc.bo.impl.Physician;
@@ -318,7 +322,7 @@ public class RootTestCase extends TestCase {
 		HibernateUtil.commitTransaction();
 	}
 
-	public void createAppointment(String customerFirstName, String customerLastName, String wantedTreatmentName,
+	public long createAppointment2(String customerFirstName, String customerLastName, String wantedTreatmentName,
 			Date when, Date expectedWhen, Date expectedTo) {
 		HibernateUtil.beginTransaction();
 		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), 15);
@@ -347,13 +351,15 @@ public class RootTestCase extends TestCase {
 				appointmentProposal.getTo(), resources);
 		Appointment appointment = appointmentScheduler.getAppointment(executor, appointmentScheduleData, treatmentTypes,
 				customer);
-		addAppointment(appointment);
+		long appointmentId = addAppointment(appointment);
 		HibernateUtil.commitTransaction();
+		
+		return appointmentId;
 	}
 
 	public void morphAppointmentToTreatments(User executor, Appointment appointment) {
 		HibernateUtil.getCurrentSessionWithTransaction();
-		List<TreatmentType> treatmentTypes = appointment.getTreatmentTypes();
+		List<TreatmentType> treatmentTypes = appointment.getPlannedTreatmentTypes();
 
 		for (TreatmentType treatmentType : treatmentTypes) {
 			Treatment treatment = new Treatment(executor, appointment, treatmentType, new Money(new BigDecimal("50.0")),
@@ -395,15 +401,29 @@ public class RootTestCase extends TestCase {
 	public void payForAppointment(User executor, Appointment appointment, PaymentChannel paymentChannel) {
 		HibernateUtil.getCurrentSessionWithTransaction();
 		Money paidAmount = new Money();
-
+		PatientBill patientBill = new PatientBill(executor, paidAmount, 0.19, appointment);
+        Hibernate.initialize(appointment.getPatientBill());
 		for (Treatment treatment : appointment.getExecutedTreatments()) {
 			paidAmount.add(treatment.getPrice());
+			patientBill.addItem(new PatientBillItem(executor, treatment.getTreatmentType().getName(), treatment.getPrice(), treatment));
 		}
-
-		Payment payment = new Payment(executor, appointment, appointment.getExecutedTreatments(), paymentChannel,
+		patientBill.setTotalPrice(paidAmount);		
+		HibernateUtil.save(patientBill);
+		
+		Payment payment = new Payment(executor, appointment.getPatientBill().getItems(), paymentChannel,
 				paidAmount);
-
-		HibernateUtil.save(payment);
+		/*Payment payment = new Payment(executor, appointment, null, null, new Money(0));*/
+		HibernateUtil.save(payment);		
+			
+		PatientReceipt patientReceipt = new PatientReceipt(executor, "Mária", "Petrášová", 
+				appointment, payment.getPaymentChannel().getType());
+		
+		for (PatientBillItem patientBillItem : payment.getBillItemsToPay()) {
+				patientReceipt.addItem(new PatientReceiptItem(executor, patientBillItem.getPrice(), 
+						patientBillItem.getName()));
+			HibernateUtil.save(patientReceipt);
+		}
+		
 	}
 
 	public long addAppointment(Appointment appointment) {

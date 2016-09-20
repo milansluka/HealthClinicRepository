@@ -15,7 +15,7 @@ Create table "attachment"
  primary key ("id")
 ) Without Oids;
 
-Create table "executoraccount"
+Create table "executorreceipt"
 (
 	"id" BigSerial NOT NULL,
 	"executor" Bigint NOT NULL,
@@ -26,11 +26,11 @@ Create table "executoraccount"
  primary key ("id")
 ) Without Oids;
 
-Create table "accountitem"
+Create table "executorreceiptitem"
 (
 	"id" BigSerial NOT NULL,
-	"paymentchannel" Bigint NOT NULL,
-	"executoraccount" Bigint NOT NULL,
+	"paymentchanneltype" Varchar(128),
+	"executorreceipt" Bigint NOT NULL,
 	"from" Timestamp NOT NULL,
 	"to" Timestamp NOT NULL,
 	"treatmenttypename" Varchar(512) NOT NULL,
@@ -40,6 +40,52 @@ Create table "accountitem"
 	"subjectlastname" Varchar(256) NOT NULL,
 	"treatmentprice" Bigint NOT NULL,
 	"withdph" Boolean NOT NULL,
+	"createdby" Bigint NOT NULL,
+	"createdon" Timestamp NOT NULL,
+ primary key ("id")
+) Without Oids;
+
+Create table "patientbill"
+(
+	"id" BigSerial NOT NULL,
+	"appointment" Bigint NOT NULL,
+	"totalprice" Bigint NOT NULL,
+	"vatrate" Double precision NOT NULL,
+	"createdby" Bigint NOT NULL,
+	"createdon" Timestamp NOT NULL,
+ primary key ("id")
+) Without Oids;
+
+Create table "patientbillitem"
+(
+	"id" BigSerial NOT NULL,
+	"patientbill" Bigint NOT NULL,
+	"payment" Bigint,
+	"treatment" Bigint,
+	"name" Varchar(512) NOT NULL,
+	"price" Bigint NOT NULL,
+	"createdby" Bigint NOT NULL,
+	"createdon" Timestamp NOT NULL,
+ primary key ("id")
+) Without Oids;
+
+Create table "patientreceipt"
+(
+	"id" BigSerial NOT NULL,
+	"physicianfirstname" Varchar(256) NOT NULL,
+	"physicianlastname" Varchar(256) NOT NULL,
+    "paymentchanneltype" Varchar(128) NOT NULL, 
+	"createdby" Bigint NOT NULL,
+	"createdon" Timestamp NOT NULL,
+ primary key ("id")
+) Without Oids;
+
+Create table "patientreceiptitem"
+(
+	"id" BigSerial NOT NULL,
+	"patientreceipt" Bigint NOT NULL,
+	"treatmenttypename" Varchar(256) NOT NULL,
+	"paidtreatmentprice" Bigint NOT NULL,
 	"createdby" Bigint NOT NULL,
 	"createdon" Timestamp NOT NULL,
  primary key ("id")
@@ -151,7 +197,7 @@ Create table "treatment"
 	"id" BigSerial NOT NULL,
 	"appointment" Bigint NOT NULL,
 	"treatmenttype" Bigint NOT NULL,
-    "payment" Bigint,
+	"patientreceiptitem" Bigint,
 	"price" Bigint NOT NULL,
     "from" Timestamp NOT NULL,
 	"to" Timestamp NOT NULL,
@@ -398,9 +444,9 @@ Create table "appointment_resource"
 Create table "payment"
 (
 	"id" BigSerial NOT NULL,
-	"appointment" Bigint NOT NULL,
 	"paidamount" Bigint NOT NULL,
 	"paymentchannel" Bigint NOT NULL,
+	"receipt" Bigint,
 	"modifiedby" Bigint,
 	"createdby" Bigint NOT NULL,
 	"createdon" Timestamp NOT NULL,
@@ -412,7 +458,7 @@ Create table "paymentchannel"
 (
 	"id" BigSerial NOT NULL,
 	"party" Bigint NOT NULL,
-	"paymentchanneltype" Varchar(128) NOT NULL,
+	"type" Varchar(128) NOT NULL,
 	"modifiedby" Bigint,
 	"createdby" Bigint NOT NULL,
 	"createdon" Timestamp NOT NULL,
@@ -524,8 +570,6 @@ Alter table "appointment" add  foreign key ("createdby") references "systemuser"
 Alter table "treatment" add  foreign key ("appointment") references "appointment" ("id") on update restrict on delete restrict;
 
 Alter table "treatment" add  foreign key ("treatmenttype") references "treatmenttype" ("id") on update restrict on delete restrict;
-
-Alter table "treatment" add  foreign key ("payment") references "payment" ("id") on update restrict on delete restrict;
 
 Alter table "treatmenttype" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
 
@@ -657,7 +701,7 @@ Alter table "executor_treatmenttype" add  foreign key ("treatmenttype") referenc
 
 Alter table "executor_treatmenttype" add  foreign key ("executor") references "resourcepartyrole" ("id") on update restrict on delete restrict;
 
-Alter table "payment" add  foreign key ("appointment") references "appointment" ("id") on update restrict on delete restrict;
+Alter table "payment" add  foreign key ("receipt") references "patientreceipt" ("id") on update restrict on delete restrict;
 
 Alter table "payment" add  foreign key ("paymentchannel") references "paymentchannel" ("id") on update restrict on delete restrict;
 
@@ -703,14 +747,34 @@ Alter table "treatmenttype" add  foreign key ("price") references "money" ("id")
 
 Alter table "treatment" add  foreign key ("price") references "money" ("id") on update restrict on delete restrict;
 
-Alter table "accountitem" add  foreign key ("treatmentprice") references "money" ("id") on update restrict on delete restrict;
+Alter table "executorreceiptitem" add  foreign key ("treatmentprice") references "money" ("id") on update restrict on delete restrict;
 
-Alter table "accountitem" add  foreign key ("paymentchannel") references "paymentchannel" ("id") on update restrict on delete restrict;
+Alter table "executorreceiptitem" add  foreign key ("executorreceipt") references "executorreceipt" ("id") on update restrict on delete restrict;
 
-Alter table "accountitem" add  foreign key ("executoraccount") references "executoraccount" ("id") on update restrict on delete restrict;
+Alter table "executorreceiptitem" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "accountitem" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
+Alter table "executorreceipt" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
 
-Alter table "executoraccount" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
+Alter table "executorreceipt" add  foreign key ("executor") references "resourcepartyrole" ("id") on update restrict on delete restrict;
 
-Alter table "executoraccount" add  foreign key ("executor") references "resourcepartyrole" ("id") on update restrict on delete restrict;
+Alter table "patientbill" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
+
+Alter table "patientbill" add  foreign key ("totalprice") references "money" ("id") on update restrict on delete restrict;
+
+Alter table "patientbill" add  foreign key ("appointment") references "appointment" ("id") on update restrict on delete restrict;
+
+Alter table "patientbillitem" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
+
+Alter table "patientbillitem" add  foreign key ("price") references "money" ("id") on update restrict on delete restrict;
+
+Alter table "patientbillitem" add  foreign key ("treatment") references "treatment" ("id") on update restrict on delete restrict;
+
+Alter table "patientbillitem" add  foreign key ("payment") references "payment" ("id") on update restrict on delete restrict;
+
+Alter table "patientreceipt" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
+
+Alter table "patientreceiptitem" add  foreign key ("createdby") references "systemuser" ("id") on update restrict on delete restrict;
+
+Alter table "patientreceiptitem" add  foreign key ("paidtreatmentprice") references "money" ("id") on update restrict on delete restrict;
+
+Alter table "patientreceiptitem" add  foreign key ("patientreceipt") references "patientreceipt" ("id") on update restrict on delete restrict;

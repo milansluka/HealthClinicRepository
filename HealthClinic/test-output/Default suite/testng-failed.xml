@@ -3,12 +3,24 @@
 <suite guice-stage="DEVELOPMENT" name="Failed suite [Default suite]">
   <test name="Default test(failed)">
     <classes>
+      <class name="ehc.bo.test.AppointmentSchedulerTest">
+        <methods>
+          <include name="createAppointment3" invocation-numbers="2 3 4 5 6 7 16 17"/>
+          <include name="statistics"/>
+          <include name="afterClass"/>
+          <include name="beforeClass"/>
+        </methods>
+      </class> <!-- ehc.bo.test.AppointmentSchedulerTest -->
+      <class name="ehc.bo.test.PatientBillTest">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="afterClass"/>
+        </methods>
+      </class> <!-- ehc.bo.test.PatientBillTest -->
       <class name="ehc.bo.test.AccountingTest">
         <methods>
           <include name="afterClass"/>
-          <include name="createExecutorAccount"/>
           <include name="beforeClass"/>
-          <include name="generatePDF"/>
         </methods>
       </class> <!-- ehc.bo.test.AccountingTest -->
     </classes>

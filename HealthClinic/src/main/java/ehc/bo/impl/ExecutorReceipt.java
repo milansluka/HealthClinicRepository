@@ -26,17 +26,17 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class ExecutorAccount extends BaseObject {
+public class ExecutorReceipt extends BaseObject {
 	private ResourcePartyRole executor;
 	private Date from;
 	private Date to;
-	private List<AccountItem> accountItems = new ArrayList<>();
+	private List<ExecutorReceiptItem> accountItems = new ArrayList<>();
 
-	protected ExecutorAccount() {
+	protected ExecutorReceipt() {
 		super();
 	}
 
-	public ExecutorAccount(User accountCreator, ResourcePartyRole executor, Date from, Date to) {
+	public ExecutorReceipt(User accountCreator, ResourcePartyRole executor, Date from, Date to) {
 		super(accountCreator);
 		this.from = from;
 		this.to = to;
@@ -71,17 +71,17 @@ public class ExecutorAccount extends BaseObject {
 		this.to = to;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "executorAccount")
-	public List<AccountItem> getAccountItems() {
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "executorReceipt")
+	public List<ExecutorReceiptItem> getAccountItems() {
 		return accountItems;
 	}
 
-	public void setAccountItems(List<AccountItem> accountItems) {
+	public void setAccountItems(List<ExecutorReceiptItem> accountItems) {
 		this.accountItems = accountItems;
 	}
 
 	public void addAccountItem(User accountItemCreator, Treatment treatment) {
-		AccountItem accountItem = new AccountItem(accountItemCreator, treatment, executor, this, false);
+		ExecutorReceiptItem accountItem = new ExecutorReceiptItem(accountItemCreator, treatment, executor, this, false);
 		accountItems.add(accountItem);
 	}
 
@@ -117,7 +117,7 @@ public class ExecutorAccount extends BaseObject {
     	DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
         String start = "";
         String end = "";
-        for (AccountItem accountItem : accountItems) {
+        for (ExecutorReceiptItem accountItem : accountItems) {
         	table.addCell(accountItem.getSubjectFirstName());
         	table.addCell(accountItem.getSubjectLastName());
         	start = dateFormat.format(accountItem.getFrom());
@@ -127,7 +127,7 @@ public class ExecutorAccount extends BaseObject {
         	table.addCell(""+accountItem.getTreatmentPrice());
         	table.addCell(""+accountItem.getTreatmentTypeName());
         	table.addCell(""+accountItem.getTreatmentGroupName());
-        	table.addCell(""+accountItem.getPaymentChannel());
+        	table.addCell(""+accountItem.getPaymentChannelType());
         	table.addCell(accountItem.isWithDPH() ? "yes" : "no");
         	table.addCell(""+executorPerson.getFirstName());
         	table.addCell(""+executorPerson.getName());
@@ -139,7 +139,7 @@ public class ExecutorAccount extends BaseObject {
 	@Transient
 	public Money getProvisionsSum() {
 		Money provisionSum = new Money();
-		for (AccountItem accountItem : getAccountItems()) {
+		for (ExecutorReceiptItem accountItem : getAccountItems()) {
 			provisionSum = provisionSum.add(accountItem.getExecutorProvisionAmount());
 		}
 		return provisionSum;

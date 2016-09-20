@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
@@ -14,49 +16,50 @@ import javax.persistence.Transient;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class AccountItem extends BaseObject {
-	/*private TreatmentType treatmentType;*/
+public class ExecutorReceiptItem extends BaseObject {
+	/* private TreatmentType treatmentType; */
 	private Date from;
 	private Date to;
 	private Money treatmentPrice;
-	private PaymentChannel paymentChannel;
+	private PaymentChannelType paymentChannelType;
 	private double executorProvisionPercentage;
-	
+
 	private String subjectFirstName;
 	private String subjectLastName;
 	private String treatmentTypeName;
 	private String treatmentGroupName;
 	private boolean withDph;
-	
-	private ExecutorAccount executorAccount;
-	
-	protected AccountItem() {
+
+	private ExecutorReceipt executorReceipt;
+
+	protected ExecutorReceiptItem() {
 		super();
 	}
-	
-	public AccountItem(User accountItemCreator, Treatment treatment, ResourcePartyRole executor, ExecutorAccount executorAccount, boolean withDPH) {
+
+	public ExecutorReceiptItem(User accountItemCreator, Treatment treatment, ResourcePartyRole executor,
+			ExecutorReceipt executorReceipt, boolean withDPH) {
 		super(accountItemCreator);
 		this.treatmentTypeName = treatment.getTreatmentType().getName();
 		this.treatmentGroupName = treatment.getTreatmentType().getTreatmentGroup().getName();
 		this.from = treatment.getFrom();
 		this.to = treatment.getTo();
 		this.treatmentPrice = new Money(treatment.getPrice());
-		this.paymentChannel = treatment.getPayment().getPaymentChannel();
+		this.paymentChannelType = treatment.getPatientBillItem().getPayment().getPaymentChannel().getType();
 		this.subjectFirstName = treatment.getAppointment().getIndividual().getFirstName();
 		this.subjectLastName = treatment.getAppointment().getIndividual().getName();
 		this.executorProvisionPercentage = executor.getProvisionFromTreatmentType(treatment.getTreatmentType());
-		this.executorAccount = executorAccount;
+		this.executorReceipt = executorReceipt;
 		this.withDph = withDPH;
 	}
-	
+
 	@ManyToOne
-	@JoinColumn(name = "executoraccount")
-	public ExecutorAccount getExecutorAccount() {
-		return executorAccount;
+	@JoinColumn(name = "executorreceipt")
+	public ExecutorReceipt getExecutorReceipt() {
+		return executorReceipt;
 	}
 
-	public void setExecutorAccount(ExecutorAccount executorAccount) {
-		this.executorAccount = executorAccount;
+	public void setExecutorReceipt(ExecutorReceipt executorReceipt) {
+		this.executorReceipt = executorReceipt;
 	}
 
 	public String getSubjectFirstName() {
@@ -119,14 +122,13 @@ public class AccountItem extends BaseObject {
 		this.treatmentPrice = treatmentPrice;
 	}
 
-	@OneToOne
-	@JoinColumn(name = "paymentchannel")
-	public PaymentChannel getPaymentChannel() {
-		return paymentChannel;
+	@Enumerated(EnumType.STRING)
+	public PaymentChannelType getPaymentChannelType() {
+		return paymentChannelType;
 	}
 
-	public void setPaymentChannel(PaymentChannel paymentChannel) {
-		this.paymentChannel = paymentChannel;
+	public void setPaymentChannelType(PaymentChannelType paymentChannelType) {
+		this.paymentChannelType = paymentChannelType;
 	}
 
 	public double getExecutorProvisionPercentage() {
@@ -136,10 +138,10 @@ public class AccountItem extends BaseObject {
 	public void setExecutorProvisionPercentage(double executorProvisionPercentage) {
 		this.executorProvisionPercentage = executorProvisionPercentage;
 	}
-	
+
 	@Transient
 	public Money getExecutorProvisionAmount() {
-		return new Money(treatmentPrice.getPercentage(getExecutorProvisionPercentage()));	
+		return new Money(treatmentPrice.getPercentage(getExecutorProvisionPercentage()));
 	}
 
 	public boolean isWithDPH() {
@@ -148,5 +150,5 @@ public class AccountItem extends BaseObject {
 
 	public void setWithDPH(boolean withDPH) {
 		this.withDph = withDPH;
-	}	
+	}
 }

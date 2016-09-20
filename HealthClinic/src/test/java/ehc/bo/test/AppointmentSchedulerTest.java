@@ -128,7 +128,7 @@ public class AppointmentSchedulerTest extends RootTestCase {
 	}
 	
 	@Test(dataProvider = "appointmentParams", priority = 3, groups = {"setup"})
-	public void createAppointment(String customerFirstName, String customerLastName, String wantedTreatmentName, Date when, Date expectedWhen, Date expectedTo) {
+	public void createAppointment3(String customerFirstName, String customerLastName, String wantedTreatmentName, Date when, Date expectedWhen, Date expectedTo) {
 		HibernateUtil.beginTransaction();
 		Login login = new Login();
 		User executor = login.login("admin", "admin");
@@ -161,10 +161,10 @@ public class AppointmentSchedulerTest extends RootTestCase {
 		appointment = HibernateUtil.get(Appointment.class, appointmentId);
 		Assert.assertEquals(expectedWhen, appointment.getFrom());
 		Assert.assertEquals(expectedTo, appointment.getTo());
-		HibernateUtil.commitTransaction();	
+		HibernateUtil.commitTransaction();
 	}
 	
-	@Test(dependsOnMethods = {"createAppointment"})
+	@Test(dependsOnMethods = {"createAppointment3"})
 	public void statistics() {
 		
 		

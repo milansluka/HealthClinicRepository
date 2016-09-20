@@ -15,7 +15,7 @@ public abstract class ResourcePartyRole extends ResourceImpl {
 	Party source;
 	Party target;
 	List<ExecutorProvision> treatmentTypeProvisions = new ArrayList<>();
-	List<ExecutorAccount> executorAccounts = new ArrayList<>();
+	List<ExecutorReceipt> executorAccounts = new ArrayList<>();
 
 	protected ResourcePartyRole() {
 		super();
@@ -42,11 +42,11 @@ public abstract class ResourcePartyRole extends ResourceImpl {
 	}
 	
     @OneToMany(mappedBy = "executor", cascade = CascadeType.ALL)
-	public List<ExecutorAccount> getExecutorAccounts() {
+	public List<ExecutorReceipt> getExecutorAccounts() {
 		return executorAccounts;
 	}
 
-	public void setExecutorAccounts(List<ExecutorAccount> executorAccounts) {
+	public void setExecutorAccounts(List<ExecutorReceipt> executorAccounts) {
 		this.executorAccounts = executorAccounts;
 	}
 
@@ -78,7 +78,7 @@ public abstract class ResourcePartyRole extends ResourceImpl {
 		treatmentTypeProvisions.add(executorProvision);
 	}
 	
-	public void addExecutorAccount(ExecutorAccount executorAccount) {
+	public void addExecutorAccount(ExecutorReceipt executorAccount) {
 		getExecutorAccounts().add(executorAccount);
 	}
 	

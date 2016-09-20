@@ -18,7 +18,7 @@ import javax.persistence.OneToMany;
 public class PaymentChannel extends ModifiableObject {
 	private Party party;
 	private List<Payment> payments = new ArrayList<>();
-	private PaymentChannelType paymentChannelType;
+	private PaymentChannelType type;
 	
 	protected PaymentChannel() {
 		super();
@@ -27,7 +27,7 @@ public class PaymentChannel extends ModifiableObject {
 	public PaymentChannel(User executor, Party party, PaymentChannelType paymentChannelType) {
 		super(executor);
 		this.party = party;
-		this.paymentChannelType = paymentChannelType;
+		this.type = paymentChannelType;
 	}
 
 	@ManyToOne
@@ -50,12 +50,12 @@ public class PaymentChannel extends ModifiableObject {
 	}
 	
 	@Enumerated(EnumType.STRING)
-	public PaymentChannelType getPaymentChannelType() {
-		return paymentChannelType;
+	public PaymentChannelType getType() {
+		return type;
 	}
 
-	public void setPaymentChannelType(PaymentChannelType paymentChannelType) {
-		this.paymentChannelType = paymentChannelType;
+	public void setType(PaymentChannelType paymentChannelType) {
+		this.type = paymentChannelType;
 	}
 
 	public void addPayment(Payment payment) {
@@ -64,6 +64,6 @@ public class PaymentChannel extends ModifiableObject {
 
 	@Override
 	public String toString() {
-		return "" + paymentChannelType;
+		return "" + type;
 	}	
 }

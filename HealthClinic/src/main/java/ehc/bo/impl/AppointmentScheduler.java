@@ -35,7 +35,7 @@ public class AppointmentScheduler {
 		Appointment appointment = new Appointment(executor, appointmentScheduleData.getFrom(),
 				appointmentScheduleData.getTo(), individual);
 		appointment.setResources(appointmentScheduleData.getResources());
-		appointment.setTreatmentTypes(treatmentTypes);
+		appointment.setPlannedTreatmentTypes(treatmentTypes);
 		return appointment;
 	}
 

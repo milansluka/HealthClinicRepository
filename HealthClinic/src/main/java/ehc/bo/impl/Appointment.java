@@ -26,12 +26,16 @@ public class Appointment extends BaseObject {
 	Date to;
 	AppointmentState state;
 	Individual individual;
-	List<TreatmentType> treatmentTypes = new ArrayList<>();
+	PatientBill patientBill;
+	List<TreatmentType> plannedTreatmentTypes = new ArrayList<>();
 	List<Resource> resources = new ArrayList<>();
 	List<Treatment> executedTreatments = new ArrayList<>();
-	List<Payment> payments = new ArrayList<>();
-	Appointment previous = null;
-	Appointment next = null;
+	/* List<Payment> payments = new ArrayList<>(); */
+	/* List<PatientReceipt> receipts = new ArrayList<>(); */
+	/* List<PatientBill> bills = new ArrayList<>(); */
+	/* PatientBill patientBill; */
+	Appointment previous;
+	Appointment next;
 
 	protected Appointment() {
 		super();
@@ -66,14 +70,13 @@ public class Appointment extends BaseObject {
 		this.executedTreatments = executedTreatments;
 	}
 
-	@OneToMany(mappedBy = "appointment", cascade = CascadeType.ALL)
-	public List<Payment> getPayments() {
-		return payments;
-	}
-
-	public void setPayments(List<Payment> payments) {
-		this.payments = payments;
-	}
+	/*
+	 * @OneToMany(mappedBy = "appointment", cascade = CascadeType.ALL) public
+	 * List<Payment> getPayments() { return payments; }
+	 * 
+	 * public void setPayments(List<Payment> payments) { this.payments =
+	 * payments; }
+	 */
 
 	@Column(name = "\"from\"")
 	public Date getFrom() {
@@ -136,13 +139,38 @@ public class Appointment extends BaseObject {
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinTable(name = "appointment_treatmenttype", joinColumns = {
 			@JoinColumn(name = "appointment") }, inverseJoinColumns = { @JoinColumn(name = "treatmenttype") })
-	public List<TreatmentType> getTreatmentTypes() {
-		return treatmentTypes;
+	public List<TreatmentType> getPlannedTreatmentTypes() {
+		return plannedTreatmentTypes;
 	}
 
-	public void setTreatmentTypes(List<TreatmentType> treatmentTypes) {
-		this.treatmentTypes = treatmentTypes;
+	public void setPlannedTreatmentTypes(List<TreatmentType> treatmentTypes) {
+		this.plannedTreatmentTypes = treatmentTypes;
 	}
+
+	@OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL)
+	public PatientBill getPatientBill() {
+		return patientBill;
+	}
+
+	public void setPatientBill(PatientBill patientBill) {
+		this.patientBill = patientBill;
+	}
+
+	/*
+	 * @OneToMany(mappedBy = "appointment", cascade = CascadeType.ALL) public
+	 * List<PatientReceipt> getReceipts() { return receipts; }
+	 * 
+	 * public void setReceipts(List<PatientReceipt> receipts) { this.receipts =
+	 * receipts; }
+	 */
+
+	/*
+	 * @OneToMany(mappedBy = "appointment", cascade = CascadeType.ALL) public
+	 * List<PatientBill> getBills() { return bills; }
+	 * 
+	 * public void setBills(List<PatientBill> bills) { this.bills = bills; }
+	 */
+
 
 	public void assignPerson(Individual person) {
 		if (person != null) {
@@ -153,7 +181,7 @@ public class Appointment extends BaseObject {
 
 	public void addTreatmentType(TreatmentType treatmentType) {
 		if (treatmentType != null) {
-			getTreatmentTypes().add(treatmentType);
+			getPlannedTreatmentTypes().add(treatmentType);
 			treatmentType.addAppointment(this);
 		}
 	}
@@ -181,10 +209,10 @@ public class Appointment extends BaseObject {
 		getResources().add(resource);
 		resource.addAppointment(this);
 	}
-	
-	public void addPayment(Payment payment) {
-		getPayments().add(payment);
-	}
+
+	/*
+	 * public void addPayment(Payment payment) { getPayments().add(payment); }
+	 */
 
 	public void removeIndividual() {
 		getIndividual().removeAppointment(this);
@@ -210,8 +238,8 @@ public class Appointment extends BaseObject {
 	}
 
 	public void prepareForDeleting() {
-		 removeResources(); 
-		 removeIndividual(); 
+		removeResources();
+		removeIndividual();
 		removeFromNext();
 		removeFromPrevious();
 	}
@@ -238,31 +266,74 @@ public class Appointment extends BaseObject {
 	public void addTreatment(Treatment treatment) {
 		getExecutedTreatments().add(treatment);
 	}
-	
+
+	/*
+	 * public void addPatientBill(PatientBill patientBill) {
+	 * getBills().add(patientBill); }
+	 */
+
 	@Transient
 	public boolean isPayed() {
-		Money paidAmount = new Money();
-		Money requiredAmount = new Money();
-		
-		for (Payment payment : getPayments()) {
-			paidAmount.add(payment.getPaidAmount());
-		}
-		for (Treatment treatment : getExecutedTreatments()) {
-			requiredAmount.add(treatment.getPrice());
-		}
-		
-		return paidAmount.greaterThanOrEqual(requiredAmount);	
+		return getPatientBill().isPaid();
 	}
-	
+
+	/*
+	 * @Transient public boolean isPayed() { Money paidAmount = new Money();
+	 * Money requiredAmount = new Money();
+	 * 
+	 * for (Payment payment : getPayments()) {
+	 * paidAmount.add(payment.getPaidAmount()); } for (Treatment treatment :
+	 * getExecutedTreatments()) { requiredAmount.add(treatment.getPrice()); }
+	 * 
+	 * return paidAmount.greaterThanOrEqual(requiredAmount); }
+	 */
+
+	/*
+	 * @Transient public boolean isPayed() { Money paidAmount = new Money();
+	 * Money requiredAmount = new Money();
+	 * 
+	 * for (PatientReceipt patientReceipt : getReceipts()) {
+	 * paidAmount.add(patientReceipt.getTotalPayedPrice()); } for (PatientBill
+	 * patientBill : getBills()) {
+	 * requiredAmount.add(patientBill.getTotalPrice()); }
+	 * 
+	 * return paidAmount.greaterThanOrEqual(requiredAmount) &&
+	 * getUnpaidBills().isEmpty(); }
+	 */
+
+	/*
+	 * @Transient public List<PatientBill> getUnpaidBills() { List<PatientBill>
+	 * unpaidBills = new ArrayList<>();
+	 * 
+	 * for (PatientBill patientBill : getBills()) { if (patientBill.getPayment()
+	 * == null) { unpaidBills.add(patientBill); } } return unpaidBills; }
+	 */
+
+	/*
+	 * @Transient public List<PatientBill> getPaidBills() { List<PatientBill>
+	 * paidBills = new ArrayList<>();
+	 * 
+	 * for (PatientBill patientBill : getBills()) { if (patientBill.getPayment()
+	 * != null) { paidBills.add(patientBill); } } return paidBills; }
+	 */
+
 	@Transient
-	public List<Treatment> getUnpaidTreatments() {
-		List<Treatment> unpaidTreatments = new ArrayList<>();
-		
-		for (Treatment treatment : getExecutedTreatments()) {
-			if (treatment.getPayment() == null) {
-				unpaidTreatments.add(treatment);
+	public List<PatientBillItem> getUnpaidBillItems() {
+		List<PatientBillItem> unpaidBillItems = new ArrayList<>();
+
+		for (PatientBillItem patientBillItem : getPatientBill().getItems()) {
+			if (patientBillItem.getPayment() == null) {
+				unpaidBillItems.add(patientBillItem);
 			}
-		}		
-		return unpaidTreatments;	
+		}
+		return unpaidBillItems;
 	}
+	/*
+	 * @Transient public List<Treatment> getUnpaidTreatments() { List<Treatment>
+	 * unpaidTreatments = new ArrayList<>();
+	 * 
+	 * for (Treatment treatment : getExecutedTreatments()) { if
+	 * (treatment.getPayment() == null) { unpaidTreatments.add(treatment); } }
+	 * return unpaidTreatments; }
+	 */
 }

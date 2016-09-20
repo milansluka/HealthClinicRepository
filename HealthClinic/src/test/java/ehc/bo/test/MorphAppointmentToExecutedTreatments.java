@@ -66,7 +66,7 @@ public class MorphAppointmentToExecutedTreatments extends RootTestCase {
 		WorkTime workTime = getWorkTime();
 		HibernateUtil.commitTransaction();
 
-		AppointmentScheduler resourcesUtil = new AppointmentScheduler(workTime, HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
+		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(workTime, HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
 
 		// appointment from 7:30 to 8:30
 		Date when = DateUtil.date(2016, 7, 7, 7, 30, 0);
@@ -82,7 +82,7 @@ public class MorphAppointmentToExecutedTreatments extends RootTestCase {
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
 		List<TreatmentType> treatmentTypes = new ArrayList<>();
 		treatmentTypes.add(treatmentType);
-		List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentTypes, 1);
+		List<AppointmentProposal> appointmentProposals = appointmentScheduler.getAppointmentProposals(when, to, treatmentTypes, 1);
 
 		AppointmentProposal appointmentProposal = appointmentProposals.get(0);
 		List<Resource> resources = new ArrayList<>();
