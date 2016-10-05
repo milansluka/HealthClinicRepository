@@ -116,6 +116,62 @@ public class RootTestCase extends TestCase {
 
 		return id;
 	}
+	
+	protected void addAppointments() {
+		
+		addAppointment("Janko", "Mrkvicka", "Odstraňovanie pigmentov chrbát", 
+				DateUtil.date(2016, 9, 26, 7, 15, 0), DateUtil.date(2016, 9, 26, 8, 15, 0));
+		
+		addAppointment("František", "Zicho", "Epilácia brucha", 
+				DateUtil.date(2016, 9, 26, 7, 15, 0), DateUtil.date(2016, 9, 26, 8, 15, 0));
+		
+		addAppointment("Michal", "Očko", "Epilácia brucha", 
+				DateUtil.date(2016, 9, 26, 8, 15, 0), DateUtil.date(2016, 9, 26, 9, 15, 0));
+		
+		addAppointment("Pavol", "Kocinec", "Epilácia brucha", 
+				DateUtil.date(2016, 9, 26, 9, 45, 0), DateUtil.date(2016, 9, 26, 10, 45, 0));
+		
+		addAppointment("Tomáš", "Krivko", "OxyGeneo - tvár", 
+				DateUtil.date(2016, 9, 26, 11, 30, 0), DateUtil.date(2016, 9, 26, 12, 0, 0));
+		
+		addAppointment("Lukáš", "Trnka", "Odstraňovanie pigmentov celá tvár", 
+				DateUtil.date(2016, 9, 26, 12, 30, 0), DateUtil.date(2016, 9, 26, 14, 30, 0));
+		
+		addAppointment("Jozef", "Šemota", "OxyGeneo - tvár", 
+				DateUtil.date(2016, 9, 26, 15, 0, 0), DateUtil.date(2016, 9, 26, 15, 30, 0));
+		
+		addAppointment("Peter", "Korbel", "OxyGeneo - tvár", 
+				DateUtil.date(2016, 9, 26, 15, 45, 0), DateUtil.date(2016, 9, 26, 16, 15, 0));
+		
+		addAppointment("Nataša", "Gerthofferová", "Odstraňovanie pigmentov celá tvár", 
+				DateUtil.date(2016, 9, 26, 16, 0, 0), DateUtil.date(2016, 9, 26, 18, 0, 0));
+		
+		addAppointment("Tatiana", "Hiková", "Epilácia brucha", 
+				DateUtil.date(2016, 9, 26, 17, 0, 0), DateUtil.date(2016, 9, 26, 18, 0, 0));	
+	}
+	
+	private void addAppointment(String customerFirstName, String customerLastName, 
+			String treatmentTypeName, Date from, Date to) {
+		HibernateUtil.beginTransaction();
+		Login login = new Login();
+		User executor  = login.login("admin", "admin");
+		Individual individual = individualDao.findByFirstAndLastName(customerFirstName, customerLastName);
+		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), 15);
+		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentTypeName);
+		treatmentTypes.add(treatmentType);
+		AppointmentProposal appointmentProposal = appointmentScheduler.getAppointmentProposal(from, to, treatmentTypes);
+		List<Resource> resources = new ArrayList<>();
+		
+		for (Map.Entry<ResourceType, SortedSet<Resource>> entry : appointmentProposal.getResources().entrySet()) {
+			resources.add(entry.getValue().first());		
+		}
+		
+		AppointmentScheduleData appointmentScheduleData = new AppointmentScheduleData(from, to, resources);
+		Appointment appointment = appointmentScheduler.getAppointment(executor, appointmentScheduleData, treatmentTypes, individual);
+		addAppointment(appointment);	
+		HibernateUtil.commitTransaction();
+	}
 
 	public int getCountOfResources() {
 		RoomDao roomDao = RoomDao.getInstance();
@@ -726,15 +782,13 @@ public class RootTestCase extends TestCase {
 	protected void removeAppointment(long id) {
 		HibernateUtil.beginTransaction();
 		Appointment appointment = appointmentDao.findById(id);
-		/* appointment.setResources(new ArrayList<>()); */
-		/* appointment.removeResources(); */
+
+		if (appointment == null) {
+			return;
+		}
 		appointment.prepareForDeleting();
-		/* appointment.removeIndividual(); */
+	
 		HibernateUtil.saveOrUpdate(appointment);
-		/*
-		 * for (Resource resource : appointment.getResources()) {
-		 * appointment.removeResources(); }
-		 */
 		HibernateUtil.delete(appointment);
 		HibernateUtil.commitTransaction();
 	}
@@ -837,11 +891,6 @@ public class RootTestCase extends TestCase {
 
 		treatmentGroup.addTreatmentType(treatmentType);
 		HibernateUtil.saveOrUpdate(treatmentGroup);
-		/* long id = (long)HibernateUtil.saveOrUpdate(treatmentGroup); */
-		/*
-		 * long id = treatmentGroup.getId(); treatmentTypeIds.add(id);
-		 */
-
 		HibernateUtil.commitTransaction();
 	}
 
@@ -1069,7 +1118,6 @@ public class RootTestCase extends TestCase {
 		removeNurses();
 		removeWaitingIndividuals();
 		removeIndividuals();
-		/* removeTreatmentTypes(); */
 		removeTreatmentGroups();
 		removeSkills();
 		removeWorkTimes();

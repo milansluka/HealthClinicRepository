@@ -74,9 +74,7 @@ public class CanTreatmentsBeCombined_CanBe extends RootTestCase {
 		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
 	
 		assertTrue(appointmentScheduler.canBeCombinedIntoOneAppointment(treatmentTypes));
-		HibernateUtil.commitTransaction();
-	
-			
+		HibernateUtil.commitTransaction();			
 	}
 
 	protected void tearDown() throws Exception {

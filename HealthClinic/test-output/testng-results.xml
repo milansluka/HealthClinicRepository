@@ -1,34 +1,439 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results skipped="0" failed="0" total="42" passed="42">
+<testng-results skipped="0" failed="0" total="54" passed="54">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="38216" started-at="2016-09-20T17:59:27Z" finished-at="2016-09-20T18:00:06Z">
+  <suite name="Default suite" duration-ms="41657" started-at="2016-10-05T11:35:35Z" finished-at="2016-10-05T11:36:17Z">
     <groups>
-      <group name="setup">
-        <method signature="AppointmentSchedulerTest.createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" class="ehc.bo.test.AppointmentSchedulerTest"/>
-      </group> <!-- setup -->
     </groups>
-    <test name="Default test" duration-ms="38216" started-at="2016-09-20T17:59:27Z" finished-at="2016-09-20T18:00:06Z">
-      <class name="ehc.bo.test.PatientBillTest">
-        <test-method status="PASS" signature="beforeClass()[pri:0, instance:null(ehc.bo.test.PatientBillTest)]" name="beforeClass" is-config="true" duration-ms="7716" started-at="2016-09-20T19:59:27Z" finished-at="2016-09-20T19:59:35Z">
+    <test name="Default test" duration-ms="41657" started-at="2016-10-05T11:35:35Z" finished-at="2016-10-05T11:36:17Z">
+      <class name="ehc.bo.test.AppointmentSchedulerFindingFreeBlocksTest">
+        <test-method status="PASS" signature="beforeClass()[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerFindingFreeBlocksTest)]" name="beforeClass" is-config="true" duration-ms="964" started-at="2016-10-05T13:35:49Z" finished-at="2016-10-05T13:35:50Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- beforeClass -->
-        <test-method status="PASS" signature="createPatientBill()[pri:0, instance:null(ehc.bo.test.PatientBillTest)]" name="createPatientBill" duration-ms="177" started-at="2016-09-20T19:59:35Z" finished-at="2016-09-20T19:59:35Z">
+        <test-method status="PASS" signature="getFreeTimeWindows(java.lang.String, int)[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerFindingFreeBlocksTest)]" name="getFreeTimeWindows" duration-ms="4673" started-at="2016-10-05T13:35:50Z" data-provider="appointmentDateTimes" finished-at="2016-10-05T13:35:55Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[Odstraňovanie pigmentov chrbát]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[12]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getFreeTimeWindows -->
+        <test-method status="PASS" signature="deleteAppointments()[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerFindingFreeBlocksTest)]" name="deleteAppointments" is-config="true" duration-ms="1188" started-at="2016-10-05T13:35:55Z" finished-at="2016-10-05T13:35:56Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- deleteAppointments -->
+        <test-method status="PASS" signature="getFreeTimeWindowsIfNoAppointmentPlanned()[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerFindingFreeBlocksTest)]" name="getFreeTimeWindowsIfNoAppointmentPlanned" duration-ms="1647" started-at="2016-10-05T13:35:56Z" finished-at="2016-10-05T13:35:58Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getFreeTimeWindowsIfNoAppointmentPlanned -->
+        <test-method status="PASS" signature="deleteAppointments()[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerFindingFreeBlocksTest)]" name="deleteAppointments" is-config="true" duration-ms="35" started-at="2016-10-05T13:35:58Z" finished-at="2016-10-05T13:35:58Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- deleteAppointments -->
+        <test-method status="PASS" signature="afterClass()[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerFindingFreeBlocksTest)]" name="afterClass" is-config="true" duration-ms="1269" started-at="2016-10-05T13:35:58Z" finished-at="2016-10-05T13:35:59Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterClass -->
+      </class> <!-- ehc.bo.test.AppointmentSchedulerFindingFreeBlocksTest -->
+      <class name="ehc.bo.test.AppointmentSchedulerAssigningResourcesTest">
+        <test-method status="PASS" signature="beforeClass()[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerAssigningResourcesTest)]" name="beforeClass" is-config="true" duration-ms="1062" started-at="2016-10-05T13:35:42Z" finished-at="2016-10-05T13:35:43Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeClass -->
+        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date, java.lang.String, java.lang.String, java.lang.String, java.lang.String)[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerAssigningResourcesTest)]" name="scheduleAppointment" duration-ms="231" started-at="2016-10-05T13:35:43Z" data-provider="appointmentParams" finished-at="2016-10-05T13:35:44Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[Mon Sep 26 07:15:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[Mon Sep 26 08:15:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[Odstraňovanie pigmentov chrbát]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[Petrášová]]>
+              </value>
+            </param>
+            <param index="4">
+              <value>
+                <![CDATA[Podhorská]]>
+              </value>
+            </param>
+            <param index="5">
+              <value>
+                <![CDATA[test room 1]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- scheduleAppointment -->
+        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date, java.lang.String, java.lang.String, java.lang.String, java.lang.String)[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerAssigningResourcesTest)]" name="scheduleAppointment" duration-ms="412" started-at="2016-10-05T13:35:44Z" data-provider="appointmentParams" finished-at="2016-10-05T13:35:44Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[Mon Sep 26 07:15:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[Mon Sep 26 08:15:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[Epilácia brucha]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[Piršelová]]>
+              </value>
+            </param>
+            <param index="4">
+              <value>
+                <![CDATA[Vanková]]>
+              </value>
+            </param>
+            <param index="5">
+              <value>
+                <![CDATA[test room 2]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- scheduleAppointment -->
+        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date, java.lang.String, java.lang.String, java.lang.String, java.lang.String)[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerAssigningResourcesTest)]" name="scheduleAppointment" duration-ms="259" started-at="2016-10-05T13:35:44Z" data-provider="appointmentParams" finished-at="2016-10-05T13:35:44Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[Mon Sep 26 08:15:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[Mon Sep 26 09:15:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[Epilácia brucha]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[Piršelová]]>
+              </value>
+            </param>
+            <param index="4">
+              <value>
+                <![CDATA[Podhorská]]>
+              </value>
+            </param>
+            <param index="5">
+              <value>
+                <![CDATA[test room 1]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- scheduleAppointment -->
+        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date, java.lang.String, java.lang.String, java.lang.String, java.lang.String)[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerAssigningResourcesTest)]" name="scheduleAppointment" duration-ms="417" started-at="2016-10-05T13:35:44Z" data-provider="appointmentParams" finished-at="2016-10-05T13:35:45Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[Mon Sep 26 09:45:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[Mon Sep 26 10:45:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[Epilácia brucha]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[Piršelová]]>
+              </value>
+            </param>
+            <param index="4">
+              <value>
+                <![CDATA[Podhorská]]>
+              </value>
+            </param>
+            <param index="5">
+              <value>
+                <![CDATA[test room 1]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- scheduleAppointment -->
+        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date, java.lang.String, java.lang.String, java.lang.String, java.lang.String)[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerAssigningResourcesTest)]" name="scheduleAppointment" duration-ms="411" started-at="2016-10-05T13:35:45Z" data-provider="appointmentParams" finished-at="2016-10-05T13:35:45Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[Mon Sep 26 11:30:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[Mon Sep 26 12:00:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[OxyGeneo - tvár]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[Piršelová]]>
+              </value>
+            </param>
+            <param index="4">
+              <value>
+                <![CDATA[Vanková]]>
+              </value>
+            </param>
+            <param index="5">
+              <value>
+                <![CDATA[test room 3]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- scheduleAppointment -->
+        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date, java.lang.String, java.lang.String, java.lang.String, java.lang.String)[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerAssigningResourcesTest)]" name="scheduleAppointment" duration-ms="255" started-at="2016-10-05T13:35:45Z" data-provider="appointmentParams" finished-at="2016-10-05T13:35:45Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[Mon Sep 26 12:30:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[Mon Sep 26 14:30:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[Odstraňovanie pigmentov celá tvár]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[Petrášová]]>
+              </value>
+            </param>
+            <param index="4">
+              <value>
+                <![CDATA[Podhorská]]>
+              </value>
+            </param>
+            <param index="5">
+              <value>
+                <![CDATA[test room 2]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- scheduleAppointment -->
+        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date, java.lang.String, java.lang.String, java.lang.String, java.lang.String)[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerAssigningResourcesTest)]" name="scheduleAppointment" duration-ms="252" started-at="2016-10-05T13:35:45Z" data-provider="appointmentParams" finished-at="2016-10-05T13:35:46Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[Mon Sep 26 15:00:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[Mon Sep 26 15:30:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[OxyGeneo - tvár]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[Piršelová]]>
+              </value>
+            </param>
+            <param index="4">
+              <value>
+                <![CDATA[Vanková]]>
+              </value>
+            </param>
+            <param index="5">
+              <value>
+                <![CDATA[test room 3]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- scheduleAppointment -->
+        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date, java.lang.String, java.lang.String, java.lang.String, java.lang.String)[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerAssigningResourcesTest)]" name="scheduleAppointment" duration-ms="233" started-at="2016-10-05T13:35:46Z" data-provider="appointmentParams" finished-at="2016-10-05T13:35:46Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[Mon Sep 26 15:45:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[Mon Sep 26 16:15:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[OxyGeneo - tvár]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[Piršelová]]>
+              </value>
+            </param>
+            <param index="4">
+              <value>
+                <![CDATA[Vanková]]>
+              </value>
+            </param>
+            <param index="5">
+              <value>
+                <![CDATA[test room 3]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- scheduleAppointment -->
+        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date, java.lang.String, java.lang.String, java.lang.String, java.lang.String)[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerAssigningResourcesTest)]" name="scheduleAppointment" duration-ms="214" started-at="2016-10-05T13:35:46Z" data-provider="appointmentParams" finished-at="2016-10-05T13:35:46Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[Mon Sep 26 16:00:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[Mon Sep 26 18:00:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[Odstraňovanie pigmentov celá tvár]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[Petrášová]]>
+              </value>
+            </param>
+            <param index="4">
+              <value>
+                <![CDATA[Podhorská]]>
+              </value>
+            </param>
+            <param index="5">
+              <value>
+                <![CDATA[test room 2]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- scheduleAppointment -->
+        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date, java.lang.String, java.lang.String, java.lang.String, java.lang.String)[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerAssigningResourcesTest)]" name="scheduleAppointment" duration-ms="428" started-at="2016-10-05T13:35:46Z" data-provider="appointmentParams" finished-at="2016-10-05T13:35:47Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[Mon Sep 26 17:00:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[Mon Sep 26 18:00:00 CEST 2016]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[Epilácia brucha]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[Piršelová]]>
+              </value>
+            </param>
+            <param index="4">
+              <value>
+                <![CDATA[Vanková]]>
+              </value>
+            </param>
+            <param index="5">
+              <value>
+                <![CDATA[test room 1]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- scheduleAppointment -->
+        <test-method status="PASS" signature="afterClass()[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerAssigningResourcesTest)]" name="afterClass" is-config="true" duration-ms="2687" started-at="2016-10-05T13:35:47Z" finished-at="2016-10-05T13:35:49Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterClass -->
+      </class> <!-- ehc.bo.test.AppointmentSchedulerAssigningResourcesTest -->
+      <class name="ehc.bo.test.PatientBillTest">
+        <test-method status="PASS" signature="beforeClass()[pri:0, instance:null(ehc.bo.test.PatientBillTest)]" name="beforeClass" is-config="true" duration-ms="5603" started-at="2016-10-05T13:35:35Z" finished-at="2016-10-05T13:35:41Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeClass -->
+        <test-method status="PASS" signature="createPatientBill()[pri:0, instance:null(ehc.bo.test.PatientBillTest)]" name="createPatientBill" duration-ms="146" started-at="2016-10-05T13:35:41Z" finished-at="2016-10-05T13:35:41Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createPatientBill -->
-        <test-method status="PASS" signature="afterClass()[pri:0, instance:null(ehc.bo.test.PatientBillTest)]" name="afterClass" is-config="true" duration-ms="1790" started-at="2016-09-20T19:59:35Z" finished-at="2016-09-20T19:59:37Z">
+        <test-method status="PASS" signature="afterClass()[pri:0, instance:null(ehc.bo.test.PatientBillTest)]" name="afterClass" is-config="true" duration-ms="1257" started-at="2016-10-05T13:35:41Z" finished-at="2016-10-05T13:35:42Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- afterClass -->
       </class> <!-- ehc.bo.test.PatientBillTest -->
       <class name="ehc.bo.test.AppointmentSchedulerTest">
-        <test-method status="PASS" signature="beforeClass()[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="beforeClass" is-config="true" duration-ms="1270" started-at="2016-09-20T19:59:47Z" finished-at="2016-09-20T19:59:48Z">
+        <test-method status="PASS" signature="beforeClass()[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="beforeClass" is-config="true" duration-ms="844" started-at="2016-10-05T13:36:04Z" finished-at="2016-10-05T13:36:05Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- beforeClass -->
-        <test-method status="PASS" signature="getAppointmentProposalWhenResourcesAvailable(java.util.Date, java.util.Date)[pri:1, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="getAppointmentProposalWhenResourcesAvailable" duration-ms="143" started-at="2016-09-20T19:59:48Z" data-provider="appointmentDateTimes" finished-at="2016-09-20T19:59:48Z">
+        <test-method status="PASS" signature="getAppointmentProposalWhenResourcesAvailable(java.util.Date, java.util.Date)[pri:1, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="getAppointmentProposalWhenResourcesAvailable" duration-ms="104" started-at="2016-10-05T13:36:05Z" data-provider="appointmentDateTimes" finished-at="2016-10-05T13:36:05Z">
           <params>
             <param index="0">
               <value>
@@ -44,7 +449,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- getAppointmentProposalWhenResourcesAvailable -->
-        <test-method status="PASS" signature="getAppointmentProposalWhenResourcesAvailable(java.util.Date, java.util.Date)[pri:1, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="getAppointmentProposalWhenResourcesAvailable" duration-ms="198" started-at="2016-09-20T19:59:48Z" data-provider="appointmentDateTimes" finished-at="2016-09-20T19:59:49Z">
+        <test-method status="PASS" signature="getAppointmentProposalWhenResourcesAvailable(java.util.Date, java.util.Date)[pri:1, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="getAppointmentProposalWhenResourcesAvailable" duration-ms="100" started-at="2016-10-05T13:36:05Z" data-provider="appointmentDateTimes" finished-at="2016-10-05T13:36:05Z">
           <params>
             <param index="0">
               <value>
@@ -60,7 +465,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- getAppointmentProposalWhenResourcesAvailable -->
-        <test-method status="PASS" signature="getAppointmentProposalWhenResourcesAvailable(java.util.Date, java.util.Date)[pri:1, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="getAppointmentProposalWhenResourcesAvailable" duration-ms="175" started-at="2016-09-20T19:59:49Z" data-provider="appointmentDateTimes" finished-at="2016-09-20T19:59:49Z">
+        <test-method status="PASS" signature="getAppointmentProposalWhenResourcesAvailable(java.util.Date, java.util.Date)[pri:1, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="getAppointmentProposalWhenResourcesAvailable" duration-ms="103" started-at="2016-10-05T13:36:05Z" data-provider="appointmentDateTimes" finished-at="2016-10-05T13:36:05Z">
           <params>
             <param index="0">
               <value>
@@ -76,7 +481,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- getAppointmentProposalWhenResourcesAvailable -->
-        <test-method status="PASS" signature="getAppointmentProposalWhenResourcesAvailable(java.util.Date, java.util.Date)[pri:1, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="getAppointmentProposalWhenResourcesAvailable" duration-ms="166" started-at="2016-09-20T19:59:49Z" data-provider="appointmentDateTimes" finished-at="2016-09-20T19:59:49Z">
+        <test-method status="PASS" signature="getAppointmentProposalWhenResourcesAvailable(java.util.Date, java.util.Date)[pri:1, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="getAppointmentProposalWhenResourcesAvailable" duration-ms="109" started-at="2016-10-05T13:36:05Z" data-provider="appointmentDateTimes" finished-at="2016-10-05T13:36:05Z">
           <params>
             <param index="0">
               <value>
@@ -92,7 +497,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- getAppointmentProposalWhenResourcesAvailable -->
-        <test-method status="PASS" signature="getAppointmentProposalWhenResourcesAvailable(java.util.Date, java.util.Date)[pri:1, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="getAppointmentProposalWhenResourcesAvailable" duration-ms="157" started-at="2016-09-20T19:59:49Z" data-provider="appointmentDateTimes" finished-at="2016-09-20T19:59:49Z">
+        <test-method status="PASS" signature="getAppointmentProposalWhenResourcesAvailable(java.util.Date, java.util.Date)[pri:1, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="getAppointmentProposalWhenResourcesAvailable" duration-ms="86" started-at="2016-10-05T13:36:05Z" data-provider="appointmentDateTimes" finished-at="2016-10-05T13:36:05Z">
           <params>
             <param index="0">
               <value>
@@ -108,7 +513,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- getAppointmentProposalWhenResourcesAvailable -->
-        <test-method status="PASS" signature="getAppointmentProposalWhenResourcesAvailable(java.util.Date, java.util.Date)[pri:1, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="getAppointmentProposalWhenResourcesAvailable" duration-ms="178" started-at="2016-09-20T19:59:49Z" data-provider="appointmentDateTimes" finished-at="2016-09-20T19:59:49Z">
+        <test-method status="PASS" signature="getAppointmentProposalWhenResourcesAvailable(java.util.Date, java.util.Date)[pri:1, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="getAppointmentProposalWhenResourcesAvailable" duration-ms="96" started-at="2016-10-05T13:36:05Z" data-provider="appointmentDateTimes" finished-at="2016-10-05T13:36:05Z">
           <params>
             <param index="0">
               <value>
@@ -124,7 +529,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- getAppointmentProposalWhenResourcesAvailable -->
-        <test-method status="PASS" signature="getAppointmentProposalWhenResourcesAvailable(java.util.Date, java.util.Date)[pri:1, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="getAppointmentProposalWhenResourcesAvailable" duration-ms="171" started-at="2016-09-20T19:59:49Z" data-provider="appointmentDateTimes" finished-at="2016-09-20T19:59:50Z">
+        <test-method status="PASS" signature="getAppointmentProposalWhenResourcesAvailable(java.util.Date, java.util.Date)[pri:1, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="getAppointmentProposalWhenResourcesAvailable" duration-ms="117" started-at="2016-10-05T13:36:05Z" data-provider="appointmentDateTimes" finished-at="2016-10-05T13:36:05Z">
           <params>
             <param index="0">
               <value>
@@ -140,7 +545,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- getAppointmentProposalWhenResourcesAvailable -->
-        <test-method status="PASS" signature="getAppointmentProposalWhenResourcesAvailable(java.util.Date, java.util.Date)[pri:1, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="getAppointmentProposalWhenResourcesAvailable" duration-ms="194" started-at="2016-09-20T19:59:50Z" data-provider="appointmentDateTimes" finished-at="2016-09-20T19:59:50Z">
+        <test-method status="PASS" signature="getAppointmentProposalWhenResourcesAvailable(java.util.Date, java.util.Date)[pri:1, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="getAppointmentProposalWhenResourcesAvailable" duration-ms="125" started-at="2016-10-05T13:36:05Z" data-provider="appointmentDateTimes" finished-at="2016-10-05T13:36:06Z">
           <params>
             <param index="0">
               <value>
@@ -156,7 +561,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- getAppointmentProposalWhenResourcesAvailable -->
-        <test-method status="PASS" signature="getAppointmentProposalWhenResourcesAvailable(java.util.Date, java.util.Date)[pri:1, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="getAppointmentProposalWhenResourcesAvailable" duration-ms="186" started-at="2016-09-20T19:59:50Z" data-provider="appointmentDateTimes" finished-at="2016-09-20T19:59:50Z">
+        <test-method status="PASS" signature="getAppointmentProposalWhenResourcesAvailable(java.util.Date, java.util.Date)[pri:1, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="getAppointmentProposalWhenResourcesAvailable" duration-ms="94" started-at="2016-10-05T13:36:06Z" data-provider="appointmentDateTimes" finished-at="2016-10-05T13:36:06Z">
           <params>
             <param index="0">
               <value>
@@ -172,7 +577,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- getAppointmentProposalWhenResourcesAvailable -->
-        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date)[pri:2, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="scheduleAppointment" duration-ms="174" started-at="2016-09-20T19:59:50Z" data-provider="appointmentDateTimes" finished-at="2016-09-20T19:59:50Z">
+        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date)[pri:2, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="scheduleAppointment" duration-ms="168" started-at="2016-10-05T13:36:06Z" data-provider="appointmentDateTimes" finished-at="2016-10-05T13:36:06Z">
           <params>
             <param index="0">
               <value>
@@ -188,7 +593,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- scheduleAppointment -->
-        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date)[pri:2, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="scheduleAppointment" duration-ms="137" started-at="2016-09-20T19:59:50Z" data-provider="appointmentDateTimes" finished-at="2016-09-20T19:59:50Z">
+        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date)[pri:2, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="scheduleAppointment" duration-ms="155" started-at="2016-10-05T13:36:06Z" data-provider="appointmentDateTimes" finished-at="2016-10-05T13:36:06Z">
           <params>
             <param index="0">
               <value>
@@ -204,7 +609,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- scheduleAppointment -->
-        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date)[pri:2, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="scheduleAppointment" duration-ms="198" started-at="2016-09-20T19:59:50Z" data-provider="appointmentDateTimes" finished-at="2016-09-20T19:59:50Z">
+        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date)[pri:2, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="scheduleAppointment" duration-ms="239" started-at="2016-10-05T13:36:06Z" data-provider="appointmentDateTimes" finished-at="2016-10-05T13:36:06Z">
           <params>
             <param index="0">
               <value>
@@ -220,7 +625,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- scheduleAppointment -->
-        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date)[pri:2, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="scheduleAppointment" duration-ms="229" started-at="2016-09-20T19:59:50Z" data-provider="appointmentDateTimes" finished-at="2016-09-20T19:59:51Z">
+        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date)[pri:2, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="scheduleAppointment" duration-ms="93" started-at="2016-10-05T13:36:06Z" data-provider="appointmentDateTimes" finished-at="2016-10-05T13:36:06Z">
           <params>
             <param index="0">
               <value>
@@ -236,7 +641,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- scheduleAppointment -->
-        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date)[pri:2, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="scheduleAppointment" duration-ms="256" started-at="2016-09-20T19:59:51Z" data-provider="appointmentDateTimes" finished-at="2016-09-20T19:59:51Z">
+        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date)[pri:2, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="scheduleAppointment" duration-ms="94" started-at="2016-10-05T13:36:06Z" data-provider="appointmentDateTimes" finished-at="2016-10-05T13:36:06Z">
           <params>
             <param index="0">
               <value>
@@ -252,7 +657,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- scheduleAppointment -->
-        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date)[pri:2, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="scheduleAppointment" duration-ms="171" started-at="2016-09-20T19:59:51Z" data-provider="appointmentDateTimes" finished-at="2016-09-20T19:59:51Z">
+        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date)[pri:2, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="scheduleAppointment" duration-ms="94" started-at="2016-10-05T13:36:06Z" data-provider="appointmentDateTimes" finished-at="2016-10-05T13:36:07Z">
           <params>
             <param index="0">
               <value>
@@ -268,7 +673,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- scheduleAppointment -->
-        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date)[pri:2, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="scheduleAppointment" duration-ms="179" started-at="2016-09-20T19:59:51Z" data-provider="appointmentDateTimes" finished-at="2016-09-20T19:59:51Z">
+        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date)[pri:2, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="scheduleAppointment" duration-ms="95" started-at="2016-10-05T13:36:07Z" data-provider="appointmentDateTimes" finished-at="2016-10-05T13:36:07Z">
           <params>
             <param index="0">
               <value>
@@ -284,7 +689,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- scheduleAppointment -->
-        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date)[pri:2, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="scheduleAppointment" duration-ms="133" started-at="2016-09-20T19:59:51Z" data-provider="appointmentDateTimes" finished-at="2016-09-20T19:59:51Z">
+        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date)[pri:2, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="scheduleAppointment" duration-ms="105" started-at="2016-10-05T13:36:07Z" data-provider="appointmentDateTimes" finished-at="2016-10-05T13:36:07Z">
           <params>
             <param index="0">
               <value>
@@ -300,7 +705,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- scheduleAppointment -->
-        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date)[pri:2, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="scheduleAppointment" duration-ms="209" started-at="2016-09-20T19:59:51Z" data-provider="appointmentDateTimes" finished-at="2016-09-20T19:59:52Z">
+        <test-method status="PASS" signature="scheduleAppointment(java.util.Date, java.util.Date)[pri:2, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="scheduleAppointment" duration-ms="128" started-at="2016-10-05T13:36:07Z" data-provider="appointmentDateTimes" finished-at="2016-10-05T13:36:07Z">
           <params>
             <param index="0">
               <value>
@@ -316,7 +721,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- scheduleAppointment -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="388" started-at="2016-09-20T19:59:52Z" data-provider="appointmentParams" finished-at="2016-09-20T19:59:52Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="188" started-at="2016-10-05T13:36:07Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:07Z">
           <params>
             <param index="0">
               <value>
@@ -352,7 +757,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="406" started-at="2016-09-20T19:59:52Z" data-provider="appointmentParams" finished-at="2016-09-20T19:59:52Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="125" started-at="2016-10-05T13:36:07Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:07Z">
           <params>
             <param index="0">
               <value>
@@ -388,7 +793,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="218" started-at="2016-09-20T19:59:52Z" data-provider="appointmentParams" finished-at="2016-09-20T19:59:53Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="135" started-at="2016-10-05T13:36:07Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:07Z">
           <params>
             <param index="0">
               <value>
@@ -424,7 +829,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="206" started-at="2016-09-20T19:59:53Z" data-provider="appointmentParams" finished-at="2016-09-20T19:59:53Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="152" started-at="2016-10-05T13:36:07Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:07Z">
           <params>
             <param index="0">
               <value>
@@ -460,7 +865,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="232" started-at="2016-09-20T19:59:53Z" data-provider="appointmentParams" finished-at="2016-09-20T19:59:53Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="187" started-at="2016-10-05T13:36:07Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:08Z">
           <params>
             <param index="0">
               <value>
@@ -496,7 +901,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="220" started-at="2016-09-20T19:59:53Z" data-provider="appointmentParams" finished-at="2016-09-20T19:59:53Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="179" started-at="2016-10-05T13:36:08Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:08Z">
           <params>
             <param index="0">
               <value>
@@ -532,7 +937,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="257" started-at="2016-09-20T19:59:53Z" data-provider="appointmentParams" finished-at="2016-09-20T19:59:54Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="187" started-at="2016-10-05T13:36:08Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:08Z">
           <params>
             <param index="0">
               <value>
@@ -568,7 +973,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="425" started-at="2016-09-20T19:59:54Z" data-provider="appointmentParams" finished-at="2016-09-20T19:59:54Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="208" started-at="2016-10-05T13:36:08Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:08Z">
           <params>
             <param index="0">
               <value>
@@ -604,7 +1009,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="415" started-at="2016-09-20T19:59:54Z" data-provider="appointmentParams" finished-at="2016-09-20T19:59:54Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="164" started-at="2016-10-05T13:36:08Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:08Z">
           <params>
             <param index="0">
               <value>
@@ -640,7 +1045,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="424" started-at="2016-09-20T19:59:54Z" data-provider="appointmentParams" finished-at="2016-09-20T19:59:55Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="172" started-at="2016-10-05T13:36:08Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:09Z">
           <params>
             <param index="0">
               <value>
@@ -676,7 +1081,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="417" started-at="2016-09-20T19:59:55Z" data-provider="appointmentParams" finished-at="2016-09-20T19:59:55Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="199" started-at="2016-10-05T13:36:09Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:09Z">
           <params>
             <param index="0">
               <value>
@@ -712,7 +1117,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="567" started-at="2016-09-20T19:59:55Z" data-provider="appointmentParams" finished-at="2016-09-20T19:59:56Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="433" started-at="2016-10-05T13:36:09Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:09Z">
           <params>
             <param index="0">
               <value>
@@ -748,7 +1153,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="601" started-at="2016-09-20T19:59:56Z" data-provider="appointmentParams" finished-at="2016-09-20T19:59:56Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="380" started-at="2016-10-05T13:36:09Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:10Z">
           <params>
             <param index="0">
               <value>
@@ -784,7 +1189,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="581" started-at="2016-09-20T19:59:57Z" data-provider="appointmentParams" finished-at="2016-09-20T19:59:57Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="551" started-at="2016-10-05T13:36:10Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:10Z">
           <params>
             <param index="0">
               <value>
@@ -820,7 +1225,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="431" started-at="2016-09-20T19:59:57Z" data-provider="appointmentParams" finished-at="2016-09-20T19:59:58Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="417" started-at="2016-10-05T13:36:10Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:11Z">
           <params>
             <param index="0">
               <value>
@@ -856,7 +1261,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="457" started-at="2016-09-20T19:59:58Z" data-provider="appointmentParams" finished-at="2016-09-20T19:59:58Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="249" started-at="2016-10-05T13:36:11Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:11Z">
           <params>
             <param index="0">
               <value>
@@ -892,7 +1297,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="439" started-at="2016-09-20T19:59:58Z" data-provider="appointmentParams" finished-at="2016-09-20T19:59:58Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="351" started-at="2016-10-05T13:36:11Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:11Z">
           <params>
             <param index="0">
               <value>
@@ -928,7 +1333,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="425" started-at="2016-09-20T19:59:58Z" data-provider="appointmentParams" finished-at="2016-09-20T19:59:59Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="413" started-at="2016-10-05T13:36:11Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:12Z">
           <params>
             <param index="0">
               <value>
@@ -964,7 +1369,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="740" started-at="2016-09-20T19:59:59Z" data-provider="appointmentParams" finished-at="2016-09-20T20:00:00Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="308" started-at="2016-10-05T13:36:12Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:12Z">
           <params>
             <param index="0">
               <value>
@@ -1000,7 +1405,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="461" started-at="2016-09-20T20:00:00Z" data-provider="appointmentParams" finished-at="2016-09-20T20:00:00Z">
+        <test-method status="PASS" signature="createAppointment3(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date, java.util.Date)[pri:3, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="createAppointment3" duration-ms="626" started-at="2016-10-05T13:36:12Z" data-provider="appointmentParams" finished-at="2016-10-05T13:36:13Z">
           <params>
             <param index="0">
               <value>
@@ -1036,29 +1441,29 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createAppointment3 -->
-        <test-method status="PASS" signature="statistics()[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="statistics" duration-ms="2" started-at="2016-09-20T20:00:00Z" depends-on-methods="ehc.bo.test.AppointmentSchedulerTest.createAppointment3" finished-at="2016-09-20T20:00:00Z">
+        <test-method status="PASS" signature="statistics()[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="statistics" duration-ms="2" started-at="2016-10-05T13:36:13Z" depends-on-methods="ehc.bo.test.AppointmentSchedulerTest.createAppointment3" finished-at="2016-10-05T13:36:13Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- statistics -->
-        <test-method status="PASS" signature="afterClass()[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="afterClass" is-config="true" duration-ms="5611" started-at="2016-09-20T20:00:00Z" finished-at="2016-09-20T20:00:06Z">
+        <test-method status="PASS" signature="afterClass()[pri:0, instance:null(ehc.bo.test.AppointmentSchedulerTest)]" name="afterClass" is-config="true" duration-ms="4333" started-at="2016-10-05T13:36:13Z" finished-at="2016-10-05T13:36:17Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- afterClass -->
       </class> <!-- ehc.bo.test.AppointmentSchedulerTest -->
       <class name="ehc.bo.test.AccountingTest">
-        <test-method status="PASS" signature="beforeClass()[pri:0, instance:null(ehc.bo.test.AccountingTest)]" name="beforeClass" is-config="true" duration-ms="4532" started-at="2016-09-20T19:59:37Z" finished-at="2016-09-20T19:59:42Z">
+        <test-method status="PASS" signature="beforeClass()[pri:0, instance:null(ehc.bo.test.AccountingTest)]" name="beforeClass" is-config="true" duration-ms="2205" started-at="2016-10-05T13:35:59Z" finished-at="2016-10-05T13:36:01Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- beforeClass -->
-        <test-method status="PASS" signature="createExecutorAccount()[pri:0, instance:null(ehc.bo.test.AccountingTest)]" name="createExecutorAccount" duration-ms="221" started-at="2016-09-20T19:59:42Z" finished-at="2016-09-20T19:59:42Z">
+        <test-method status="PASS" signature="createExecutorAccount()[pri:0, instance:null(ehc.bo.test.AccountingTest)]" name="createExecutorAccount" duration-ms="162" started-at="2016-10-05T13:36:01Z" finished-at="2016-10-05T13:36:01Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- createExecutorAccount -->
-        <test-method status="PASS" signature="generatePDF()[pri:0, instance:null(ehc.bo.test.AccountingTest)]" name="generatePDF" duration-ms="869" started-at="2016-09-20T19:59:42Z" finished-at="2016-09-20T19:59:43Z">
+        <test-method status="PASS" signature="generatePDF()[pri:0, instance:null(ehc.bo.test.AccountingTest)]" name="generatePDF" duration-ms="536" started-at="2016-10-05T13:36:01Z" finished-at="2016-10-05T13:36:02Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- generatePDF -->
-        <test-method status="PASS" signature="afterClass()[pri:0, instance:null(ehc.bo.test.AccountingTest)]" name="afterClass" is-config="true" duration-ms="4133" started-at="2016-09-20T19:59:43Z" finished-at="2016-09-20T19:59:47Z">
+        <test-method status="PASS" signature="afterClass()[pri:0, instance:null(ehc.bo.test.AccountingTest)]" name="afterClass" is-config="true" duration-ms="2011" started-at="2016-10-05T13:36:02Z" finished-at="2016-10-05T13:36:04Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- afterClass -->

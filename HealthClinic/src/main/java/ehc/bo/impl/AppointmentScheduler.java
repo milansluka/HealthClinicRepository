@@ -15,8 +15,7 @@ import ehc.util.DateUtil;
 public class AppointmentScheduler {
 	public static final String TREATMENTS_CANNOT_BE_JOINED_MSG = "Treatments can not be planned in one appointment, it is recommended to create more appointments";
 	public static final String INSUFFICIENT_DIFFERENCE_BETWEEN_FROM_AND_TO_MSG = "Treatment type duration is longer than set duration";
-    
-	
+	public static final String TREATMENTS_LIST_EMPTY_MSG = "No treatment types specified ";
 	private PhysicianDao physicianDao = PhysicianDao.getInstance();
 	private NurseDao nurseDao = NurseDao.getInstance();
 	private DeviceDao deviceDao = DeviceDao.getInstance();
@@ -42,15 +41,15 @@ public class AppointmentScheduler {
 	private Date moveFromIfOutOfWorkTime(Date from, Date to) {
 		Date startWorkTime = workTime.getStartWorkTime(from);
 		Date endWorkTime = workTime.getEndWorkTime(to);
-		int duration = (int)getAppointmentDuration(from, to);
-		
+		int duration = (int) getAppointmentDuration(from, to);
+
 		if (from.before(startWorkTime)) {
 			return startWorkTime;
 		} else if (to.after(endWorkTime)) {
 			Date nextDay = DateUtil.addDays(from, 1);
 			Date nextFrom = workTime.getStartWorkTime(nextDay);
 			Date nextTo = DateUtil.addSeconds(nextFrom, duration);
-			
+
 			return moveFromIfOutOfWorkTime(nextFrom, nextTo);
 		}
 		return from;
@@ -58,13 +57,17 @@ public class AppointmentScheduler {
 
 	private boolean sufficientAppointmentDuration(Date from, Date to, List<TreatmentType> treatmentTypes) {
 		long appointmentDuration = getAppointmentDuration(from, to);
+		return sufficientAppointmentDuration(appointmentDuration, treatmentTypes);
+	}
+
+	private boolean sufficientAppointmentDuration(long plannedAppointmentDuration, List<TreatmentType> treatmentTypes) {
 		long treatmentDuration = 0;
 
 		for (TreatmentType treatmentType : treatmentTypes) {
 			treatmentDuration += treatmentType.getDuration();
 		}
 
-		return appointmentDuration >= treatmentDuration;
+		return plannedAppointmentDuration >= treatmentDuration;
 	}
 
 	private long getAppointmentDuration(Date from, Date to) {
@@ -107,9 +110,64 @@ public class AppointmentScheduler {
 		return appointmentScheduleDatas;
 	}
 
+	public List<TimeWindow> findAvailableTimeWindows(Date from, Date to, List<TreatmentType> treatmentTypes,
+			int appointmentDuration) {
+		List<TimeWindow> foundBlocks = new ArrayList<>();
+
+		if (treatmentTypes.isEmpty()) {
+			setMessage(TREATMENTS_LIST_EMPTY_MSG);
+			return foundBlocks;
+		}
+
+		if (!canBeCombinedIntoOneAppointment(treatmentTypes)) {
+			setMessage(TREATMENTS_CANNOT_BE_JOINED_MSG);
+			return foundBlocks;
+		}
+
+		if (!sufficientAppointmentDuration(from, to, treatmentTypes)) {
+			setMessage(INSUFFICIENT_DIFFERENCE_BETWEEN_FROM_AND_TO_MSG);
+			return foundBlocks;
+		}
+
+		/* long appointmentDuration = getAppointmentDuration(from, to); */
+		from = moveFromIfOutOfWorkTime(from, to);
+		/* to = DateUtil.addSeconds(from, (int) appointmentDuration); */
+
+		List<Room> roomsWhereTreatmentTypesCanBeExecuted = findPossibleRoomsForTreatmentTypes(treatmentTypes);
+
+		for (Room room : roomsWhereTreatmentTypesCanBeExecuted) {
+			List<TimeWindow> blocks = findFreeTimeWindowsInRoom(from, to, treatmentTypes, room, appointmentDuration);
+			foundBlocks.addAll(blocks);
+		}
+
+		return foundBlocks;
+	}
+
+	public List<TimeWindow> findFreeTimeWindowsInRoom(Date from, Date to, List<TreatmentType> treatmentTypes, Room room,
+			long appointmentDuration) {
+		List<TimeWindow> foundFreeTimeWindows = new ArrayList<>();
+		Date actualPosition = (Date) from.clone();
+
+		while (actualPosition.before(to)) {
+			TimeWindow timeWindow = getNextTimeWindow(actualPosition, to, treatmentTypes, room, appointmentDuration);
+         
+	/*		if (block == null) {
+				break;
+			}*/
+
+			if (timeWindow != null) {
+				foundFreeTimeWindows.add(timeWindow);
+				actualPosition = timeWindow.getEnd();			
+			} else {
+				actualPosition = DateUtil.addSeconds(actualPosition, timeGridInMinutes * 60);
+			}	
+		}
+		return foundFreeTimeWindows;
+	}
+
 	public AppointmentProposal getAppointmentProposal(Date from, Date to, List<TreatmentType> treatmentTypes) {
 		if (!canBeCombinedIntoOneAppointment(treatmentTypes)) {
-			
+
 			return null;
 		}
 
@@ -119,15 +177,88 @@ public class AppointmentScheduler {
 
 		from = moveFromIfOutOfWorkTime(from, to);
 		to = DateUtil.addSeconds(from, (int) getAppointmentDuration(from, to));
-		Map<ResourceType, SortedSet<Resource>> resources = getResources(from, to,
-				treatmentTypes);
+		Map<ResourceType, SortedSet<Resource>> resources = getResources(from, to, treatmentTypes);
 
 		if (resources != null) {
 			return new AppointmentProposal(resources, treatmentTypes, from, to);
 		}
 		return null;
 	}
+
+	public TimeWindow getNextTimeWindow(Date start, Date limit, List<TreatmentType> treatmentTypes, Room room, long appointmentDuration) {
+		/*List<AppointmentProposal> appointmentProposals = getAppointmentProposalsForBlock(start, limit, treatmentTypes, room, appointmentDuration);*/
+		List<AppointmentProposal> appointmentProposals = new ArrayList<>();
+
+		Date actualAppointmentStart = new Date(start.getTime());
+		Date actualAppointmentEnd = DateUtil.addSeconds(actualAppointmentStart, (int) appointmentDuration);	
+		actualAppointmentStart = moveFromIfOutOfWorkTime(actualAppointmentStart, actualAppointmentEnd);
+		actualAppointmentEnd = DateUtil.addSeconds(actualAppointmentStart, (int) appointmentDuration);
+		Date endWorkTime = workTime.getEndWorkTime(actualAppointmentStart);
+		
+		while (!actualAppointmentEnd.after(limit) && !actualAppointmentEnd.after(endWorkTime)) {
+			Map<ResourceType, SortedSet<Resource>> resources = getResources(actualAppointmentStart,
+					actualAppointmentEnd, treatmentTypes);
+
+			if (resources == null || !room.isNotBusy(actualAppointmentStart, actualAppointmentEnd)) {
+				break;
+			}
+
+			AppointmentProposal appointmentProposal = new AppointmentProposal(resources, treatmentTypes, actualAppointmentStart, actualAppointmentEnd);
+			appointmentProposals.add(appointmentProposal);
+			
+			actualAppointmentStart = DateUtil.addSeconds(actualAppointmentStart, timeGridInMinutes * 60);
+			actualAppointmentEnd = DateUtil.addSeconds(actualAppointmentEnd, timeGridInMinutes * 60);		
+		}
+		
+		Date blockStart;
+		Date blockEnd;
+		
+		if (appointmentProposals.isEmpty()) {
+			return null;
+		}
+		
+	/*	if (!appointmentProposals.isEmpty()) {*/
+			blockStart = appointmentProposals.get(0).getFrom();
+			blockEnd = appointmentProposals.get(appointmentProposals.size()-1).getTo();
+	/*	} */
+/*		else {
+			blockStart = actualAppointmentStart;
+			blockEnd = actualAppointmentEnd;
+			if (!actualAppointmentEnd.before(endWorkTime)) {
+				blockEnd = endWorkTime;
+			} else if (!actualAppointmentEnd.before(limit)) {
+				blockEnd = limit;
+			}
+		}*/
+		
+		TimeWindow block = new TimeWindow(blockStart, blockEnd, room);
 	
+		return block;
+	}
+
+	public List<AppointmentProposal> getAppointmentProposalsForBlock(Date start, Date limit, List<TreatmentType> treatmentTypes,
+			Room room, long appointmentDuration) {
+		List<AppointmentProposal> appointmentProposals = new ArrayList<>();
+		Date endWorkTime = workTime.getEndWorkTime(start);
+		Date actualAppointmentStart = new Date(start.getTime());
+		Date actualAppointmentEnd = DateUtil.addSeconds(actualAppointmentStart, (int) appointmentDuration);
+		while (actualAppointmentEnd.before(limit) && actualAppointmentEnd.before(endWorkTime)) {
+			Map<ResourceType, SortedSet<Resource>> resources = getResources(actualAppointmentStart,
+					actualAppointmentEnd, treatmentTypes);
+
+			if (resources == null) {
+				break;
+			}
+
+			AppointmentProposal appointmentProposal = new AppointmentProposal(resources, treatmentTypes, actualAppointmentStart, actualAppointmentEnd);
+			appointmentProposals.add(appointmentProposal);
+			
+			actualAppointmentStart = DateUtil.addSeconds(actualAppointmentStart, timeGridInMinutes * 60);
+			actualAppointmentEnd = DateUtil.addSeconds(actualAppointmentEnd, timeGridInMinutes * 60);
+		}
+		return appointmentProposals;
+	}
+
 	public List<AppointmentProposal> getAppointmentProposals(Date from, Date to, List<TreatmentType> treatmentTypes,
 			Date limitDate, int count) {
 		if (!canBeCombinedIntoOneAppointment(treatmentTypes)) {
@@ -148,8 +279,7 @@ public class AppointmentScheduler {
 		List<AppointmentProposal> appointmentProposals = new ArrayList<>();
 
 		while (proposedAppointments < count && to.before(limitDate)) {
-			Map<ResourceType, SortedSet<Resource>> resources = getResources(from, to,
-					treatmentTypes);
+			Map<ResourceType, SortedSet<Resource>> resources = getResources(from, to, treatmentTypes);
 
 			if (resources != null) {
 				AppointmentProposal appointmentProposal = new AppointmentProposal(resources, treatmentTypes, from, to);
@@ -163,21 +293,24 @@ public class AppointmentScheduler {
 			to = DateUtil.addSeconds(from, (int) appointmentDuration);
 		}
 
-		return appointmentProposals;	
+		return appointmentProposals;
 	}
 
 	public List<AppointmentProposal> getAppointmentProposals(Date from, Date to, List<TreatmentType> treatmentTypes,
 			int count) {
-		Date limitDate = DateUtil.addDays(DateUtil.now(), HealthPoint.COUNT_OF_DAYS_FROM_NOW_WHEN_APPOINTMENTS_CAN_BE_CREATED);
+		Date limitDate = DateUtil.addDays(DateUtil.now(),
+				HealthPoint.COUNT_OF_DAYS_FROM_NOW_WHEN_APPOINTMENTS_CAN_BE_CREATED);
 		return getAppointmentProposals(from, to, treatmentTypes, limitDate, count);
 	}
-	
-	private SortedSet<Resource> findSuitableRooms(List<TreatmentType> treatmentTypes, Date from, Date to) {
+
+	private List<Room> findPossibleRoomsForTreatmentTypes(List<TreatmentType> treatmentTypes) {
+		List<Room> foundRooms = new ArrayList<>();
 		TreatmentType treatmentType = treatmentTypes.get(0);
 		List<RoomType> roomTypes = treatmentType.getPossibleRoomTypes();
-        List<RoomType> roomTypesCopy = new ArrayList<>(roomTypes);
-        
-        //find suitable rooms (each such a room that each treatment can be executed in)
+		List<RoomType> roomTypesCopy = new ArrayList<>(roomTypes);
+
+		// find suitable rooms (each such a room that each treatment can be
+		// executed in)
 		for (int i = 1; i < treatmentTypes.size(); i++) {
 			TreatmentType treatmentType2 = treatmentTypes.get(i);
 			for (int j = 0; j < roomTypesCopy.size(); j++) {
@@ -186,20 +319,42 @@ public class AppointmentScheduler {
 					roomTypes.remove(roomType);
 				}
 			}
-		}	
-		//create ordered set from suitable rooms that are available
-		TreeSet<Resource> rooms = new TreeSet(new RoomSuitabilityComparator()); 		
+		}
+		for (RoomType roomType : roomTypes) {
+			foundRooms.add(roomType.getRoom());
+		}
+		return foundRooms;
+	}
+
+	private SortedSet<Resource> findSuitableRooms(List<TreatmentType> treatmentTypes, Date from, Date to) {
+		TreatmentType treatmentType = treatmentTypes.get(0);
+		List<RoomType> roomTypes = treatmentType.getPossibleRoomTypes();
+		List<RoomType> roomTypesCopy = new ArrayList<>(roomTypes);
+
+		// find suitable rooms (each such a room that each treatment can be
+		// executed in)
+		for (int i = 1; i < treatmentTypes.size(); i++) {
+			TreatmentType treatmentType2 = treatmentTypes.get(i);
+			for (int j = 0; j < roomTypesCopy.size(); j++) {
+				if (!roomTypesCopy.get(j).getPossibleTreatmentTypes().contains(treatmentType2)) {
+					RoomType roomType = roomTypesCopy.get(j);
+					roomTypes.remove(roomType);
+				}
+			}
+		}
+		// create ordered set from suitable rooms that are available
+		TreeSet<Resource> rooms = new TreeSet(new RoomSuitabilityComparator());
 		if (roomTypes.size() > 0) {
 			for (RoomType roomType : roomTypes) {
 				Room room = roomType.getRoom();
 				if (room.isNotBusy(from, to)) {
-					rooms.add(roomType.getRoom());		
-				}	
+					rooms.add(roomType.getRoom());
+				}
 			}
-		}	
+		}
 		return rooms;
 	}
-	
+
 	private void setMessage(String message) {
 		this.message = message;
 	}
@@ -239,6 +394,43 @@ public class AppointmentScheduler {
 			}
 		}
 		return suitableResources;
+	}
+
+	private Map<ResourceType, SortedSet<Resource>> getResources(Date from, Date to, List<TreatmentType> treatmentTypes,
+			Room room) {
+		Map<ResourceType, SortedSet<Resource>> resources = new HashMap<>();
+		List<Physician> physicians = physicianDao.getAll();
+		List<Nurse> nurses = nurseDao.getAll();
+		List<Device> devices = deviceDao.getAll();
+		List<ResourceType> neededResourceTypes = treatmentTypes.get(0).getResourceTypes();
+
+		for (ResourceType neededResourceType : neededResourceTypes) {
+			if (neededResourceType instanceof PhysicianType) {
+				SortedSet<Resource> suitablePhysicians = findSuitableResources(physicians, neededResourceType, from, to,
+						new PhysicianSuitabilityComparator());
+				if (suitablePhysicians.isEmpty()) {
+					return null;
+				}
+				resources.put(neededResourceType, suitablePhysicians);
+
+			} else if (neededResourceType instanceof NurseType) {
+				SortedSet<Resource> suitableNurses = findSuitableResources(nurses, neededResourceType, from, to,
+						new NurseSuitabilityComparator());
+				if (suitableNurses.isEmpty()) {
+					return null;
+				}
+				resources.put(neededResourceType, suitableNurses);
+
+			} else if (neededResourceType instanceof DeviceType) {
+				SortedSet<Resource> suitableDevices = findSuitableResources(devices, neededResourceType, from, to,
+						new DeviceSuitabilityComparator());
+				if (suitableDevices.isEmpty()) {
+					return null;
+				}
+				resources.put(neededResourceType, suitableDevices);
+			}
+		}
+		return resources;
 	}
 
 	private Map<ResourceType, SortedSet<Resource>> getResources(Date from, Date to,
