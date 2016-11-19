@@ -9,11 +9,21 @@ import entities.AppointmentModel;
 @Import(library = { "context:mybootstrap/js/test.js" }, stylesheet = {
 		"context:mybootstrap/css/appointmentViewStyle.css" })
 public class AppointmentView {
+	private final double CSS_TOP = 8;
+	private final double CSS_LEFT = 8.65;
+	private final double CSS_WIDTH = 6.1;
+	private final double CSS_HEIGHT = 4;
+		
 	private int xPosition;
 	private int yPosition;
 	private int startTimeInMinutes;
 	private int grid;
 	private int height;
+	
+	private double distanceFromTop;
+	private double distanceFromLeft;
+	private double h;
+	private double w;
 	
 /*	private int from;
 	private int to;*/
@@ -68,7 +78,7 @@ public class AppointmentView {
 	}
 
 	public int getxPosition() {
-		return dayIndex + roomIndex;
+		return (dayIndex-1) + roomIndex;
 	}
 
 	public void setxPosition(int xPosition) {
@@ -78,9 +88,41 @@ public class AppointmentView {
 	public int getyPosition() {
 		return (model.getFrom()-getStartTimeInMinutes())/getGrid();
 	}
-
-	public void setyPosition(int yPosition) {
+	
+    public void setyPosition(int yPosition) {
 		this.yPosition = yPosition;
+	}
+	
+	public double getDistanceFromTop() {
+		return CSS_TOP + getyPosition()*CSS_HEIGHT;
+	}
+
+	public void setDistanceFromTop(double distanceFromTop) {
+		this.distanceFromTop = distanceFromTop;
+	}
+
+	public double getDistanceFromLeft() {
+		return CSS_LEFT + getxPosition()*CSS_WIDTH;
+	}
+
+	public void setDistanceFromLeft(double distanceFromLeft) {
+		this.distanceFromLeft = distanceFromLeft;
+	}
+
+	public double getH() {
+		return getHeight()*CSS_HEIGHT;
+	}
+
+	public void setH(double h) {
+		this.h = h;
+	}
+
+	public double getW() {
+		return CSS_WIDTH;
+	}
+
+	public void setW(double w) {
+		this.w = w;
 	}
 
 	public int getHeight() {
@@ -89,7 +131,5 @@ public class AppointmentView {
 
 	public void setHeight(int height) {
 		this.height = height;
-	}
-	
-	
+	}	
 }

@@ -1,6 +1,6 @@
 <t:container xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
 	xmlns:p="tapestry:parameter">
-	<div class="appointment" style="top:${yPosition}; height:${height}">
+	<div class="appointment" style="top:${distanceFromTop}%; height:${h}%">
 		<p>${model.treatmentName}</p>
 	</div>
 
