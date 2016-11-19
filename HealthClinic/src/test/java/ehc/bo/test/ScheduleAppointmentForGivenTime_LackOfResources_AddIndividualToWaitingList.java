@@ -47,7 +47,7 @@ public class ScheduleAppointmentForGivenTime_LackOfResources_AddIndividualToWait
 		addDevices();
 		addWorkTime();
 		
-		List<String> treatmentNames = new ArrayList<>();
+		List<String> treatmentNames = new ArrayList<String>();
 		treatmentNames.add("Odstraňovanie pigmentov chrbát");
 		treatmentNames.add("OxyGeneo - tvár");
 		addRoom("test room 1", treatmentNames);
@@ -78,7 +78,7 @@ public class ScheduleAppointmentForGivenTime_LackOfResources_AddIndividualToWait
 		User executor = login.login("admin", "admin");
 		Individual individual = individualDao.findByFirstAndLastName(personFirstName, personLastName);
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
 		List<AppointmentProposal> appointmentProposals = appointmentScheduler.getAppointmentProposals(when, to, treatmentTypes, 1);
@@ -86,7 +86,7 @@ public class ScheduleAppointmentForGivenTime_LackOfResources_AddIndividualToWait
 		AppointmentProposal appointmentProposal = appointmentProposals.get(0);
 		/*Date from = DateUtil.date(2016, 7, 7, 7, 30, 0);*/
 		/*Date to = DateUtil.date(2016, 7, 7, 8, 30, 0);*/
-		List<Resource> resources = new ArrayList<>();
+		List<Resource> resources = new ArrayList<Resource>();
 
 		for (Entry<ResourceType, SortedSet<Resource>> entry : appointmentProposal.getResources().entrySet()) {
 			resources.add(entry.getValue().first());
@@ -110,7 +110,7 @@ public class ScheduleAppointmentForGivenTime_LackOfResources_AddIndividualToWait
 		User executor = login.login("admin", "admin");
 		Individual person = individualDao.findByFirstAndLastName(personFirstName, personLastName);
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
 		AppointmentProposal appointmentProposal = appointmentScheduler.getAppointmentProposal(when, to, treatmentTypes);

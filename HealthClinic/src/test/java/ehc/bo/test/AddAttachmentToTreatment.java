@@ -30,7 +30,7 @@ public class AddAttachmentToTreatment extends RootTestCase {
 	private IndividualDao individualDao = IndividualDao.getInstance();
 	private AppointmentDao appointmentDao = AppointmentDao.getInstance();
 	private TreatmentDao treatmentDao = TreatmentDao.getInstance();
-	private List<Long> treatmentIds = new ArrayList<>();
+	private List<Long> treatmentIds = new ArrayList<Long>();
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -46,10 +46,10 @@ public class AddAttachmentToTreatment extends RootTestCase {
 		Date from = DateUtil.date(2016, 7, 2, 7, 30, 0);
 		Date to = DateUtil.date(2016, 7, 2, 8, 30, 0);
 		TreatmentType treatmentType = treatmentTypeDao.findByName("Odstraňovanie pigmentov chrbát");
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		Individual individual = individualDao.findByFirstAndLastName("Janko", "Mrkvicka");
-		List<Resource> resources = new ArrayList<>();
+		List<Resource> resources = new ArrayList<Resource>();
 		Individual physicianPerson = individualDao.findByFirstAndLastName("Mária", "Petrášová");
 		resources.add(physicianPerson.getReservableSourceRoles().get(0));
 		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
@@ -65,7 +65,7 @@ public class AddAttachmentToTreatment extends RootTestCase {
 				new Money(new BigDecimal("80.0")), appointment2.getFrom(), appointment2.getTo());
 		appointment.setState(executor, AppointmentStateValue.CONFIRMED);
 		treatment.addResource(appointment2.getResources().get(0));
-		long treatmentId = (long) HibernateUtil.save(treatment);
+		long treatmentId = (Long) HibernateUtil.save(treatment);
 		treatmentIds.add(treatmentId);
 		HibernateUtil.commitTransaction();
 	}

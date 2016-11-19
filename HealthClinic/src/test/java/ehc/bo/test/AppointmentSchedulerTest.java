@@ -103,7 +103,7 @@ public class AppointmentSchedulerTest extends RootTestCase {
 		HibernateUtil.beginTransaction();
 		TreatmentType treatmentType = treatmentTypeDao.findByName(wantedTreatmentName);
 		Date to = DateUtil.addSeconds(when, treatmentType.getDuration());
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 
 		AppointmentProposal appointmentProposal = appointmentScheduler.getAppointmentProposal(when, to, treatmentTypes);
@@ -120,7 +120,7 @@ public class AppointmentSchedulerTest extends RootTestCase {
 		HibernateUtil.beginTransaction();
 		TreatmentType treatmentType = treatmentTypeDao.findByName(wantedTreatmentName);
 		Date to = DateUtil.addSeconds(when, treatmentType.getDuration());
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		AppointmentProposal appointmentProposal = appointmentScheduler.getAppointmentProposal(when, to, treatmentTypes);
 		Assert.assertEquals(expectedWhen, appointmentProposal.getFrom());
@@ -141,11 +141,11 @@ public class AppointmentSchedulerTest extends RootTestCase {
 		}
 		
 		Date to = DateUtil.addSeconds(when, treatmentType.getDuration());
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		List<AppointmentProposal> appointmentProposals = appointmentScheduler.getAppointmentProposals(when, to, treatmentTypes, 1);
 		AppointmentProposal appointmentProposal = appointmentProposals.get(0);
-		List<Resource> resources = new ArrayList<>();
+		List<Resource> resources = new ArrayList<Resource>();
 		for (Map.Entry<ResourceType, SortedSet<Resource>> entry : appointmentProposal.getResources().entrySet()) {
 			resources.add(entry.getValue().first());
 		}

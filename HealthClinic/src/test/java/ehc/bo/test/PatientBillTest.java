@@ -45,7 +45,7 @@ public class PatientBillTest extends RootTestCase {
 	
 		PatientBill patientBill = new PatientBill(executor, new Money(25), 0.19, appointment);
 		patientBill.addItem(new PatientBillItem(executor, "Odstraňovanie pigmentov chrbát", new Money(25), treatment));
-		long patientBillId = (long)HibernateUtil.save(patientBill);
+		long patientBillId = (Long)HibernateUtil.save(patientBill);
 		HibernateUtil.commitTransaction();
         
 		HibernateUtil.beginTransaction();

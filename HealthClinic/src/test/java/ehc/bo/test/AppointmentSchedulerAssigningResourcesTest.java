@@ -96,12 +96,12 @@ public class AppointmentSchedulerAssigningResourcesTest extends RootTestCase {
 			addIndividual2("Janko", "Mrkvicka");
 			customer = individualDao.findByFirstAndLastName("Janko", "Mrkvicka");
 		}
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		List<AppointmentProposal> appointmentProposals = appointmentScheduler.getAppointmentProposals(when, to,
 				treatmentTypes, 1);
 		AppointmentProposal appointmentProposal = appointmentProposals.get(0);
-		List<Resource> resources = new ArrayList<>();
+		List<Resource> resources = new ArrayList<Resource>();
 		for (Map.Entry<ResourceType, SortedSet<Resource>> entry : appointmentProposal.getResources().entrySet()) {
 			resources.add(entry.getValue().first());
 		}

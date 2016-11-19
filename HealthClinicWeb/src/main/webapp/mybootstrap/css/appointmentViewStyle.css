@@ -1,0 +1,9 @@
+@charset "UTF-8";
+.appointment {
+	background-color:aqua;
+	position:absolute;
+	top:8%;
+	left:8.65%;
+	width: 6.1%;
+	height: 4%;
+}

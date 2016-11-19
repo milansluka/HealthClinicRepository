@@ -9,7 +9,7 @@ import java.util.SortedSet;
 import ehc.bo.Resource;
 
 public class AppointmentProposal {
-	Map<ResourceType, SortedSet<Resource>> availableResources = new HashMap<>();
+	Map<ResourceType, SortedSet<Resource>> availableResources = new HashMap<ResourceType, SortedSet<Resource>>();
     List<TreatmentType> treatmentTypes;
    
     Date from;

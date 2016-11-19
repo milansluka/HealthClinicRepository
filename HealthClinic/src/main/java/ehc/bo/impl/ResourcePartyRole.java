@@ -14,8 +14,8 @@ import javax.persistence.OneToMany;
 public abstract class ResourcePartyRole extends ResourceImpl {
 	Party source;
 	Party target;
-	List<ExecutorProvision> treatmentTypeProvisions = new ArrayList<>();
-	List<ExecutorReceipt> executorAccounts = new ArrayList<>();
+	List<ExecutorProvision> treatmentTypeProvisions = new ArrayList<ExecutorProvision>();
+	List<ExecutorReceipt> executorAccounts = new ArrayList<ExecutorReceipt>();
 
 	protected ResourcePartyRole() {
 		super();

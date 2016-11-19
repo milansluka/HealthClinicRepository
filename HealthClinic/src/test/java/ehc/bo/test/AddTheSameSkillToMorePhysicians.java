@@ -29,14 +29,14 @@ public class AddTheSameSkillToMorePhysicians extends TestCase {
 		HibernateUtil.beginTransaction();
 		User executor = login.login("admin", "admin");
 		Individual individual = new Individual(executor, "Milan", "Sluka");
-		long individualId = (long)HibernateUtil.save(individual);
+		long individualId = (Long)HibernateUtil.save(individual);
 		individualIds.add(individualId);
 		HibernateUtil.commitTransaction();
 		
 		HibernateUtil.beginTransaction();
 		executor = login.login("admin", "admin");
 		individual = new Individual(executor, "Jozko", "Mrkvicka");
-		individualId = (long)HibernateUtil.save(individual);
+		individualId = (Long)HibernateUtil.save(individual);
 		individualIds.add(individualId);
 		HibernateUtil.commitTransaction();
 	}

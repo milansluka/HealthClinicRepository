@@ -67,7 +67,7 @@ public class ScheduleAppointmentForGivenTime_AllResourcesAvailable_Success exten
 		Individual person = individualDao.findByFirstAndLastName(personFirstName, personLastName);
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
 		Hibernate.initialize(treatmentType.getResourceTypes());
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		
 		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
@@ -81,7 +81,7 @@ public class ScheduleAppointmentForGivenTime_AllResourcesAvailable_Success exten
         assertTrue(appointmentProposal.getFrom().equals(when) && 
         		appointmentProposal.getResources().size() == 4); 
         
-        List<Resource> resourceList = new ArrayList<>();
+        List<Resource> resourceList = new ArrayList<Resource>();
         
         for (Map.Entry<ResourceType, SortedSet<Resource>> entry : resources.entrySet()) {
         	resourceList.add(entry.getValue().first());	

@@ -16,7 +16,7 @@ import org.hibernate.annotations.CascadeType;
 @Entity
 @PrimaryKeyJoinColumn(name = "id")
 public class ResourceTypeWithSkills extends ResourceType {
-	List<Skill> skills;
+	List<Skill> skills = new ArrayList<Skill>();;
 	
 	public ResourceTypeWithSkills() {
 		super();
@@ -24,7 +24,6 @@ public class ResourceTypeWithSkills extends ResourceType {
 	
 	public ResourceTypeWithSkills(User executor) {
 		super(executor);
-		skills = new ArrayList<>();
 	}
 	
 	@ManyToMany(fetch = FetchType.LAZY)

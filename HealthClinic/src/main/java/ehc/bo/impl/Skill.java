@@ -13,7 +13,7 @@ import javax.persistence.ManyToMany;
 @Inheritance(strategy=InheritanceType.JOINED) 
 public class Skill extends ModifiableObject {
 	String name;
-	List<ResourceTypeWithSkills> resourceTypes = new ArrayList<>();
+	List<ResourceTypeWithSkills> resourceTypes = new ArrayList<ResourceTypeWithSkills>();
 	
 	protected Skill() {
 		super();

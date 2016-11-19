@@ -30,7 +30,7 @@ public class ExecutorReceipt extends BaseObject {
 	private ResourcePartyRole executor;
 	private Date from;
 	private Date to;
-	private List<ExecutorReceiptItem> accountItems = new ArrayList<>();
+	private List<ExecutorReceiptItem> accountItems = new ArrayList<ExecutorReceiptItem>();
 
 	protected ExecutorReceipt() {
 		super();

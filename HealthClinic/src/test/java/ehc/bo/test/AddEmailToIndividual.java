@@ -25,7 +25,7 @@ public class AddEmailToIndividual extends RootTestCase {
 		User executor = login.login("admin", "admin");
 		Individual individual = individualDao.findByFirstAndLastName("Janko", "Mrkvicka");
 	    Email email = new Email(executor, "janko.mrkvicka@gmail.com", DateUtil.now(), individual);
-	    long emailId = (long)HibernateUtil.save(email);	
+	    long emailId = (Long)HibernateUtil.save(email);	
 		HibernateUtil.commitTransaction();
 		
 		HibernateUtil.beginTransaction();

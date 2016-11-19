@@ -13,12 +13,12 @@ import javax.persistence.OneToMany;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Party extends ModifiableObject implements Comparable<Party> {
 	private String name;
-	private List<PartyRole> sourceRoles = new ArrayList<>();
-	private List<PartyRole> targetRoles = new ArrayList<>();
-	private List<ResourcePartyRole> reservableSourceRoles = new ArrayList<>();
-	private List<ResourcePartyRole> reservableTargetRoles = new ArrayList<>();
-	private List<CommunicationChannel> communicationChannels = new ArrayList<>();
-	private List<PaymentChannel> paymentChannels = new ArrayList<>();
+	private List<PartyRole> sourceRoles = new ArrayList<PartyRole>();
+	private List<PartyRole> targetRoles = new ArrayList<PartyRole>();
+	private List<ResourcePartyRole> reservableSourceRoles = new ArrayList<ResourcePartyRole>();
+	private List<ResourcePartyRole> reservableTargetRoles = new ArrayList<ResourcePartyRole>();
+	private List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
+	private List<PaymentChannel> paymentChannels = new ArrayList<PaymentChannel>();
 
 	protected Party() {
 		super();

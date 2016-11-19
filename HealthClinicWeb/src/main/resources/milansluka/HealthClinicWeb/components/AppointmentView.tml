@@ -1,0 +1,7 @@
+<t:container xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
+	xmlns:p="tapestry:parameter">
+	<div class="appointment" style="top:${yPosition}; height:${height}">
+		<p>${model.treatmentName}</p>
+	</div>
+
+</t:container>

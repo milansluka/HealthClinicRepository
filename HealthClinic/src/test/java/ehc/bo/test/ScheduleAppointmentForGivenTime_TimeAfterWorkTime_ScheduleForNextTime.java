@@ -66,7 +66,7 @@ public class ScheduleAppointmentForGivenTime_TimeAfterWorkTime_ScheduleForNextTi
 		User executor = login.login("admin", "admin");
 		Individual person = individualDao.findByFirstAndLastName(personFirstName, personLastName);
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 	/*	ResourcesUtil resourcesUtil = new ResourcesUtil();*/
 		List<AppointmentProposal> appointmentProposals = resourcesUtil.getAppointmentProposals(when, to, treatmentTypes, 1);

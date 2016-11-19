@@ -28,7 +28,7 @@ public class CalculateMonthlyProvisionForPhysician extends RootTestCase {
 	private TreatmentTypeDao treatmentTypeDao = TreatmentTypeDao.getInstance();
 	private IndividualDao individualDao = IndividualDao.getInstance();
 	private AppointmentDao appointmentDao = AppointmentDao.getInstance();
-	private List<Long> appointmentIds = new ArrayList<>();
+	private List<Long> appointmentIds = new ArrayList<Long>();
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -55,10 +55,10 @@ public class CalculateMonthlyProvisionForPhysician extends RootTestCase {
 		Date from = DateUtil.date(2016, 7, 2, 7, 30, 0);
 		Date to = DateUtil.date(2016, 7, 2, 8, 30, 0);
 		treatmentType = treatmentTypeDao.findByName("Odstraňovanie pigmentov chrbát");
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		individual = individualDao.findByFirstAndLastName("Janko", "Mrkvicka");
-		List<Resource> resources = new ArrayList<>();
+		List<Resource> resources = new ArrayList<Resource>();
 		Individual physicianPerson = individualDao.findByFirstAndLastName("Mária", "Petrášová");
 		resources.add(physicianPerson.getReservableSourceRoles().get(0));
 		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
@@ -71,10 +71,10 @@ public class CalculateMonthlyProvisionForPhysician extends RootTestCase {
 		from = DateUtil.date(2016, 7, 10, 9, 30, 0);
 		to = DateUtil.date(2016, 7, 10, 10, 40, 0);
 		treatmentType = treatmentTypeDao.findByName("Odstraňovanie pigmentov chrbát");
-		treatmentTypes = new ArrayList<>();
+		treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		individual = individualDao.findByFirstAndLastName("Janko", "Mrkvicka");
-		resources = new ArrayList<>();
+		resources = new ArrayList<Resource>();
 		physicianPerson = individualDao.findByFirstAndLastName("Mária", "Petrášová");
 		resources.add(physicianPerson.getReservableSourceRoles().get(0));
 		appointmentScheduleData = new AppointmentScheduleData(from, to, resources);

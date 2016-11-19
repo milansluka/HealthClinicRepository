@@ -28,7 +28,7 @@ public class AddTreatmentType extends RootTestCase {
 		User executor = login.login("admin", "admin");
 		Money price = new Money(80);
 		TreatmentGroup treatmentGroup = new TreatmentGroup(executor, "test treatments");
-	    treatmentGroupId = (long)HibernateUtil.save(treatmentGroup);
+	    treatmentGroupId = (Long)HibernateUtil.save(treatmentGroup);
 		
 		TreatmentType treatmentType = new TreatmentType(executor, "Test treatment", price, 0.1, 60*60, treatmentGroup);
 		ResourceTypeWithSkills resourceType = new PhysicianType(executor);

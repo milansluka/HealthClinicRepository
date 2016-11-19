@@ -97,7 +97,7 @@ public class AppointmentScheduler {
 			List<TreatmentType> treatmentTypes, List<Resource> resources, int count) {
 		from = moveFromIfOutOfWorkTime(from, to);
 		to = DateUtil.addSeconds(from, (int) getAppointmentDuration(from, to));
-		List<AppointmentScheduleData> appointmentScheduleDatas = new ArrayList<>();
+		List<AppointmentScheduleData> appointmentScheduleDatas = new ArrayList<AppointmentScheduleData>();
 		int givenAppointmentScheduleData = 0;
 		while (givenAppointmentScheduleData < count) {
 			if (areResourcesAvailable(from, to, resources)) {
@@ -112,7 +112,7 @@ public class AppointmentScheduler {
 
 	public List<TimeWindow> findAvailableTimeWindows(Date from, Date to, List<TreatmentType> treatmentTypes,
 			int appointmentDuration) {
-		List<TimeWindow> foundBlocks = new ArrayList<>();
+		List<TimeWindow> foundBlocks = new ArrayList<TimeWindow>();
 
 		if (treatmentTypes.isEmpty()) {
 			setMessage(TREATMENTS_LIST_EMPTY_MSG);
@@ -145,7 +145,7 @@ public class AppointmentScheduler {
 
 	public List<TimeWindow> findFreeTimeWindowsInRoom(Date from, Date to, List<TreatmentType> treatmentTypes, Room room,
 			long appointmentDuration) {
-		List<TimeWindow> foundFreeTimeWindows = new ArrayList<>();
+		List<TimeWindow> foundFreeTimeWindows = new ArrayList<TimeWindow>();
 		Date actualPosition = (Date) from.clone();
 
 		while (actualPosition.before(to)) {
@@ -187,7 +187,7 @@ public class AppointmentScheduler {
 
 	public TimeWindow getNextTimeWindow(Date start, Date limit, List<TreatmentType> treatmentTypes, Room room, long appointmentDuration) {
 		/*List<AppointmentProposal> appointmentProposals = getAppointmentProposalsForBlock(start, limit, treatmentTypes, room, appointmentDuration);*/
-		List<AppointmentProposal> appointmentProposals = new ArrayList<>();
+		List<AppointmentProposal> appointmentProposals = new ArrayList<AppointmentProposal>();
 
 		Date actualAppointmentStart = new Date(start.getTime());
 		Date actualAppointmentEnd = DateUtil.addSeconds(actualAppointmentStart, (int) appointmentDuration);	
@@ -238,7 +238,7 @@ public class AppointmentScheduler {
 
 	public List<AppointmentProposal> getAppointmentProposalsForBlock(Date start, Date limit, List<TreatmentType> treatmentTypes,
 			Room room, long appointmentDuration) {
-		List<AppointmentProposal> appointmentProposals = new ArrayList<>();
+		List<AppointmentProposal> appointmentProposals = new ArrayList<AppointmentProposal>();
 		Date endWorkTime = workTime.getEndWorkTime(start);
 		Date actualAppointmentStart = new Date(start.getTime());
 		Date actualAppointmentEnd = DateUtil.addSeconds(actualAppointmentStart, (int) appointmentDuration);
@@ -276,7 +276,7 @@ public class AppointmentScheduler {
 		to = DateUtil.addSeconds(from, (int) appointmentDuration);
 
 		int proposedAppointments = 0;
-		List<AppointmentProposal> appointmentProposals = new ArrayList<>();
+		List<AppointmentProposal> appointmentProposals = new ArrayList<AppointmentProposal>();
 
 		while (proposedAppointments < count && to.before(limitDate)) {
 			Map<ResourceType, SortedSet<Resource>> resources = getResources(from, to, treatmentTypes);
@@ -304,10 +304,10 @@ public class AppointmentScheduler {
 	}
 
 	private List<Room> findPossibleRoomsForTreatmentTypes(List<TreatmentType> treatmentTypes) {
-		List<Room> foundRooms = new ArrayList<>();
+		List<Room> foundRooms = new ArrayList<Room>();
 		TreatmentType treatmentType = treatmentTypes.get(0);
 		List<RoomType> roomTypes = treatmentType.getPossibleRoomTypes();
-		List<RoomType> roomTypesCopy = new ArrayList<>(roomTypes);
+		List<RoomType> roomTypesCopy = new ArrayList<RoomType>(roomTypes);
 
 		// find suitable rooms (each such a room that each treatment can be
 		// executed in)
@@ -329,7 +329,7 @@ public class AppointmentScheduler {
 	private SortedSet<Resource> findSuitableRooms(List<TreatmentType> treatmentTypes, Date from, Date to) {
 		TreatmentType treatmentType = treatmentTypes.get(0);
 		List<RoomType> roomTypes = treatmentType.getPossibleRoomTypes();
-		List<RoomType> roomTypesCopy = new ArrayList<>(roomTypes);
+		List<RoomType> roomTypesCopy = new ArrayList<RoomType>(roomTypes);
 
 		// find suitable rooms (each such a room that each treatment can be
 		// executed in)
@@ -398,7 +398,7 @@ public class AppointmentScheduler {
 
 	private Map<ResourceType, SortedSet<Resource>> getResources(Date from, Date to, List<TreatmentType> treatmentTypes,
 			Room room) {
-		Map<ResourceType, SortedSet<Resource>> resources = new HashMap<>();
+		Map<ResourceType, SortedSet<Resource>> resources = new HashMap<ResourceType, SortedSet<Resource>>();
 		List<Physician> physicians = physicianDao.getAll();
 		List<Nurse> nurses = nurseDao.getAll();
 		List<Device> devices = deviceDao.getAll();
@@ -435,7 +435,7 @@ public class AppointmentScheduler {
 
 	private Map<ResourceType, SortedSet<Resource>> getResources(Date from, Date to,
 			List<TreatmentType> treatmentTypes) {
-		Map<ResourceType, SortedSet<Resource>> resources = new HashMap<>();
+		Map<ResourceType, SortedSet<Resource>> resources = new HashMap<ResourceType, SortedSet<Resource>>();
 		List<Physician> physicians = physicianDao.getAll();
 		List<Nurse> nurses = nurseDao.getAll();
 		List<Device> devices = deviceDao.getAll();

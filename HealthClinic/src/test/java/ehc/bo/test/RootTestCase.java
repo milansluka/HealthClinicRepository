@@ -82,7 +82,7 @@ public class RootTestCase extends TestCase {
 		User executor = login.login("admin", "admin");
 
 		Individual person = new Individual(executor, firstName, lastName);
-		long id = (long) HibernateUtil.save(person);
+		long id = (Long) HibernateUtil.save(person);
 		HibernateUtil.commitTransaction();
 
 		individualIds.add(id);
@@ -102,7 +102,7 @@ public class RootTestCase extends TestCase {
 		Login login = new Login();
 		User executor = login.login("admin", "admin");
 		Individual person = new Individual(executor, firstName, lastName);
-		long id = (long) HibernateUtil.save(person);
+		long id = (Long) HibernateUtil.save(person);
 		individualIds.add(id);
 
 		return id;
@@ -110,7 +110,7 @@ public class RootTestCase extends TestCase {
 
 	protected long addWaitingIndividual(WaitingIndividual waitingIndividual) {
 		HibernateUtil.beginTransaction();
-		long id = (long) HibernateUtil.save(waitingIndividual);
+		long id = (Long) HibernateUtil.save(waitingIndividual);
 		HibernateUtil.commitTransaction();
 		waitingIndividualIds.add(id);
 
@@ -157,11 +157,11 @@ public class RootTestCase extends TestCase {
 		User executor  = login.login("admin", "admin");
 		Individual individual = individualDao.findByFirstAndLastName(customerFirstName, customerLastName);
 		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), 15);
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentTypeName);
 		treatmentTypes.add(treatmentType);
 		AppointmentProposal appointmentProposal = appointmentScheduler.getAppointmentProposal(from, to, treatmentTypes);
-		List<Resource> resources = new ArrayList<>();
+		List<Resource> resources = new ArrayList<Resource>();
 		
 		for (Map.Entry<ResourceType, SortedSet<Resource>> entry : appointmentProposal.getResources().entrySet()) {
 			resources.add(entry.getValue().first());		
@@ -196,7 +196,7 @@ public class RootTestCase extends TestCase {
 		workTime.addDay(new Day(executor, "Štvrtok", 7, 30, 18, 0));
 		workTime.addDay(new Day(executor, "Piatok", 7, 0, 18, 0));
 		workTime.addDay(new Day(executor, "Sobota", 7, 0, 18, 0));
-		long workTimeId = (long) HibernateUtil.save(workTime);
+		long workTimeId = (Long) HibernateUtil.save(workTime);
 		workTimeIds.add(workTimeId);
 		HibernateUtil.commitTransaction();
 	}
@@ -219,7 +219,7 @@ public class RootTestCase extends TestCase {
 		Login login = new Login();
 		User executor = login.login("admin", "admin");
 		Individual person = new Individual(executor, firstName, lastName);
-		long id = (long) HibernateUtil.save(person);
+		long id = (Long) HibernateUtil.save(person);
 		physicianIds.add(id);
 		HibernateUtil.commitTransaction();
 
@@ -245,7 +245,7 @@ public class RootTestCase extends TestCase {
 		User executor = login.login("admin", "admin");
 
 		Individual person = new Individual(executor, firstName, lastName);
-		long id = (long) HibernateUtil.save(person);
+		long id = (Long) HibernateUtil.save(person);
 		physicianIds.add(id);
 
 		IndividualDao individualDao = IndividualDao.getInstance();
@@ -266,7 +266,7 @@ public class RootTestCase extends TestCase {
 		User executor = login.login("admin", "admin");
 
 		Individual person = new Individual(executor, firstName, lastName);
-		long id = (long) HibernateUtil.save(person);
+		long id = (Long) HibernateUtil.save(person);
 		physicianIds.add(id);
 
 		IndividualDao individualDao = IndividualDao.getInstance();
@@ -293,7 +293,7 @@ public class RootTestCase extends TestCase {
 		Login login = new Login();
 		User executor = login.login("admin", "admin");
 		Skill skill = new Skill(executor, name);
-		long id = (long) HibernateUtil.save(skill);
+		long id = (Long) HibernateUtil.save(skill);
 		skillIds.add(id);
 		/* HibernateUtil.commitTransaction(); */
 		return skill;
@@ -301,7 +301,7 @@ public class RootTestCase extends TestCase {
 
 	public void addDevice(Device device) {
 		HibernateUtil.beginTransaction();
-		long id = (long) HibernateUtil.save(device);
+		long id = (Long) HibernateUtil.save(device);
 		deviceIds.add(id);
 		HibernateUtil.commitTransaction();
 	}
@@ -318,7 +318,7 @@ public class RootTestCase extends TestCase {
 		 * deviceType.addPossibleTreatmentType(treatmentType); }
 		 */
 		Device device = new Device(executor, deviceType, name);
-		long id = (long) HibernateUtil.save(device);
+		long id = (Long) HibernateUtil.save(device);
 		deviceIds.add(id);
 		HibernateUtil.commitTransaction();
 	}
@@ -329,14 +329,14 @@ public class RootTestCase extends TestCase {
 		User executor = login.login("admin", "admin");
 		DeviceType deviceType = new DeviceType(executor, deviceTypeName);
 		Device device = new Device(executor, deviceType, name);
-		long id = (long) HibernateUtil.save(device);
+		long id = (Long) HibernateUtil.save(device);
 		deviceIds.add(id);
 		HibernateUtil.commitTransaction();
 	}
 
 	public void addRoom(Room room) {
 		HibernateUtil.beginTransaction();
-		long id = (long) HibernateUtil.save(room);
+		long id = (Long) HibernateUtil.save(room);
 		roomIds.add(id);
 		HibernateUtil.commitTransaction();
 	}
@@ -347,7 +347,7 @@ public class RootTestCase extends TestCase {
 		User executor = login.login("admin", "admin");
 		RoomType roomType = new RoomType(executor);
 		Room room = new Room(executor, roomType, name);
-		long id = (long) HibernateUtil.save(room);
+		long id = (Long) HibernateUtil.save(room);
 		roomIds.add(id);
 		HibernateUtil.commitTransaction();
 	}
@@ -363,7 +363,7 @@ public class RootTestCase extends TestCase {
 			roomType.addPossibleTreatmentType(treatmentType);
 		}
 		Room room = new Room(executor, roomType, name);
-		long id = (long) HibernateUtil.save(room);
+		long id = (Long) HibernateUtil.save(room);
 		roomIds.add(id);
 		HibernateUtil.commitTransaction();
 	}
@@ -373,7 +373,7 @@ public class RootTestCase extends TestCase {
 		Login login = new Login();
 		User executor = login.login("admin", "admin");
 		Room room = new Room(executor, type, name);
-		long id = (long) HibernateUtil.save(room);
+		long id = (Long) HibernateUtil.save(room);
 		roomIds.add(id);
 		HibernateUtil.commitTransaction();
 	}
@@ -393,12 +393,12 @@ public class RootTestCase extends TestCase {
 		}
 
 		Date to = DateUtil.addSeconds(when, treatmentType.getDuration());
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		List<AppointmentProposal> appointmentProposals = appointmentScheduler.getAppointmentProposals(when, to,
 				treatmentTypes, 1);
 		AppointmentProposal appointmentProposal = appointmentProposals.get(0);
-		List<Resource> resources = new ArrayList<>();
+		List<Resource> resources = new ArrayList<Resource>();
 		for (Map.Entry<ResourceType, SortedSet<Resource>> entry : appointmentProposal.getResources().entrySet()) {
 			resources.add(entry.getValue().first());
 		}
@@ -485,7 +485,7 @@ public class RootTestCase extends TestCase {
 	public long addAppointment(Appointment appointment) {
 		HibernateUtil.getCurrentSessionWithTransaction();
 		/* HibernateUtil.beginTransaction(); */
-		long id = (long) HibernateUtil.save(appointment);
+		long id = (Long) HibernateUtil.save(appointment);
 		appointmentIds.add(id);
 		/* HibernateUtil.commitTransaction(); */
 		return id;
@@ -508,7 +508,7 @@ public class RootTestCase extends TestCase {
 		User executor = login.login("admin", "admin");
 
 		Individual person = new Individual(executor, firstName, lastName);
-		long id = (long) HibernateUtil.save(person);
+		long id = (Long) HibernateUtil.save(person);
 		nurseIds.add(id);
 
 		IndividualDao individualDao = IndividualDao.getInstance();
@@ -528,7 +528,7 @@ public class RootTestCase extends TestCase {
 		User executor = login.login("admin", "admin");
 
 		Individual person = new Individual(executor, firstName, lastName);
-		long id = (long) HibernateUtil.save(person);
+		long id = (Long) HibernateUtil.save(person);
 		nurseIds.add(id);
 
 		IndividualDao individualDao = IndividualDao.getInstance();
@@ -548,7 +548,7 @@ public class RootTestCase extends TestCase {
 		Login login = new Login();
 		User executor = login.login("admin", "admin");
 		Individual person = new Individual(executor, firstName, lastName);
-		long id = (long) HibernateUtil.save(person);
+		long id = (Long) HibernateUtil.save(person);
 		nurseIds.add(id);
 		HibernateUtil.commitTransaction();
 
@@ -692,27 +692,27 @@ public class RootTestCase extends TestCase {
 	}
 
 	protected void addPhysicians() {
-		List<String> skillNames1 = new ArrayList<>();
+		List<String> skillNames1 = new ArrayList<String>();
 		skillNames1.add("test skill1");
 		skillNames1.add("test skill2");
 		skillNames1.add("test skill3");
 		addPhysician("Mária", "Petrášová", skillNames1);
 
-		List<String> skillNames2 = new ArrayList<>();
+		List<String> skillNames2 = new ArrayList<String>();
 		skillNames2.add("test skill1");
 		skillNames2.add("test skill2");
 		addPhysician("Marika", "Piršelová", skillNames2);
 	}
 
 	protected void addDevices() {
-		List<String> treatmentTypeNames1 = new ArrayList<>();
+		List<String> treatmentTypeNames1 = new ArrayList<String>();
 		treatmentTypeNames1.add("Odstraňovanie pigmentov chrbát");
 		treatmentTypeNames1.add("OxyGeneo - tvár");
 
-		List<String> treatmentTypeNames2 = new ArrayList<>();
+		List<String> treatmentTypeNames2 = new ArrayList<String>();
 		treatmentTypeNames2.add("Odstraňovanie pigmentov chrbát");
 
-		List<String> treatmentTypeNames3 = new ArrayList<>();
+		List<String> treatmentTypeNames3 = new ArrayList<String>();
 		treatmentTypeNames3.add("OxyGeneo - tvár");
 
 		addDevice("test device 1", treatmentTypeNames1);
@@ -726,17 +726,17 @@ public class RootTestCase extends TestCase {
 	}
 
 	protected void addRooms() {
-		List<String> treatmentTypeNames1 = new ArrayList<>();
+		List<String> treatmentTypeNames1 = new ArrayList<String>();
 		treatmentTypeNames1.add("Odstraňovanie pigmentov chrbát");
 		treatmentTypeNames1.add("OxyGeneo - tvár");
 		treatmentTypeNames1.add("Epilácia brucha");
 
-		List<String> treatmentTypeNames2 = new ArrayList<>();
+		List<String> treatmentTypeNames2 = new ArrayList<String>();
 		treatmentTypeNames2.add("Odstraňovanie pigmentov chrbát");
 		treatmentTypeNames2.add("Odstraňovanie pigmentov celá tvár");
 		treatmentTypeNames2.add("Epilácia brucha");
 
-		List<String> treatmentTypeNames3 = new ArrayList<>();
+		List<String> treatmentTypeNames3 = new ArrayList<String>();
 		treatmentTypeNames3.add("OxyGeneo - tvár");
 
 		addRoom("test room 1", treatmentTypeNames1);
@@ -757,12 +757,12 @@ public class RootTestCase extends TestCase {
 	}
 
 	protected void addNurses2() {
-		List<String> skillNames1 = new ArrayList<>();
+		List<String> skillNames1 = new ArrayList<String>();
 		skillNames1.add("test skillA");
 		skillNames1.add("test skillB");
 		addNurse("Zuzana", "Vanková", skillNames1);
 
-		List<String> skillNames2 = new ArrayList<>();
+		List<String> skillNames2 = new ArrayList<String>();
 		skillNames2.add("test skillA");
 		addNurse("Helena", "Podhorská", skillNames2);
 	}
@@ -869,7 +869,7 @@ public class RootTestCase extends TestCase {
 			treatmentType.addResourceType(resourceType);
 		}
 
-		long id = (long) HibernateUtil.save(treatmentType);
+		long id = (Long) HibernateUtil.save(treatmentType);
 		treatmentTypeIds.add(id);
 		/* HibernateUtil.commitTransaction(); */
 	}
@@ -898,7 +898,7 @@ public class RootTestCase extends TestCase {
 		Login login = new Login();
 		User executor = login.login("admin", "admin");
 		TreatmentGroup treatmentGroup = new TreatmentGroup(executor, name);
-		long id = (long) HibernateUtil.save(treatmentGroup);
+		long id = (Long) HibernateUtil.save(treatmentGroup);
 		treatmentGroupIds.add(id);
 
 		return treatmentGroup;
@@ -929,7 +929,7 @@ public class RootTestCase extends TestCase {
 		Login login = new Login();
 		User executor = login.login("admin", "admin");
 
-		List<ResourceType> resourceTypes1 = new ArrayList<>();
+		List<ResourceType> resourceTypes1 = new ArrayList<ResourceType>();
 		PhysicianType physicianType1 = new PhysicianType(executor);
 		NurseType nurseType1 = new NurseType(executor);
 		RoomType roomType1 = new RoomType(executor);
@@ -944,7 +944,7 @@ public class RootTestCase extends TestCase {
 
 		TreatmentGroup treatmentGroup = new TreatmentGroup(executor, "Odstránenie pigmentových škvŕn");
 
-		long treatmentGroupId = (long) HibernateUtil.save(treatmentGroup);
+		long treatmentGroupId = (Long) HibernateUtil.save(treatmentGroup);
 		treatmentGroupIds.add(treatmentGroupId);
 
 		addTreatmentType("Odstraňovanie pigmentov chrbát", resourceTypes1, 60 * 60, treatmentGroup);
@@ -954,7 +954,7 @@ public class RootTestCase extends TestCase {
 		login = new Login();
 		executor = login.login("admin", "admin");
 
-		List<ResourceType> resourceTypes2 = new ArrayList<>();
+		List<ResourceType> resourceTypes2 = new ArrayList<ResourceType>();
 		PhysicianType physicianType2 = new PhysicianType(executor);
 		NurseType nurseType2 = new NurseType(executor);
 		RoomType roomType2 = new RoomType(executor);
@@ -969,7 +969,7 @@ public class RootTestCase extends TestCase {
 		resourceTypes2.add(deviceType2);
 
 		TreatmentGroup treatmentGroup2 = new TreatmentGroup(executor, "OxyGeneo");
-		treatmentGroupId = (long) HibernateUtil.save(treatmentGroup2);
+		treatmentGroupId = (Long) HibernateUtil.save(treatmentGroup2);
 		treatmentGroupIds.add(treatmentGroupId);
 
 		addTreatmentType("OxyGeneo - tvár", resourceTypes2, 60 * 60, treatmentGroup2);
@@ -978,7 +978,7 @@ public class RootTestCase extends TestCase {
 		HibernateUtil.beginTransaction();
 		login = new Login();
 		executor = login.login("admin", "admin");
-		List<ResourceType> resourceTypes3 = new ArrayList<>();
+		List<ResourceType> resourceTypes3 = new ArrayList<ResourceType>();
 		PhysicianType physicianType3 = new PhysicianType(executor);
 		NurseType nurseType3 = new NurseType(executor);
 		RoomType roomType3 = new RoomType(executor);
@@ -1000,7 +1000,7 @@ public class RootTestCase extends TestCase {
 		Login login = new Login();
 		User executor = login.login("admin", "admin");
 
-		List<ResourceType> resourceTypes1 = new ArrayList<>();
+		List<ResourceType> resourceTypes1 = new ArrayList<ResourceType>();
 		PhysicianType physicianType1 = new PhysicianType(executor);
 		NurseType nurseType1 = new NurseType(executor);
 		RoomType roomType1 = new RoomType(executor);
@@ -1015,7 +1015,7 @@ public class RootTestCase extends TestCase {
 
 		TreatmentGroup treatmentGroup = new TreatmentGroup(executor, "Odstránenie pigmentových škvŕn");
 
-		long treatmentGroupId = (long) HibernateUtil.save(treatmentGroup);
+		long treatmentGroupId = (Long) HibernateUtil.save(treatmentGroup);
 		treatmentGroupIds.add(treatmentGroupId);
 
 		addTreatmentType("Odstraňovanie pigmentov chrbát", resourceTypes1, 60 * 60, treatmentGroup);
@@ -1025,7 +1025,7 @@ public class RootTestCase extends TestCase {
 		login = new Login();
 		executor = login.login("admin", "admin");
 
-		List<ResourceType> resourceTypes2 = new ArrayList<>();
+		List<ResourceType> resourceTypes2 = new ArrayList<ResourceType>();
 		PhysicianType physicianType2 = new PhysicianType(executor);
 		NurseType nurseType2 = new NurseType(executor);
 		RoomType roomType2 = new RoomType(executor);
@@ -1042,7 +1042,7 @@ public class RootTestCase extends TestCase {
 		resourceTypes2.add(deviceType2);
 
 		TreatmentGroup treatmentGroup2 = new TreatmentGroup(executor, "OxyGeneo");
-		treatmentGroupId = (long) HibernateUtil.save(treatmentGroup2);
+		treatmentGroupId = (Long) HibernateUtil.save(treatmentGroup2);
 		treatmentGroupIds.add(treatmentGroupId);
 
 		addTreatmentType("OxyGeneo - tvár", resourceTypes2, 30 * 60, treatmentGroup2);
@@ -1051,7 +1051,7 @@ public class RootTestCase extends TestCase {
 		HibernateUtil.beginTransaction();
 		login = new Login();
 		executor = login.login("admin", "admin");
-		List<ResourceType> resourceTypes3 = new ArrayList<>();
+		List<ResourceType> resourceTypes3 = new ArrayList<ResourceType>();
 		PhysicianType physicianType3 = new PhysicianType(executor);
 		NurseType nurseType3 = new NurseType(executor);
 		RoomType roomType3 = new RoomType(executor);
@@ -1070,7 +1070,7 @@ public class RootTestCase extends TestCase {
 		HibernateUtil.beginTransaction();
 		login = new Login();
 		executor = login.login("admin", "admin");
-		List<ResourceType> resourceTypes4 = new ArrayList<>();
+		List<ResourceType> resourceTypes4 = new ArrayList<ResourceType>();
 		PhysicianType physicianType4 = new PhysicianType(executor);
 		NurseType nurseType4 = new NurseType(executor);
 		RoomType roomType4 = new RoomType(executor);
@@ -1084,7 +1084,7 @@ public class RootTestCase extends TestCase {
 		resourceTypes4.add(deviceType4);
 
 		TreatmentGroup treatmentGroup4 = new TreatmentGroup(executor, "Epilácia");
-		treatmentGroupId = (long) HibernateUtil.save(treatmentGroup4);
+		treatmentGroupId = (Long) HibernateUtil.save(treatmentGroup4);
 		treatmentGroupIds.add(treatmentGroupId);
 		addTreatmentType("Epilácia brucha", resourceTypes4, 60 * 60, treatmentGroup4);
 		HibernateUtil.commitTransaction();
@@ -1100,7 +1100,7 @@ public class RootTestCase extends TestCase {
 		addWorkTime();
 	}
 
-	protected void setUpSystem2() {
+	public void setUpSystem2() {
 		addTreatmentTypes2();
 		addPhysicians();
 		addRooms();

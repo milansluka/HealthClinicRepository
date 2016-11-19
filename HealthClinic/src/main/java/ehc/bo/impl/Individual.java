@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @PrimaryKeyJoinColumn(name = "id")
 public class Individual extends Party {
 	private String firstName;
-	private List<Appointment> appointments = new ArrayList<>();
+	private List<Appointment> appointments = new ArrayList<Appointment>();
 
 	protected Individual() {
 		super();

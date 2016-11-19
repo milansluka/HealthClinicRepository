@@ -15,7 +15,7 @@ import javax.persistence.Transient;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class PatientBill extends BaseObject {
-	private List<PatientBillItem> items = new ArrayList<>();
+	private List<PatientBillItem> items = new ArrayList<PatientBillItem>();
 	private Money totalPrice;
 	private double VATrate;
 	private Appointment appointment;

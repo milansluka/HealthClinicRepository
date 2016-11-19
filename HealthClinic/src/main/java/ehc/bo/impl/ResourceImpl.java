@@ -18,7 +18,7 @@ import ehc.bo.Resource;
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class ResourceImpl extends ModifiableObject implements Resource {
 	private List<Appointment> resourceAppointments = new ArrayList<Appointment>();
-	private List<Treatment> treatments = new ArrayList<>();
+	private List<Treatment> treatments = new ArrayList<Treatment>();
 	private Date availableFrom;
 	private Date availableTo;
 

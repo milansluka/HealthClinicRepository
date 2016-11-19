@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Table(name = "treatmentgroup")
 public class TreatmentGroup extends ModifiableObject {
 	private String name;
-	private List<TreatmentType> treatmentTypes = new ArrayList<>();
+	private List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 	
 	protected TreatmentGroup() {
 		super();

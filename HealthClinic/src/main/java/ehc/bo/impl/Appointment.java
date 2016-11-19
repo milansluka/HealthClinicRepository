@@ -27,9 +27,9 @@ public class Appointment extends BaseObject {
 	AppointmentState state;
 	Individual individual;
 	PatientBill patientBill;
-	List<TreatmentType> plannedTreatmentTypes = new ArrayList<>();
-	List<Resource> resources = new ArrayList<>();
-	List<Treatment> executedTreatments = new ArrayList<>();
+	List<TreatmentType> plannedTreatmentTypes = new ArrayList<TreatmentType>();
+	List<Resource> resources = new ArrayList<Resource>();
+	List<Treatment> executedTreatments = new ArrayList<Treatment>();
 	/* List<Payment> payments = new ArrayList<>(); */
 	/* List<PatientReceipt> receipts = new ArrayList<>(); */
 	/* List<PatientBill> bills = new ArrayList<>(); */
@@ -319,7 +319,7 @@ public class Appointment extends BaseObject {
 
 	@Transient
 	public List<PatientBillItem> getUnpaidBillItems() {
-		List<PatientBillItem> unpaidBillItems = new ArrayList<>();
+		List<PatientBillItem> unpaidBillItems = new ArrayList<PatientBillItem>();
 
 		for (PatientBillItem patientBillItem : getPatientBill().getItems()) {
 			if (patientBillItem.getPayment() == null) {

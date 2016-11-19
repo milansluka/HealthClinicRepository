@@ -1,0 +1,86 @@
+<t:container xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
+	xmlns:p="tapestry:parameter">
+
+	<span> weeks count (component) ${model.weekmodels.size()}</span>
+	<!-- <h1>Appointment schedule</h1> -->
+	<span>
+		${from} - ${to}
+	</span>
+	<span>
+		(component)currentweekIndex: ${currentWeekIndex}
+	</span>
+	<span>
+	</span>
+
+	<div id="schedule">
+		<table>
+			<tr>
+				<th></th>
+				<t:loop source="model.workdays" value="model.workday">
+					<th colspan='${model.roomsCount}'>
+						${model.workday.name}
+					</th>
+				</t:loop>
+
+			</tr>
+			<tr>
+				<th>All day</th>
+				<t:loop source="model.workdays">
+					<t:loop source="model.roomnames" value="model.roomname">
+						<th>${model.roomname}</th>
+					</t:loop>
+				</t:loop>
+			</tr>
+			<tr>
+				<td>${model.getFormattedTime(model.starttimeinminutes)}</td>
+				<t:loop source="model.workdays" value="model.workday">
+					<t:if test="${model.workday.startTimeIsEqual(model.starttimeinminutes)}">
+						<t:loop source="model.roomnames" value="model.roomname"
+							index="model.roomindex">
+							<t:if test="${model.roomIndexIsZero(model.roomindex)}">
+								<td class="left-border" rowspan='${model.workday.offset}'></td>
+								<p:else>
+									<td class="schedule" rowspan='${model.workday.offset}'></td>
+								</p:else>
+							</t:if>
+
+						</t:loop>
+						<p:else>
+							<td class="left-border" colspan="${model.roomscount}" rowspan='${model.workday.offset}'></td>
+						</p:else>
+					</t:if>
+
+				</t:loop>
+			</tr>
+			<t:loop source="model.times" value="model.time">
+				<tr>
+					<td>${model.getFormattedTime(model.time)}</td>
+					<t:loop source="model.workdays" value="model.workday">
+						<t:if test="${model.workday.startTimeIsEqualOrLesser(model.time)}">
+							<t:loop source="model.roomnames" value="model.roomname"
+								index="model.roomindex">
+								<t:if test="${model.roomIndexIsZero(model.roomindex)}">
+									<td class="left-border"></td>
+									<p:else>
+										<td class="schedule"></td>
+									</p:else>
+								</t:if>
+								<!-- <td class="schedule"></td> -->
+							</t:loop>
+
+						</t:if>
+					</t:loop>
+				</tr>
+			</t:loop>
+		</table>
+		<t:loop source="currentWeek.dayModels" value="currentWeek.dayModel" index="currentWeek.dayIndex">
+			<t:loop source="currentWeek.dayModel.roomLanes" value="currentWeek.dayModel.roomLane" index = "currentWeek.dayModel.roomLaneIndex">
+				<t:loop source="currentWeek.dayModel.roomLane.appointmentModels"
+					value="currentWeek.dayModel.roomLane.appointmentModel">
+					<t:appointmentView t:id="appointmentView"
+						t:model="currentWeek.dayModel.roomLane.appointmentModel" t:dayIndex="currentWeek.dayIndex" t:roomIndex="currentWeek.dayModel.roomLaneIndex"></t:appointmentView>
+				</t:loop>
+			</t:loop>
+		</t:loop>
+	</div>
+</t:container>

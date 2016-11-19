@@ -55,7 +55,7 @@ public class AppointmentSchedulerFindingFreeBlocksTest extends RootTestCase {
 		Date from = workTime.getStartWorkTime(monday);
 		Date to = workTime.getEndWorkTime(friday);	
 		TreatmentType treatmentType = treatmentTypeDao.findByName("Odstraňovanie pigmentov chrbát");
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		List<TimeWindow> timeWindows = appointmentScheduler.findAvailableTimeWindows(from, to, treatmentTypes, 60*60);	
 		assertEquals(10, timeWindows.size());	
@@ -85,7 +85,7 @@ public class AppointmentSchedulerFindingFreeBlocksTest extends RootTestCase {
 		Date from = workTime.getStartWorkTime(monday);
 		Date to = workTime.getEndWorkTime(friday);	
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentTypeName);
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		List<TimeWindow> timeWindows = appointmentScheduler.findAvailableTimeWindows(from, to, treatmentTypes, 60*60);	
 		assertEquals(expectedTimeWindowsCount, timeWindows.size());	

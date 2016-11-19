@@ -17,7 +17,7 @@ import javax.persistence.OneToMany;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class PaymentChannel extends ModifiableObject {
 	private Party party;
-	private List<Payment> payments = new ArrayList<>();
+	private List<Payment> payments = new ArrayList<Payment>();
 	private PaymentChannelType type;
 	
 	protected PaymentChannel() {

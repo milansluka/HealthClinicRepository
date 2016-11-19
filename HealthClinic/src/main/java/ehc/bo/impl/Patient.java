@@ -11,7 +11,7 @@ import javax.persistence.Transient;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Patient extends PartyRole {
-	private List<Voucher> vouchers = new ArrayList<>();
+	private List<Voucher> vouchers = new ArrayList<Voucher>();
 
 	protected Patient() {
 		super();

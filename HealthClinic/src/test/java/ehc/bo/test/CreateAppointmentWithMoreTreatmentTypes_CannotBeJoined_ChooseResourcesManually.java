@@ -50,7 +50,7 @@ public class CreateAppointmentWithMoreTreatmentTypes_CannotBeJoined_ChooseResour
 		TreatmentType treatmentType2 = treatmentTypeDao.findByName("OxyGeneo - tvár");
 		Date from = DateUtil.date(2016, 7, 28, 9, 45, 0);
 		Date to = DateUtil.date(2016, 7, 28, 11, 45, 0);
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		treatmentTypes.add(treatmentType2);
 		
@@ -63,7 +63,7 @@ public class CreateAppointmentWithMoreTreatmentTypes_CannotBeJoined_ChooseResour
 		long appointmentId = -1;
 		if (appointmentProposals == null) {
 			//choose resources manually
-			List<Resource> resources = new ArrayList<>();
+			List<Resource> resources = new ArrayList<Resource>();
 			Individual physicianPerson = individualDao.findByFirstAndLastName("Mária", "Petrášová");
 			resources.add(physicianPerson.getReservableSourceRoles().get(0));
 			

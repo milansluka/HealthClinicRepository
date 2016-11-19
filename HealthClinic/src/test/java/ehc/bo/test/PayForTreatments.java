@@ -38,7 +38,7 @@ public class PayForTreatments extends RootTestCase {
 	private IndividualDao individualDao = IndividualDao.getInstance();
 	private AppointmentDao appointmentDao = AppointmentDao.getInstance();
 	private PatientReceiptDao patientReceiptDao = PatientReceiptDao.getInstance();
-	private List<Long> appointmentIds = new ArrayList<>();
+	private List<Long> appointmentIds = new ArrayList<Long>();
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -54,10 +54,10 @@ public class PayForTreatments extends RootTestCase {
 		Date from = DateUtil.date(2016, 7, 2, 7, 30, 0);
 		Date to = DateUtil.date(2016, 7, 2, 8, 30, 0);
 		TreatmentType treatmentType = treatmentTypeDao.findByName("Odstraňovanie pigmentov chrbát");
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		Individual individual = individualDao.findByFirstAndLastName("Janko", "Mrkvicka");
-		List<Resource> resources = new ArrayList<>();
+		List<Resource> resources = new ArrayList<Resource>();
 		Individual physicianPerson = individualDao.findByFirstAndLastName("Mária", "Petrášová");
 		resources.add(physicianPerson.getReservableSourceRoles().get(0));
 		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
@@ -108,11 +108,11 @@ public class PayForTreatments extends RootTestCase {
 		long receiptId = -1;
 		
 		if (payment.isSufficient()) {
-			paymentId = (long)HibernateUtil.save(payment);	
+			paymentId = (Long)HibernateUtil.save(payment);	
 			PatientReceipt patientReceipt = new PatientReceipt(executor, "Mária", "Petrášová", appointment, payment.getPaymentChannel().getType());
 			patientReceipt.addPaidBills(payment.getBillItemsToPay());
 			Hibernate.initialize(patientReceipt.getItems());
-			receiptId = (long)HibernateUtil.save(patientReceipt);
+			receiptId = (Long)HibernateUtil.save(patientReceipt);
 		}
 	
 		HibernateUtil.commitTransaction();

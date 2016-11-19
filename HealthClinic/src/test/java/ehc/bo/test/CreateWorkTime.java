@@ -26,7 +26,7 @@ public class CreateWorkTime extends TestCase {
 		workTime.addDay(new Day(executor, "Štvrtok", 7, 30, 18, 0));
 		workTime.addDay(new Day(executor, "Piatok", 7, 0, 18, 0));
 		workTime.addDay(new Day(executor, "Sobota", 7, 0, 18, 0));
-		workTimeId = (long)HibernateUtil.save(workTime);
+		workTimeId = (Long)HibernateUtil.save(workTime);
 		HibernateUtil.commitTransaction();
 	}
 

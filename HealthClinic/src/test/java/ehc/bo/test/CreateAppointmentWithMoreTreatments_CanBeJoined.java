@@ -53,13 +53,13 @@ public class CreateAppointmentWithMoreTreatments_CanBeJoined extends RootTestCas
 		TreatmentType treatmentType2 = treatmentTypeDao.findByName("Odstraňovanie pigmentov celá tvár");
 		Date from = DateUtil.date(2016, 7, 28, 9, 45, 0);
 		Date to = DateUtil.date(2016, 7, 28, 11, 45, 0);
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		treatmentTypes.add(treatmentType2);
 		
 		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
         AppointmentProposal appointmentProposal = appointmentScheduler.getAppointmentProposal(from, to, treatmentTypes);
-        List<Resource> resources = new ArrayList<>();
+        List<Resource> resources = new ArrayList<Resource>();
         
         
     	for (Entry<ResourceType, SortedSet<Resource>> entry : appointmentProposal.getResources().entrySet()) {

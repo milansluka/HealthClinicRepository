@@ -34,7 +34,7 @@ public class GetAppointmentProposalsFromGivenTime extends RootTestCase {
 
 		HibernateUtil.beginTransaction();
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		Date to = DateUtil.date(2016, 7, 19, 11, 30, 0);
 		

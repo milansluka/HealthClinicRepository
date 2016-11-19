@@ -45,7 +45,7 @@ public class ReserveResourcesForTreatment extends RootTestCase {
 		User executor = login.login("admin", "admin");
 
 		String treatmentName = "Zväčšenie pier";
-		List<ResourceType> resourceTypes = new ArrayList<>();
+		List<ResourceType> resourceTypes = new ArrayList<ResourceType>();
 		PhysicianType physicianType = new PhysicianType(executor);
 		physicianType.addSkill(getSkill("some skill 1"));
 		physicianType.addSkill(getSkill("some skill 2"));
@@ -137,17 +137,17 @@ public class ReserveResourcesForTreatment extends RootTestCase {
 		HibernateUtil.commitTransaction();
 		addNurse(nurseType5, "Martina", "Slukova");
 
-		List<String> treatmentTypeNames = new ArrayList<>();
+		List<String> treatmentTypeNames = new ArrayList<String>();
 		treatmentTypeNames.add("Zväčšenie pier");
 		treatmentTypeNames.add("Odstraňovanie pigmentov chrbát");
 		addDevice("some device 1", treatmentTypeNames);
 
-		treatmentTypeNames = new ArrayList<>();
+		treatmentTypeNames = new ArrayList<String>();
 		treatmentTypeNames.add("OxyGeneo - tvár");
 		treatmentTypeNames.add("Zväčšenie pier");
 		addRoom("some room 1", treatmentTypeNames);
 
-		treatmentTypeNames = new ArrayList<>();
+		treatmentTypeNames = new ArrayList<String>();
 		treatmentTypeNames.add("OxyGeneo - tvár");
 		treatmentTypeNames.add("Odstraňovanie pigmentov chrbát");
 		treatmentTypeNames.add("Zväčšenie pier");
@@ -160,7 +160,7 @@ public class ReserveResourcesForTreatment extends RootTestCase {
 
 		TreatmentTypeDao treatmentTypeDao = TreatmentTypeDao.getInstance();
 		TreatmentType treatmentType = treatmentTypeDao.findByName("Zväčšenie pier");
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		AppointmentScheduler resourcesUtil = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);
 		Date when = DateUtil.date(2016, 7, 24, 11, 30, 0);
@@ -175,7 +175,7 @@ public class ReserveResourcesForTreatment extends RootTestCase {
 		Device device = null;
 		Room room = null;
 		Room room2 = null;
-		List<Nurse> nurses = new ArrayList<>();
+		List<Nurse> nurses = new ArrayList<Nurse>();
 
 		AppointmentProposal appointmentProposal = appointmentProposals.get(0);
 		for (Map.Entry<ResourceType, SortedSet<Resource>> entry : appointmentProposal.getResources().entrySet()) {
@@ -203,7 +203,7 @@ public class ReserveResourcesForTreatment extends RootTestCase {
 
 		Individual physicianPerson = (Individual) physician.getSource();
 		Individual physicianPerson2 = (Individual) physician2.getSource();
-		List<Individual> nursePersons = new ArrayList<>();
+		List<Individual> nursePersons = new ArrayList<Individual>();
 		Individual nursePerson2 = (Individual)nurse2.getSource();
 
 		for (Nurse n : nurses) {

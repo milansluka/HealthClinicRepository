@@ -50,7 +50,7 @@ public class CreateAppointmentForNewPerson extends RootTestCase {
 		Date from = DateUtil.date(2016, 4, 20, 10, 0, 0);
 		Date to = DateUtil.date(2016, 4, 20, 10, 30, 0);
 		
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		
 		List<Physician> physicians = physicianDao.getAll();
@@ -60,7 +60,7 @@ public class CreateAppointmentForNewPerson extends RootTestCase {
 		String physicianFirstName = physicianPerson.getFirstName();
 		String physicianLastName = physicianPerson.getName();
 		Room room = rooms.get(0);
-		List<Resource> resources = new ArrayList<>();
+		List<Resource> resources = new ArrayList<Resource>();
 		resources.add(physician);
 		resources.add(room);
 		

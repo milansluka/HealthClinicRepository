@@ -1,0 +1,16 @@
+<html t:type="layout" title="HealthClinicWeb Index"
+	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd">
+
+	<t:actionlink t:id="admin">Administration</t:actionlink>
+	<span>
+		<t:actionlink t:id="previous">Test Previous</t:actionlink>
+	</span>
+	<span>
+		<t:actionlink t:id="next">Test Next</t:actionlink>
+	</span>
+		<span>
+	    Weeks count (Index) ${getWeeksCount()}
+	</span>
+	<t:appointmentschedule t:id="appointmentScheduleWeekView"
+		t:model="model" t:name="name"></t:appointmentschedule>
+</html>

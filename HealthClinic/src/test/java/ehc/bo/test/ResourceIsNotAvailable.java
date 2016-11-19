@@ -28,7 +28,7 @@ public class ResourceIsNotAvailable extends RootTestCase {
 	private PhysicianDao physicianDao = PhysicianDao.getInstance();
 	private NurseDao nurseDao = NurseDao.getInstance();
 	private RoomDao roomDao = RoomDao.getInstance();
-	private List<Long> appointmentIds = new ArrayList<>();
+	private List<Long> appointmentIds = new ArrayList<Long>();
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -66,7 +66,7 @@ public class ResourceIsNotAvailable extends RootTestCase {
 		User executor = login.login("admin", "admin");
 		Individual individual = individualDao.findByFirstAndLastName(personFirstName, personLastName);
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);	
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		
 		//appointment from 7:00 to 8:00
@@ -87,7 +87,7 @@ public class ResourceIsNotAvailable extends RootTestCase {
 		appointment.addResource(room);
 		appointment.addResource(nurse);
 		
-		long appointmentId = (long)HibernateUtil.save(appointment);
+		long appointmentId = (Long)HibernateUtil.save(appointment);
 	    appointmentIds.add(appointmentId);
 		HibernateUtil.commitTransaction();
 	}

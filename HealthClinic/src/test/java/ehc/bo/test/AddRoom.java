@@ -11,7 +11,7 @@ import ehc.bo.impl.User;
 import ehc.hibernate.HibernateUtil;
 
 public class AddRoom extends RootTestCase {
-	private List<Long> roomIds = new ArrayList<>();
+	private List<Long> roomIds = new ArrayList<Long>();
 	
 	public void testApp() {
 		HibernateUtil.beginTransaction();
@@ -23,7 +23,7 @@ public class AddRoom extends RootTestCase {
 		
 		Room room = new Room(executor, roomType, roomName);
 
-		long id = (long) HibernateUtil.save(room);
+		long id = (Long) HibernateUtil.save(room);
 		roomIds.add(id);
 		HibernateUtil.commitTransaction();
 		

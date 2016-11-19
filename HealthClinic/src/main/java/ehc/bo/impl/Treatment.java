@@ -28,8 +28,8 @@ public class Treatment extends ModifiableObject {
 	private Appointment appointment;
 	private TreatmentType treatmentType;
 /*	private Payment payment;*/
-	private List<Resource> resources = new ArrayList<>();
-	private List<Attachment> attachments = new ArrayList<>();
+	private List<Resource> resources = new ArrayList<Resource>();
+	private List<Attachment> attachments = new ArrayList<Attachment>();
 	private Money price;
 	private PatientBillItem patientBillItem;
 /*	private PatientReceiptItem patientReceiptItem;*/

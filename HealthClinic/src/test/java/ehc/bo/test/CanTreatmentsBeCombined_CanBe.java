@@ -23,7 +23,7 @@ public class CanTreatmentsBeCombined_CanBe extends RootTestCase {
 	private SkillDao skillDao = SkillDao.getInstance();
 	private TreatmentGroupDao treatmentGroupDao = TreatmentGroupDao.getInstance();
 	private TreatmentTypeDao treatmentTypeDao = TreatmentTypeDao.getInstance();
-	private List<Long> treatmentGroupIds = new ArrayList<>();
+	private List<Long> treatmentGroupIds = new ArrayList<Long>();
 	protected void setUp() throws Exception {
 		super.setUp();
 		
@@ -32,7 +32,7 @@ public class CanTreatmentsBeCombined_CanBe extends RootTestCase {
 		SkillDao skillDao = SkillDao.getInstance();
 		User executor = login.login("admin", "admin");
 		TreatmentGroup treatmentGroup = new TreatmentGroup(executor, "test treatments");
-		long treatmentGroupId = (long)HibernateUtil.save(treatmentGroup);
+		long treatmentGroupId = (Long)HibernateUtil.save(treatmentGroup);
 		treatmentGroupIds.add(treatmentGroupId);
 		
 		TreatmentType treatmentType = new TreatmentType(executor, "tr1", new Money(), 0.1, 60*60, treatmentGroup);
@@ -68,7 +68,7 @@ public class CanTreatmentsBeCombined_CanBe extends RootTestCase {
 		HibernateUtil.beginTransaction();
 		TreatmentType treatmentType = treatmentTypeDao.findByName("tr1");
 		TreatmentType treatmentType2 = treatmentTypeDao.findByName("tr2");
-		List<TreatmentType> treatmentTypes = new ArrayList<>();
+		List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
 		treatmentTypes.add(treatmentType);
 		treatmentTypes.add(treatmentType2);
 		AppointmentScheduler appointmentScheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES);

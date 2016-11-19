@@ -23,11 +23,11 @@ public class TreatmentType extends BaseObject {
 	//duration in seconds
 	int duration;
 	TreatmentGroup treatmentGroup;
-	List<ResourceType> resourceTypes = new ArrayList<>();
-	List<Appointment> appointments = new ArrayList<>();
-	List<Treatment> executedTreatments = new ArrayList<>();
-	List<ExecutorProvision> executorProvisions = new ArrayList<>();
-	List<RoomType> possibleRoomTypes = new ArrayList<>();
+	List<ResourceType> resourceTypes = new ArrayList<ResourceType>();
+	List<Appointment> appointments = new ArrayList<Appointment>();
+	List<Treatment> executedTreatments = new ArrayList<Treatment>();
+	List<ExecutorProvision> executorProvisions = new ArrayList<ExecutorProvision>();
+	List<RoomType> possibleRoomTypes = new ArrayList<RoomType>();
 
 	protected TreatmentType() {
 		super();
