@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class AppointmentModel extends TimeWindowModel {
 	private String treatmentName;
-    
+  /*  private String roomName;*/
 	
 	public AppointmentModel(int from, int to, String treatmentName, Date fromDate, String roomName) {
 		super(from, to, fromDate, roomName);
@@ -23,6 +23,16 @@ public class AppointmentModel extends TimeWindowModel {
 	public void setTreatmentName(String treatmentName) {
 		this.treatmentName = treatmentName;
 	}
+	
+	
+
+/*	public String getRoomName() {
+		return roomName;
+	}*/
+
+/*	public void setRoomName(String roomName) {
+		this.roomName = roomName;
+	}*/
 
 	@Override
 	public String getInfo() {

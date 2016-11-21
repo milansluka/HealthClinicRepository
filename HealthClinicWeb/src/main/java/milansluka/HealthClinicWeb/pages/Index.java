@@ -22,6 +22,8 @@ import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
 import org.slf4j.Logger;
 import org.testng.annotations.BeforeClass;
 
+import ehc.bo.impl.Appointment;
+import ehc.bo.impl.AppointmentDao;
 import ehc.bo.impl.HealthPoint;
 import entities.AppointmentModel;
 import entities.DayModel;
@@ -145,6 +147,7 @@ public class Index {
 	}*/
 
 	private void createAppointments() {
+		
 
 	}
 
@@ -224,9 +227,26 @@ public class Index {
 		/* model.addTimeWindowModel(0, appointmentModel); */
 	}
 
+	
+	public List<Appointment> loadAppointments() {
+		return null;	
+	}
+
 	public void addAppointmentModels() {
-		AppointmentModel appointmentModel1 = new AppointmentModel(9 * 60, 10 * 60, "Epilacia", DateUtil.date(2016, 11, 14, 9, 0, 0), "room 1");
-        model.addAppointmentModel(0, appointmentModel1);    
+		AppointmentModel appointmentModel1 = new AppointmentModel(9 * 60, 10 * 60, "Epilacia", DateUtil.date(2016, 11, 14, 9, 0, 0), "room 2");
+        model.addAppointmentModel(0, appointmentModel1);
+    	AppointmentModel appointmentModel2 = new AppointmentModel(11 * 60, 13 * 60, "Liposukcia", DateUtil.date(2016, 11, 14, 11, 0, 0), "room 1");
+        model.addAppointmentModel(0, appointmentModel2); 
+    	AppointmentModel appointmentModel3 = new AppointmentModel(10 * 60, 10 * 60+30, "OxyGeneo", DateUtil.date(2016, 11, 15, 10, 0, 0), "room 1");
+        model.addAppointmentModel(0, appointmentModel3); 
+    	AppointmentModel appointmentModel4 = new AppointmentModel(9 * 60, 10 * 60, "Epilacia", DateUtil.date(2016, 11, 14, 9, 0, 0), "room 2");
+        model.addAppointmentModel(0, appointmentModel4); 
+    	AppointmentModel appointmentModel5 = new AppointmentModel(13 * 60, 14 * 60, "Epilacia", DateUtil.date(2016, 11, 14, 9, 0, 0), "room 3");
+        model.addAppointmentModel(0, appointmentModel5); 
+/*        AppointmentModel appointmentModel6 = new AppointmentModel(7 * 60, 10 * 60, "Epilacia", DateUtil.date(2016, 11, 21, 9, 0, 0), "room 3");
+        model.addAppointmentModel(1, appointmentModel6);*/ 
+  /*      AppointmentModel appointmentModel7 = new AppointmentModel(7 * 60, 10 * 60, "Epilacia", DateUtil.date(2016, 11, 21, 9, 0, 0), "room 3");
+        model.addAppointmentModel(0, appointmentModel7);*/ 
 	}
 
 	/*

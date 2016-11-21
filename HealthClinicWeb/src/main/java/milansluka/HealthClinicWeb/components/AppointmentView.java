@@ -19,6 +19,7 @@ public class AppointmentView {
 	private int startTimeInMinutes;
 	private int grid;
 	private int height;
+	private int roomsCount;
 	
 	private double distanceFromTop;
 	private double distanceFromLeft;
@@ -78,7 +79,7 @@ public class AppointmentView {
 	}
 
 	public int getxPosition() {
-		return (dayIndex-1) + roomIndex;
+		return (dayIndex-1)*getRoomsCount() + roomIndex;
 	}
 
 	public void setxPosition(int xPosition) {
@@ -93,6 +94,14 @@ public class AppointmentView {
 		this.yPosition = yPosition;
 	}
 	
+	public int getRoomsCount() {
+		return 3;
+	}
+
+	public void setRoomsCount(int roomsCount) {
+		this.roomsCount = roomsCount;
+	}
+
 	public double getDistanceFromTop() {
 		return CSS_TOP + getyPosition()*CSS_HEIGHT;
 	}
