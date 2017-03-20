@@ -150,7 +150,7 @@ public class RootTestCase extends TestCase {
 				DateUtil.date(2016, 9, 26, 17, 0, 0), DateUtil.date(2016, 9, 26, 18, 0, 0));	
 	}
 	
-	private void addAppointment(String customerFirstName, String customerLastName, 
+	protected void addAppointment(String customerFirstName, String customerLastName, 
 			String treatmentTypeName, Date from, Date to) {
 		HibernateUtil.beginTransaction();
 		Login login = new Login();

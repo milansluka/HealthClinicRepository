@@ -10,6 +10,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import ehc.bo.Resource;
+import ehc.bo.SchedulingPolicy;
 import ehc.util.DateUtil;
 
 public class AppointmentScheduler {
@@ -22,11 +23,18 @@ public class AppointmentScheduler {
 	private WorkTime workTime;
 	private int timeGridInMinutes;
 	private String message;
+	private SchedulingPolicy policy;
 
+	
 	public AppointmentScheduler(WorkTime workTime, int timeGridInMinutes) {
+		this(workTime, timeGridInMinutes, new BasicPolicy());
+	}
+	
+	public AppointmentScheduler(WorkTime workTime, int timeGridInMinutes, SchedulingPolicy policy) {
 		super();
 		this.workTime = workTime;
 		this.timeGridInMinutes = timeGridInMinutes;
+		this.policy = policy;
 	}
 
 	public Appointment getAppointment(User executor, AppointmentScheduleData appointmentScheduleData,
@@ -62,11 +70,9 @@ public class AppointmentScheduler {
 
 	private boolean sufficientAppointmentDuration(long plannedAppointmentDuration, List<TreatmentType> treatmentTypes) {
 		long treatmentDuration = 0;
-
 		for (TreatmentType treatmentType : treatmentTypes) {
 			treatmentDuration += treatmentType.getDuration();
 		}
-
 		return plannedAppointmentDuration >= treatmentDuration;
 	}
 
@@ -258,6 +264,26 @@ public class AppointmentScheduler {
 		}
 		return appointmentProposals;
 	}
+	
+	
+	public List<AppointmentProposal> getAppointmentProposals(AppointmentRequest request, SchedulingCustomisation custom) {
+		if (!canBeCombinedIntoOneAppointment(request.getTreatmentTypes())) {
+			setMessage(TREATMENTS_CANNOT_BE_JOINED_MSG);
+			return null;
+		}
+
+/*		if (!sufficientAppointmentDuration(from, to, treatmentTypes)) {
+			setMessage(INSUFFICIENT_DIFFERENCE_BETWEEN_FROM_AND_TO_MSG);
+			return null;
+		}*/
+
+	/*	request.setFrom(moveFromIfOutOfWorkTime(request.getFrom(), to));
+		to = DateUtil.addSeconds(from, (int) appointmentDuration);*/
+
+		return policy.getAppointmentProposals(request, custom);
+	}
+	
+
 
 	public List<AppointmentProposal> getAppointmentProposals(Date from, Date to, List<TreatmentType> treatmentTypes,
 			Date limitDate, int count) {
@@ -299,7 +325,7 @@ public class AppointmentScheduler {
 	public List<AppointmentProposal> getAppointmentProposals(Date from, Date to, List<TreatmentType> treatmentTypes,
 			int count) {
 		Date limitDate = DateUtil.addDays(DateUtil.now(),
-				HealthPoint.COUNT_OF_DAYS_FROM_NOW_WHEN_APPOINTMENTS_CAN_BE_CREATED);
+				HealthPoint.SCHEDULING_HORIZON_IN_DAYS);
 		return getAppointmentProposals(from, to, treatmentTypes, limitDate, count);
 	}
 

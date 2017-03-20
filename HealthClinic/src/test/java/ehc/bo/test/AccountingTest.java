@@ -130,25 +130,25 @@ public class AccountingTest extends RootTestCase {
 		Physician executor = (Physician) individual.getReservableSourceRoles().get(0);
 
 		AccountUtil accountUtil = new AccountUtil();
-		ExecutorReceipt executorAccount = accountUtil.createAccount(accountCreator, executor, from, to);
-		HibernateUtil.save(executorAccount);
+		ExecutorReceipt executorReceipt = accountUtil.createAccount(accountCreator, executor, from, to);
+		HibernateUtil.save(executorReceipt);
 
 		// create account from 1.9.2016 to 31.9.2016
 		from = DateUtil.date(2016, 9, 1, 7, 0, 0);
 		to = DateUtil.date(2016, 9, 31, 9, 30, 0);
 
-		executorAccount = accountUtil.createAccount(accountCreator, executor, from, to);
-		HibernateUtil.save(executorAccount);
+		executorReceipt = accountUtil.createAccount(accountCreator, executor, from, to);
+		HibernateUtil.save(executorReceipt);
 		HibernateUtil.commitTransaction();
 
 		HibernateUtil.beginTransaction();
 		individual = individualDao.findByFirstAndLastName(physicianFirstName, physicianLastName);
 		executor = (Physician) individual.getReservableSourceRoles().get(0);
-		executorAccount = executor.getExecutorAccounts().get(0);
+		executorReceipt = executor.getExecutorAccounts().get(0);
 		ExecutorReceipt executorAccount2 = executor.getExecutorAccounts().get(1);
-		Assert.assertNotNull(executorAccount);
+		Assert.assertNotNull(executorReceipt);
 		Assert.assertNotNull(executorAccount2);
-		Assert.assertEquals(new Money(25), executorAccount.getProvisionsSum());	
+		Assert.assertEquals(new Money(25), executorReceipt.getProvisionsSum());	
 		Assert.assertEquals(new Money(10), executorAccount2.getProvisionsSum());	
 		HibernateUtil.commitTransaction();
 	}
