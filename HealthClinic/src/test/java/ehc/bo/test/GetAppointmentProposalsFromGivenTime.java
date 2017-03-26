@@ -14,7 +14,7 @@ import ehc.bo.impl.BasicPolicy;
 import ehc.bo.impl.HealthPoint;
 import ehc.bo.impl.PhysicianType;
 import ehc.bo.impl.ResourceType;
-import ehc.bo.impl.SchedulingCustomisation;
+import ehc.bo.impl.SchedulingParameter;
 import ehc.bo.impl.SchedulingHorizon;
 import ehc.bo.impl.TreatmentType;
 import ehc.bo.impl.TreatmentTypeDao;
@@ -40,7 +40,7 @@ public class GetAppointmentProposalsFromGivenTime extends RootTestCase {
 		AppointmentRequest request = new AppointmentRequest(null, horizon);
 	
 		HibernateUtil.beginTransaction();
-		SchedulingCustomisation custom = new SchedulingCustomisation(getWorkTime());
+		SchedulingParameter custom = new SchedulingParameter(getWorkTime());
 		TreatmentType treatmentType = treatmentTypeDao.findByName(treatmentName);
 		request.addTreatmentType(treatmentType);
 		

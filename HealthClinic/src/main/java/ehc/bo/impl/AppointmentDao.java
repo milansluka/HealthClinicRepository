@@ -53,4 +53,15 @@ public class AppointmentDao {
 		List results = query.list();
 		return results;
 	}
+	
+	public List<Appointment> getAllIntersecting(Date from, Date to) {
+		Session session = HibernateUtil.getCurrentSession();
+		String hql = "FROM Appointment a WHERE a.from >= :from and a.from <= :from or "
+				+ "a.to >= :to and a.to <= :to";
+		Query query = session.createQuery(hql);
+		query.setParameter("from", from);
+		query.setParameter("to", to);
+		List results = query.list();
+		return results;
+	}
 }

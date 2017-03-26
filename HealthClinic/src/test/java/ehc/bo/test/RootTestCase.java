@@ -703,6 +703,22 @@ public class RootTestCase extends TestCase {
 		skillNames2.add("test skill2");
 		addPhysician("Marika", "Piršelová", skillNames2);
 	}
+	
+	
+	protected void addPhysicians3() {
+		List<String> skillNames1 = new ArrayList<String>();
+		skillNames1.add("test skillA");
+		addPhysician("Jana", "Mrkvickova", skillNames1);
+		
+		List<String> skillNames2 = new ArrayList<String>();
+		skillNames2.add("test skillA");
+		skillNames2.add("test skillB");
+		addPhysician("Maria", "Petrasova", skillNames2);
+
+		List<String> skillNames3 = new ArrayList<String>();
+		skillNames3.add("test skillC");
+		addPhysician("Zuzana", "Bukovinska", skillNames3);
+	}
 
 	protected void addDevices() {
 		List<String> treatmentTypeNames1 = new ArrayList<String>();
@@ -724,6 +740,12 @@ public class RootTestCase extends TestCase {
 		addDevice("test device 1", "laser");
 		addDevice("test device 2", "laser");
 	}
+	
+	protected void addDevices3() {
+		addDevice("test device 1", "laser");
+		addDevice("test device 2", "laser");
+		addDevice("test device 3", "radiofrekvencia");
+	}
 
 	protected void addRooms() {
 		List<String> treatmentTypeNames1 = new ArrayList<String>();
@@ -743,6 +765,22 @@ public class RootTestCase extends TestCase {
 		addRoom("test room 2", treatmentTypeNames2);
 		addRoom("test room 3", treatmentTypeNames3);
 	}
+	
+	
+	protected void addRooms3() {
+		List<String> treatmentTypeNames1 = new ArrayList<String>();
+		treatmentTypeNames1.add("Odstranovanie pigmentov chrbat");
+		treatmentTypeNames1.add("OxyGeneo tvar");
+
+		List<String> treatmentTypeNames2 = new ArrayList<String>();
+		treatmentTypeNames2.add("Odstranovanie pigmentov chrbat");
+		treatmentTypeNames2.add("OxyGeneo tvar");
+		treatmentTypeNames2.add("Omladenie tvare");
+
+		addRoom("test room A", treatmentTypeNames1);
+		addRoom("test room B", treatmentTypeNames2);
+	}
+	
 
 	protected void addSKills() {
 		addSkill("test skill1");
@@ -765,6 +803,17 @@ public class RootTestCase extends TestCase {
 		List<String> skillNames2 = new ArrayList<String>();
 		skillNames2.add("test skillA");
 		addNurse("Helena", "Podhorská", skillNames2);
+	}
+	
+	protected void addNurses3() {
+		List<String> skillNames1 = new ArrayList<String>();
+		skillNames1.add("test skillA");
+		skillNames1.add("test skillB");
+		addNurse("Miroslava", "Nizna", skillNames1);
+
+		List<String> skillNames2 = new ArrayList<String>();
+		skillNames2.add("test skillA");
+		addNurse("Adriana", "Jurickova", skillNames2);
 	}
 
 	protected void removeSkills() {
@@ -892,6 +941,20 @@ public class RootTestCase extends TestCase {
 		treatmentGroup.addTreatmentType(treatmentType);
 		HibernateUtil.saveOrUpdate(treatmentGroup);
 		HibernateUtil.commitTransaction();
+	}
+	
+	
+	protected void addTreatmentType(String name, List<ResourceType> resourceTypes, String price, int duration, TreatmentGroup treatmentGroup) {
+		Login login = new Login();
+		User executor = login.login("admin", "admin");
+		TreatmentType treatmentType = new TreatmentType(executor, name, new Money(new BigDecimal(price)), 0.1, duration, treatmentGroup);
+
+		for (ResourceType resourceType : resourceTypes) {
+			treatmentType.addResourceType(resourceType);
+		}
+
+		long id = (Long) HibernateUtil.save(treatmentType);
+		treatmentTypeIds.add(id);
 	}
 
 	protected TreatmentGroup addTreatmentGroup(String name) {
@@ -1090,6 +1153,78 @@ public class RootTestCase extends TestCase {
 		HibernateUtil.commitTransaction();
 	}
 
+	protected void addTreatmentTypes3() {
+		HibernateUtil.beginTransaction();
+		Login login = new Login();
+		User executor = login.login("admin", "admin");
+
+		List<ResourceType> resourceTypes1 = new ArrayList<ResourceType>();
+		PhysicianType physicianType1 = new PhysicianType(executor);
+		NurseType nurseType1 = new NurseType(executor);
+		RoomType roomType1 = new RoomType(executor);
+		DeviceType deviceType1 = new DeviceType(executor, "laser");
+
+		physicianType1.addSkill(getSkill("test skillA"));
+		physicianType1.addSkill(getSkill("test skillB"));
+		nurseType1.addSkill(getSkill("test skillA"));
+		resourceTypes1.add(physicianType1);
+		resourceTypes1.add(nurseType1);
+		resourceTypes1.add(roomType1);
+		resourceTypes1.add(deviceType1);
+
+		TreatmentGroup treatmentGroup = new TreatmentGroup(executor, "Odstránenie pigmentových škvŕn");
+
+		long treatmentGroupId = (Long) HibernateUtil.save(treatmentGroup);
+		treatmentGroupIds.add(treatmentGroupId);
+
+		addTreatmentType("Odstranovanie pigmentov chrbat", resourceTypes1, "50", 60 * 60, treatmentGroup);
+		HibernateUtil.commitTransaction();
+
+		HibernateUtil.beginTransaction();
+		login = new Login();
+		executor = login.login("admin", "admin");
+
+		List<ResourceType> resourceTypes2 = new ArrayList<ResourceType>();
+		PhysicianType physicianType2 = new PhysicianType(executor);
+		NurseType nurseType2 = new NurseType(executor);
+		RoomType roomType2 = new RoomType(executor);
+		DeviceType deviceType2 = new DeviceType(executor, "radiofrekvencia");
+
+		physicianType2.addSkill(getSkill("test skillA"));
+		nurseType2.addSkill(getSkill("test skillA"));
+		resourceTypes2.add(physicianType2);
+		resourceTypes2.add(nurseType2);
+		resourceTypes2.add(roomType2);
+		resourceTypes2.add(deviceType2);
+
+		TreatmentGroup treatmentGroup2 = new TreatmentGroup(executor, "OxyGeneo");
+		treatmentGroupId = (Long) HibernateUtil.save(treatmentGroup2);
+		treatmentGroupIds.add(treatmentGroupId);
+
+		addTreatmentType("OxyGeneo tvar", resourceTypes2, "30", 15 * 60, treatmentGroup2);
+		HibernateUtil.commitTransaction();
+
+		HibernateUtil.beginTransaction();
+		login = new Login();
+		executor = login.login("admin", "admin");
+		List<ResourceType> resourceTypes3 = new ArrayList<ResourceType>();
+		PhysicianType physicianType3 = new PhysicianType(executor);
+		NurseType nurseType3 = new NurseType(executor);
+		RoomType roomType3 = new RoomType(executor);
+		DeviceType deviceType3 = new DeviceType(executor, "laser");
+
+		physicianType3.addSkill(getSkill("test skillC"));
+		nurseType3.addSkill(getSkill("test skillA"));
+		nurseType3.addSkill(getSkill("test skillB"));
+		resourceTypes3.add(physicianType3);
+		resourceTypes3.add(nurseType3);
+		resourceTypes3.add(roomType3);
+		resourceTypes3.add(deviceType3);
+
+		addTreatmentType("Omladenie tvare", resourceTypes3, "60", 30 * 60, treatmentGroup);
+		HibernateUtil.commitTransaction();
+	}
+
 	protected void setUpSystem() {
 		addTreatmentTypes();
 		addPhysicians();
@@ -1106,6 +1241,16 @@ public class RootTestCase extends TestCase {
 		addRooms();
 		addDevices2();
 		addNurses2();
+		addIndividuals2();
+		addWorkTime();
+	}
+	
+	public void setUpSystem3() {
+		addTreatmentTypes3();
+		addPhysicians3();
+		addRooms3();
+		addDevices3();
+		addNurses3();
 		addIndividuals2();
 		addWorkTime();
 	}

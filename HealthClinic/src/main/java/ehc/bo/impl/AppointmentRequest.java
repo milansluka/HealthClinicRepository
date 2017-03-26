@@ -6,15 +6,12 @@ import java.util.List;
 
 public class AppointmentRequest {
 	private List<TreatmentType> treatmentTypes = new ArrayList<TreatmentType>();
-	private Individual individual;
+	private Individual caller;
 	private SchedulingHorizon horizon;
-//	private Date from;
-//	private Date to;
 	
-	
-	public AppointmentRequest(Individual individual, SchedulingHorizon horizon) {
+	public AppointmentRequest(Individual caller, SchedulingHorizon horizon) {
 		super();
-		this.individual = individual;
+		this.caller = caller;
 		this.horizon = horizon;
 	}
 	
@@ -33,12 +30,23 @@ public class AppointmentRequest {
 	public void setTreatmentTypes(List<TreatmentType> treatmentTypes) {
 		this.treatmentTypes = treatmentTypes;
 	}
-	public Individual getIndividual() {
-		return individual;
+	
+	public Individual getCaller() {
+		return caller;
 	}
-	public void setIndividual(Individual individual) {
-		this.individual = individual;
+
+	public void setCaller(Individual caller) {
+		this.caller = caller;
 	}
+	
+	public SchedulingHorizon getHorizon() {
+		return horizon;
+	}
+
+	public void setHorizon(SchedulingHorizon horizon) {
+		this.horizon = horizon;
+	}
+
 	public Date getFrom() {
 		return horizon.getFrom();
 	}

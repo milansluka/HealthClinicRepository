@@ -24,12 +24,12 @@ public class AppointmentScheduler {
 	private int timeGridInMinutes;
 	private String message;
 	private SchedulingPolicy policy;
+	private SchedulingUtil schedulingUtil = new SchedulingUtil();
 
-	
 	public AppointmentScheduler(WorkTime workTime, int timeGridInMinutes) {
 		this(workTime, timeGridInMinutes, new BasicPolicy());
 	}
-	
+
 	public AppointmentScheduler(WorkTime workTime, int timeGridInMinutes, SchedulingPolicy policy) {
 		super();
 		this.workTime = workTime;
@@ -46,22 +46,6 @@ public class AppointmentScheduler {
 		return appointment;
 	}
 
-	private Date moveFromIfOutOfWorkTime(Date from, Date to) {
-		Date startWorkTime = workTime.getStartWorkTime(from);
-		Date endWorkTime = workTime.getEndWorkTime(to);
-		int duration = (int) getAppointmentDuration(from, to);
-
-		if (from.before(startWorkTime)) {
-			return startWorkTime;
-		} else if (to.after(endWorkTime)) {
-			Date nextDay = DateUtil.addDays(from, 1);
-			Date nextFrom = workTime.getStartWorkTime(nextDay);
-			Date nextTo = DateUtil.addSeconds(nextFrom, duration);
-
-			return moveFromIfOutOfWorkTime(nextFrom, nextTo);
-		}
-		return from;
-	}
 
 	private boolean sufficientAppointmentDuration(Date from, Date to, List<TreatmentType> treatmentTypes) {
 		long appointmentDuration = getAppointmentDuration(from, to);
@@ -88,10 +72,27 @@ public class AppointmentScheduler {
 		}
 		return true;
 	}
+	
+/*	private SchedulingHorizon adjustSchedulingHorizonToWorkTime(SchedulingHorizon horizon) {
+		Date startWorkTime = workTime.getStartWorkTime(horizon.getFrom());
+		Date from = (Date)horizon.getFrom().clone();
+		SchedulingHorizon adjustedHorizon = new SchedulingHorizon(from, to);
+		if (from.before(startWorkTime)) {
+			return startWorkTime;
+		} else if (to.after(endWorkTime)) {
+			Date nextDay = DateUtil.addDays(from, 1);
+			Date nextFrom = workTime.getStartWorkTime(nextDay);
+			Date nextTo = DateUtil.addSeconds(nextFrom, duration);
+
+			return moveFromIfOutOfWorkTime(nextFrom, nextTo, workTime);
+		}
+		return from;
+		
+	}*/
 
 	public AppointmentScheduleData getAppointmentScheduleData(Date from, Date to, List<TreatmentType> treatmentTypes,
 			List<Resource> resources) {
-		from = moveFromIfOutOfWorkTime(from, to);
+		from = schedulingUtil.moveFromIfOutOfWorkTime(from, to, workTime);
 		to = DateUtil.addSeconds(from, (int) getAppointmentDuration(from, to));
 		if (areResourcesAvailable(from, to, resources)) {
 			return new AppointmentScheduleData(from, to, resources);
@@ -101,7 +102,7 @@ public class AppointmentScheduler {
 
 	public List<AppointmentScheduleData> getAppointmentScheduleData(Date from, Date to,
 			List<TreatmentType> treatmentTypes, List<Resource> resources, int count) {
-		from = moveFromIfOutOfWorkTime(from, to);
+		from = schedulingUtil.moveFromIfOutOfWorkTime(from, to, workTime);
 		to = DateUtil.addSeconds(from, (int) getAppointmentDuration(from, to));
 		List<AppointmentScheduleData> appointmentScheduleDatas = new ArrayList<AppointmentScheduleData>();
 		int givenAppointmentScheduleData = 0;
@@ -136,7 +137,7 @@ public class AppointmentScheduler {
 		}
 
 		/* long appointmentDuration = getAppointmentDuration(from, to); */
-		from = moveFromIfOutOfWorkTime(from, to);
+		from = schedulingUtil.moveFromIfOutOfWorkTime(from, to, workTime);
 		/* to = DateUtil.addSeconds(from, (int) appointmentDuration); */
 
 		List<Room> roomsWhereTreatmentTypesCanBeExecuted = findPossibleRoomsForTreatmentTypes(treatmentTypes);
@@ -156,24 +157,19 @@ public class AppointmentScheduler {
 
 		while (actualPosition.before(to)) {
 			TimeWindow timeWindow = getNextTimeWindow(actualPosition, to, treatmentTypes, room, appointmentDuration);
-         
-	/*		if (block == null) {
-				break;
-			}*/
 
 			if (timeWindow != null) {
 				foundFreeTimeWindows.add(timeWindow);
-				actualPosition = timeWindow.getEnd();			
+				actualPosition = timeWindow.getEnd();
 			} else {
 				actualPosition = DateUtil.addSeconds(actualPosition, timeGridInMinutes * 60);
-			}	
+			}
 		}
 		return foundFreeTimeWindows;
 	}
 
 	public AppointmentProposal getAppointmentProposal(Date from, Date to, List<TreatmentType> treatmentTypes) {
 		if (!canBeCombinedIntoOneAppointment(treatmentTypes)) {
-
 			return null;
 		}
 
@@ -181,7 +177,7 @@ public class AppointmentScheduler {
 			return null;
 		}
 
-		from = moveFromIfOutOfWorkTime(from, to);
+		from = schedulingUtil.moveFromIfOutOfWorkTime(from, to, workTime);
 		to = DateUtil.addSeconds(from, (int) getAppointmentDuration(from, to));
 		Map<ResourceType, SortedSet<Resource>> resources = getResources(from, to, treatmentTypes);
 
@@ -191,16 +187,18 @@ public class AppointmentScheduler {
 		return null;
 	}
 
-	public TimeWindow getNextTimeWindow(Date start, Date limit, List<TreatmentType> treatmentTypes, Room room, long appointmentDuration) {
-		/*List<AppointmentProposal> appointmentProposals = getAppointmentProposalsForBlock(start, limit, treatmentTypes, room, appointmentDuration);*/
+	public TimeWindow getNextTimeWindow(Date start, Date limit, List<TreatmentType> treatmentTypes, Room room,
+			long appointmentDuration) {
+
 		List<AppointmentProposal> appointmentProposals = new ArrayList<AppointmentProposal>();
 
 		Date actualAppointmentStart = new Date(start.getTime());
-		Date actualAppointmentEnd = DateUtil.addSeconds(actualAppointmentStart, (int) appointmentDuration);	
-		actualAppointmentStart = moveFromIfOutOfWorkTime(actualAppointmentStart, actualAppointmentEnd);
+		Date actualAppointmentEnd = DateUtil.addSeconds(actualAppointmentStart, (int) appointmentDuration);
+		actualAppointmentStart = schedulingUtil.moveFromIfOutOfWorkTime(actualAppointmentStart, actualAppointmentEnd,
+				workTime);
 		actualAppointmentEnd = DateUtil.addSeconds(actualAppointmentStart, (int) appointmentDuration);
 		Date endWorkTime = workTime.getEndWorkTime(actualAppointmentStart);
-		
+
 		while (!actualAppointmentEnd.after(limit) && !actualAppointmentEnd.after(endWorkTime)) {
 			Map<ResourceType, SortedSet<Resource>> resources = getResources(actualAppointmentStart,
 					actualAppointmentEnd, treatmentTypes);
@@ -209,41 +207,31 @@ public class AppointmentScheduler {
 				break;
 			}
 
-			AppointmentProposal appointmentProposal = new AppointmentProposal(resources, treatmentTypes, actualAppointmentStart, actualAppointmentEnd);
+			AppointmentProposal appointmentProposal = new AppointmentProposal(resources, treatmentTypes,
+					actualAppointmentStart, actualAppointmentEnd);
 			appointmentProposals.add(appointmentProposal);
-			
+
 			actualAppointmentStart = DateUtil.addSeconds(actualAppointmentStart, timeGridInMinutes * 60);
-			actualAppointmentEnd = DateUtil.addSeconds(actualAppointmentEnd, timeGridInMinutes * 60);		
+			actualAppointmentEnd = DateUtil.addSeconds(actualAppointmentEnd, timeGridInMinutes * 60);
 		}
-		
+
 		Date blockStart;
 		Date blockEnd;
-		
+
 		if (appointmentProposals.isEmpty()) {
 			return null;
 		}
-		
-	/*	if (!appointmentProposals.isEmpty()) {*/
-			blockStart = appointmentProposals.get(0).getFrom();
-			blockEnd = appointmentProposals.get(appointmentProposals.size()-1).getTo();
-	/*	} */
-/*		else {
-			blockStart = actualAppointmentStart;
-			blockEnd = actualAppointmentEnd;
-			if (!actualAppointmentEnd.before(endWorkTime)) {
-				blockEnd = endWorkTime;
-			} else if (!actualAppointmentEnd.before(limit)) {
-				blockEnd = limit;
-			}
-		}*/
-		
+
+		blockStart = appointmentProposals.get(0).getFrom();
+		blockEnd = appointmentProposals.get(appointmentProposals.size() - 1).getTo();
+
 		TimeWindow block = new TimeWindow(blockStart, blockEnd, room);
-	
+
 		return block;
 	}
 
-	public List<AppointmentProposal> getAppointmentProposalsForBlock(Date start, Date limit, List<TreatmentType> treatmentTypes,
-			Room room, long appointmentDuration) {
+	public List<AppointmentProposal> getAppointmentProposalsForBlock(Date start, Date limit,
+			List<TreatmentType> treatmentTypes, Room room, long appointmentDuration) {
 		List<AppointmentProposal> appointmentProposals = new ArrayList<AppointmentProposal>();
 		Date endWorkTime = workTime.getEndWorkTime(start);
 		Date actualAppointmentStart = new Date(start.getTime());
@@ -256,34 +244,38 @@ public class AppointmentScheduler {
 				break;
 			}
 
-			AppointmentProposal appointmentProposal = new AppointmentProposal(resources, treatmentTypes, actualAppointmentStart, actualAppointmentEnd);
+			AppointmentProposal appointmentProposal = new AppointmentProposal(resources, treatmentTypes,
+					actualAppointmentStart, actualAppointmentEnd);
 			appointmentProposals.add(appointmentProposal);
-			
+
 			actualAppointmentStart = DateUtil.addSeconds(actualAppointmentStart, timeGridInMinutes * 60);
 			actualAppointmentEnd = DateUtil.addSeconds(actualAppointmentEnd, timeGridInMinutes * 60);
 		}
 		return appointmentProposals;
 	}
-	
-	
-	public List<AppointmentProposal> getAppointmentProposals(AppointmentRequest request, SchedulingCustomisation custom) {
+
+	public List<AppointmentProposal> getAppointmentProposals(AppointmentRequest request, SchedulingParameter param) {
 		if (!canBeCombinedIntoOneAppointment(request.getTreatmentTypes())) {
 			setMessage(TREATMENTS_CANNOT_BE_JOINED_MSG);
 			return null;
 		}
 
-/*		if (!sufficientAppointmentDuration(from, to, treatmentTypes)) {
-			setMessage(INSUFFICIENT_DIFFERENCE_BETWEEN_FROM_AND_TO_MSG);
-			return null;
-		}*/
+		/*
+		 * if (!sufficientAppointmentDuration(from, to, treatmentTypes)) {
+		 * setMessage(INSUFFICIENT_DIFFERENCE_BETWEEN_FROM_AND_TO_MSG); return
+		 * null; }
+		 */
 
-	/*	request.setFrom(moveFromIfOutOfWorkTime(request.getFrom(), to));
-		to = DateUtil.addSeconds(from, (int) appointmentDuration);*/
+		
+//		 SchedulingHorizon adjustedHorizon = adjustSchedulingHorizonToWorkTime(request.getHorizon());
+//		 request.setHorizon(adjustedHorizon);
+		 
+/*		 request.setFrom(moveFromIfOutOfWorkTime(request.getFrom(), to));*/ 
+//		 to = DateUtil.addSeconds(from, (int) appointmentDuration);
+		 
 
-		return policy.getAppointmentProposals(request, custom);
+		return policy.getAppointmentProposals(request, param);
 	}
-	
-
 
 	public List<AppointmentProposal> getAppointmentProposals(Date from, Date to, List<TreatmentType> treatmentTypes,
 			Date limitDate, int count) {
@@ -298,7 +290,7 @@ public class AppointmentScheduler {
 		}
 
 		long appointmentDuration = getAppointmentDuration(from, to);
-		from = moveFromIfOutOfWorkTime(from, to);
+		from = schedulingUtil.moveFromIfOutOfWorkTime(from, to, workTime);
 		to = DateUtil.addSeconds(from, (int) appointmentDuration);
 
 		int proposedAppointments = 0;
@@ -315,17 +307,15 @@ public class AppointmentScheduler {
 
 			from = DateUtil.addSeconds(from, timeGridInMinutes * 60);
 			to = DateUtil.addSeconds(to, timeGridInMinutes * 60);
-			from = moveFromIfOutOfWorkTime(from, to);
+			from = schedulingUtil.moveFromIfOutOfWorkTime(from, to, workTime);
 			to = DateUtil.addSeconds(from, (int) appointmentDuration);
 		}
-
 		return appointmentProposals;
 	}
 
 	public List<AppointmentProposal> getAppointmentProposals(Date from, Date to, List<TreatmentType> treatmentTypes,
 			int count) {
-		Date limitDate = DateUtil.addDays(DateUtil.now(),
-				HealthPoint.SCHEDULING_HORIZON_IN_DAYS);
+		Date limitDate = DateUtil.addDays(DateUtil.now(), HealthPoint.SCHEDULING_HORIZON_IN_DAYS);
 		return getAppointmentProposals(from, to, treatmentTypes, limitDate, count);
 	}
 

@@ -43,15 +43,6 @@ public class WorkTime extends ModifiableObject {
 		getDays().add(day);
 		day.setWorkTime(this);
 	}
-	
-/*	public Date getStartWorkTime(DayOfWeek dayOfWeek) {
-		Date retDate = DateUtil.normDays(date);
-		Calendar c = Calendar.getInstance();
-		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-		Day day = days.get(dayOfWeek - 1);
-		retDate = DateUtil.addSeconds(retDate, day.getStartWorkTime());
-		return retDate;
-	}*/
 
 	public Date getStartWorkTime(Date date) {
 		Date retDate = DateUtil.normDays(date);

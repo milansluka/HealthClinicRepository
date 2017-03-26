@@ -1,13 +1,10 @@
 package ehc.bo.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import ehc.bo.Resource;
-import ehc.util.DateUtil;
 
-public class SchedulingCustomisation {
+public class SchedulingParameter {
 	private boolean customAppointmentLength = false;
 	private boolean customResources = false;
 	
@@ -16,9 +13,9 @@ public class SchedulingCustomisation {
 	private int timeGridInMinutes = HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES;
 	
 	private WorkTime workTime;
-    private List<Resource> resources = new ArrayList<Resource>();
+    private List<Resource> resources;
 
-	public SchedulingCustomisation(WorkTime workTime) {
+	public SchedulingParameter(WorkTime workTime) {
 		super();
 		this.workTime = workTime;
 	}
@@ -62,10 +59,5 @@ public class SchedulingCustomisation {
 	}
 	public WorkTime getWorkTime() {
 		return workTime;
-	} 
-	
-	
-	
-	
-		
+	} 		
 }

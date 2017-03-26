@@ -7,14 +7,12 @@ import ehc.bo.impl.AppointmentRequest;
 import ehc.bo.impl.DeviceDao;
 import ehc.bo.impl.NurseDao;
 import ehc.bo.impl.PhysicianDao;
-import ehc.bo.impl.SchedulingCustomisation;
+import ehc.bo.impl.SchedulingParameter;
 
 public abstract class SchedulingPolicy {
-	protected PhysicianDao physicianDao = PhysicianDao.getInstance();
+/*	protected PhysicianDao physicianDao = PhysicianDao.getInstance();
 	protected NurseDao nurseDao = NurseDao.getInstance();
-	protected DeviceDao deviceDao = DeviceDao.getInstance();
-	
-	
-	public abstract List<AppointmentProposal> getAppointmentProposals(AppointmentRequest request, SchedulingCustomisation custom);
-/*	List<AppointmentProposal> getAppointmentProposals(AppointmentRequest request, SchedulingHorizon horizon, SchedulingParam params);*/
+	protected DeviceDao deviceDao = DeviceDao.getInstance();*/
+		
+	public abstract List<AppointmentProposal> getAppointmentProposals(AppointmentRequest request, SchedulingParameter param);	
 }
