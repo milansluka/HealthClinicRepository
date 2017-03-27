@@ -48,7 +48,7 @@ public class AppointmentScheduler {
 
 
 	private boolean sufficientAppointmentDuration(Date from, Date to, List<TreatmentType> treatmentTypes) {
-		long appointmentDuration = getAppointmentDuration(from, to);
+		long appointmentDuration = schedulingUtil.getAppointmentDurationInSeconds(from, to);
 		return sufficientAppointmentDuration(appointmentDuration, treatmentTypes);
 	}
 
@@ -60,9 +60,9 @@ public class AppointmentScheduler {
 		return plannedAppointmentDuration >= treatmentDuration;
 	}
 
-	private long getAppointmentDuration(Date from, Date to) {
-		return (to.getTime() - from.getTime()) / 1000;
-	}
+//	private long getAppointmentDuration(Date from, Date to) {
+//		return (to.getTime() - from.getTime()) / 1000;
+//	}
 
 	private boolean areResourcesAvailable(Date from, Date to, List<Resource> resources) {
 		for (Resource resource : resources) {
@@ -73,27 +73,10 @@ public class AppointmentScheduler {
 		return true;
 	}
 	
-/*	private SchedulingHorizon adjustSchedulingHorizonToWorkTime(SchedulingHorizon horizon) {
-		Date startWorkTime = workTime.getStartWorkTime(horizon.getFrom());
-		Date from = (Date)horizon.getFrom().clone();
-		SchedulingHorizon adjustedHorizon = new SchedulingHorizon(from, to);
-		if (from.before(startWorkTime)) {
-			return startWorkTime;
-		} else if (to.after(endWorkTime)) {
-			Date nextDay = DateUtil.addDays(from, 1);
-			Date nextFrom = workTime.getStartWorkTime(nextDay);
-			Date nextTo = DateUtil.addSeconds(nextFrom, duration);
-
-			return moveFromIfOutOfWorkTime(nextFrom, nextTo, workTime);
-		}
-		return from;
-		
-	}*/
-
 	public AppointmentScheduleData getAppointmentScheduleData(Date from, Date to, List<TreatmentType> treatmentTypes,
 			List<Resource> resources) {
 		from = schedulingUtil.moveFromIfOutOfWorkTime(from, to, workTime);
-		to = DateUtil.addSeconds(from, (int) getAppointmentDuration(from, to));
+		to = DateUtil.addSeconds(from, (int) schedulingUtil.getAppointmentDurationInSeconds(from, to));
 		if (areResourcesAvailable(from, to, resources)) {
 			return new AppointmentScheduleData(from, to, resources);
 		}
@@ -103,7 +86,7 @@ public class AppointmentScheduler {
 	public List<AppointmentScheduleData> getAppointmentScheduleData(Date from, Date to,
 			List<TreatmentType> treatmentTypes, List<Resource> resources, int count) {
 		from = schedulingUtil.moveFromIfOutOfWorkTime(from, to, workTime);
-		to = DateUtil.addSeconds(from, (int) getAppointmentDuration(from, to));
+		to = DateUtil.addSeconds(from, (int) schedulingUtil.getAppointmentDurationInSeconds(from, to));
 		List<AppointmentScheduleData> appointmentScheduleDatas = new ArrayList<AppointmentScheduleData>();
 		int givenAppointmentScheduleData = 0;
 		while (givenAppointmentScheduleData < count) {
@@ -178,7 +161,7 @@ public class AppointmentScheduler {
 		}
 
 		from = schedulingUtil.moveFromIfOutOfWorkTime(from, to, workTime);
-		to = DateUtil.addSeconds(from, (int) getAppointmentDuration(from, to));
+		to = DateUtil.addSeconds(from, (int) schedulingUtil.getAppointmentDurationInSeconds(from, to));
 		Map<ResourceType, SortedSet<Resource>> resources = getResources(from, to, treatmentTypes);
 
 		if (resources != null) {
@@ -289,7 +272,7 @@ public class AppointmentScheduler {
 			return null;
 		}
 
-		long appointmentDuration = getAppointmentDuration(from, to);
+		long appointmentDuration = schedulingUtil.getAppointmentDurationInSeconds(from, to);
 		from = schedulingUtil.moveFromIfOutOfWorkTime(from, to, workTime);
 		to = DateUtil.addSeconds(from, (int) appointmentDuration);
 

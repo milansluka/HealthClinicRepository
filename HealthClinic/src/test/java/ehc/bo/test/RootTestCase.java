@@ -776,6 +776,7 @@ public class RootTestCase extends TestCase {
 		treatmentTypeNames2.add("Odstranovanie pigmentov chrbat");
 		treatmentTypeNames2.add("OxyGeneo tvar");
 		treatmentTypeNames2.add("Omladenie tvare");
+		treatmentTypeNames2.add("Liposukcia");
 
 		addRoom("test room A", treatmentTypeNames1);
 		addRoom("test room B", treatmentTypeNames2);
@@ -1164,8 +1165,11 @@ public class RootTestCase extends TestCase {
 		RoomType roomType1 = new RoomType(executor);
 		DeviceType deviceType1 = new DeviceType(executor, "laser");
 
-		physicianType1.addSkill(getSkill("test skillA"));
-		physicianType1.addSkill(getSkill("test skillB"));
+//		physicianType1.addSkill(getSkill("test skillA"));
+//		physicianType1.addSkill(getSkill("test skillB"));
+		
+		physicianType1.addSkill(getSkill("test skillC"));
+		
 		nurseType1.addSkill(getSkill("test skillA"));
 		resourceTypes1.add(physicianType1);
 		resourceTypes1.add(nurseType1);
@@ -1223,6 +1227,27 @@ public class RootTestCase extends TestCase {
 
 		addTreatmentType("Omladenie tvare", resourceTypes3, "60", 30 * 60, treatmentGroup);
 		HibernateUtil.commitTransaction();
+			
+		HibernateUtil.beginTransaction();
+		login = new Login();
+		executor = login.login("admin", "admin");
+		List<ResourceType> resourceTypes4 = new ArrayList<ResourceType>();
+		PhysicianType physicianType4 = new PhysicianType(executor);
+		NurseType nurseType4 = new NurseType(executor);
+		RoomType roomType4 = new RoomType(executor);
+		DeviceType deviceType4 = new DeviceType(executor, "laser");
+
+		physicianType4.addSkill(getSkill("test skillA"));
+		physicianType4.addSkill(getSkill("test skillB"));
+		nurseType4.addSkill(getSkill("test skillA"));
+		nurseType4.addSkill(getSkill("test skillB"));
+		resourceTypes4.add(physicianType4);
+		resourceTypes4.add(nurseType4);
+		resourceTypes4.add(roomType4);
+		resourceTypes4.add(deviceType4);
+
+		addTreatmentType("Liposukcia", resourceTypes4, "70", 45 * 60, treatmentGroup);
+		HibernateUtil.commitTransaction();	
 	}
 
 	protected void setUpSystem() {

@@ -171,7 +171,6 @@ public class Appointment extends BaseObject {
 	 * public void setBills(List<PatientBill> bills) { this.bills = bills; }
 	 */
 
-
 	public void assignPerson(Individual person) {
 		if (person != null) {
 			setIndividual(person);
@@ -328,6 +327,12 @@ public class Appointment extends BaseObject {
 		}
 		return unpaidBillItems;
 	}
+
+	@Transient
+	public int getDurationInSeconds() {
+		return (int) (getTo().getTime() - getFrom().getTime()) / 1000;
+	}
+
 	/*
 	 * @Transient public List<Treatment> getUnpaidTreatments() { List<Treatment>
 	 * unpaidTreatments = new ArrayList<>();

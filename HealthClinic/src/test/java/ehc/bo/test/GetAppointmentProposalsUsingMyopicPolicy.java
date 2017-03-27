@@ -27,8 +27,9 @@ public class GetAppointmentProposalsUsingMyopicPolicy extends RootTestCase {
 		if (!isSystemSet()) {
 			setUpSystem3();		
 		}
-		addAppointment("Pavol", "Kocinec", "Odstranovanie pigmentov chrbat", DateUtil.date(2017, 3, 20, 7, 0, 0), DateUtil.date(2017, 3, 20, 8, 0, 0));
+		addAppointment("Pavol", "Kocinec", "Odstranovanie pigmentov chrbat", DateUtil.date(2017, 3, 20, 7, 0, 0), DateUtil.date(2017, 3, 20, 8, 15, 0));
 		addAppointment("Karol", "Kubanda", "OxyGeneo tvar", DateUtil.date(2017, 3, 20, 7, 0, 0), DateUtil.date(2017, 3, 20, 7, 15, 0));
+		addAppointment("Tomáš", "Krivko", "Liposukcia", DateUtil.date(2017, 3, 20, 7, 45, 0), DateUtil.date(2017, 3, 20, 8, 30, 0));
 	}
 	
 	public void testApp() {	
@@ -38,7 +39,7 @@ public class GetAppointmentProposalsUsingMyopicPolicy extends RootTestCase {
 		String lastName = "Mrkvicka";
 		
 		//treatment type
-		String treatmentTypeName = "OxyGeneo tvar";
+		String treatmentTypeName = "Omladenie tvare";
 		
 		//scheduling horizon
 		Date from = DateUtil.date(2017, 3, 20, 7, 0, 0);
@@ -55,6 +56,8 @@ public class GetAppointmentProposalsUsingMyopicPolicy extends RootTestCase {
 		AppointmentScheduler scheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES, new MyopicPolicy());
         List<AppointmentProposal> appointmentProposals = scheduler.getAppointmentProposals(request, param);
         AppointmentProposal appointmentProposal = appointmentProposals.get(0);
+        
+        
           
         HibernateUtil.commitTransaction();
 	}

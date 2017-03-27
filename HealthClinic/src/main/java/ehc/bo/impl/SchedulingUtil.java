@@ -24,6 +24,19 @@ public class SchedulingUtil {
 
 	}
 
+
+	public boolean isConflict(Appointment appointment, Date from, Date to, List<TreatmentType> treatmentTypes) {
+		List<Resource> resources = new ArrayList<Resource>();
+		List<Physician> physicians = physicianDao.getAll();
+		List<Nurse> nurses = nurseDao.getAll();
+		List<Device> devices = deviceDao.getAll();
+		resources.addAll(physicians);
+		resources.addAll(nurses);
+		resources.addAll(devices);
+		List<ResourceType> neededResourceTypes = treatmentTypes.get(0).getResourceTypes();		
+		return !areNeededResourcesAvailable(resources, neededResourceTypes, from, to, appointment);
+	}
+
 	public Set<Appointment> getConflictingAppointments(Date from, Date to, List<TreatmentType> treatmentTypes) {
 		List<Resource> resources = new ArrayList<Resource>();
 		List<Physician> physicians = physicianDao.getAll();
@@ -42,7 +55,7 @@ public class SchedulingUtil {
 
 		List<Appointment> appointments = appointmentDao.getAllIntersecting(from, to);
 		List<Resource> suitableResources = findSuitableResources(resources, neededResourceTypes, from, to);
-		
+
 		for (Appointment appointment : appointments) {
 			for (Resource resource : suitableResources) {
 				if (hasResource(appointment, resource)) {
@@ -54,7 +67,35 @@ public class SchedulingUtil {
 	}
 	
 	
-	
+	public Set<Appointment> getConflictingAppointmentsStartingFrom(Date start, Date from, Date to, List<TreatmentType> treatmentTypes) {
+		List<Resource> resources = new ArrayList<Resource>();
+		List<Physician> physicians = physicianDao.getAll();
+		List<Nurse> nurses = nurseDao.getAll();
+		List<Device> devices = deviceDao.getAll();
+		resources.addAll(physicians);
+		resources.addAll(nurses);
+		resources.addAll(devices);
+
+		List<ResourceType> neededResourceTypes = treatmentTypes.get(0).getResourceTypes();
+		Set<Appointment> conflictingAppointments = new HashSet<Appointment>();
+
+		if (areNeededResourcesAvailable(resources, neededResourceTypes, from, to)) {
+			return conflictingAppointments;
+		}
+
+		List<Appointment> appointments = appointmentDao.getAllIntersectingFrom(start, from, to);
+		List<Resource> suitableResources = findSuitableResources(resources, neededResourceTypes, from, to);
+
+		for (Appointment appointment : appointments) {
+			for (Resource resource : suitableResources) {
+				if (hasResource(appointment, resource)) {
+					conflictingAppointments.add(appointment);
+				}
+			}
+		}
+		return conflictingAppointments;
+	}
+
 	protected Map<ResourceType, SortedSet<Resource>> getSuitableResources(Date from, Date to,
 			List<TreatmentType> treatmentTypes) {
 		Map<ResourceType, SortedSet<Resource>> resources = new HashMap<ResourceType, SortedSet<Resource>>();
@@ -66,8 +107,8 @@ public class SchedulingUtil {
 
 		for (ResourceType neededResourceType : neededResourceTypes) {
 			if (neededResourceType instanceof PhysicianType) {
-				SortedSet<Resource> suitablePhysicians = findSuitableResources(physicians, neededResourceType, from,
-						to, new PhysicianSuitabilityComparator());
+				SortedSet<Resource> suitablePhysicians = findSuitableResources(physicians, neededResourceType, from, to,
+						new PhysicianSuitabilityComparator());
 				if (suitablePhysicians.isEmpty()) {
 					return null;
 				}
@@ -98,9 +139,6 @@ public class SchedulingUtil {
 		}
 		return resources;
 	}
-	
-	
-	
 
 	protected Map<ResourceType, SortedSet<Resource>> getAvailableResources(Date from, Date to,
 			List<TreatmentType> treatmentTypes) {
@@ -197,11 +235,9 @@ public class SchedulingUtil {
 		}
 		return suitableResources;
 	}
-	
-	
-	
-	protected List<Resource> findSuitableResources(List<? extends Resource> resources,
-			List<ResourceType> resourceTypes, Date from, Date to) {
+
+	protected List<Resource> findSuitableResources(List<? extends Resource> resources, List<ResourceType> resourceTypes,
+			Date from, Date to) {
 		List<Resource> suitableResources = new ArrayList<Resource>();
 
 		for (ResourceType resourceType : resourceTypes) {
@@ -213,8 +249,6 @@ public class SchedulingUtil {
 		}
 		return suitableResources;
 	}
-	
-	
 
 	protected SortedSet<Resource> findSuitableResources(List<? extends ResourceImpl> resources,
 			List<ResourceType> resourceTypes, Date from, Date to, Comparator<? extends ResourceImpl> comparator) {
@@ -248,6 +282,25 @@ public class SchedulingUtil {
 		}
 		return true;
 	}
+	
+	protected boolean areNeededResourcesAvailable(List<? extends Resource> resources, List<ResourceType> resourceTypes,
+			Date from, Date to, Appointment appointment) {
+		boolean wasFound = false;
+		for (ResourceType resourceType : resourceTypes) {
+			for (Resource resource : resources) {
+				if (resource.isSuitable(resourceType)) {
+					if (!hasResource(appointment, resource)) {
+						wasFound = true;			
+					}
+				}
+			}
+			if (!wasFound) {
+				return false;
+			}
+			wasFound = false;
+		}
+		return true;
+	}
 
 	protected SortedSet<Resource> findSuitableResources(List<? extends ResourceImpl> resources,
 			ResourceType resourceType, Date from, Date to, Comparator<? extends ResourceImpl> comparator) {
@@ -261,14 +314,14 @@ public class SchedulingUtil {
 		return suitableResources;
 	}
 
-	protected long getAppointmentDuration(Date from, Date to) {
+	public long getAppointmentDurationInSeconds(Date from, Date to) {
 		return (to.getTime() - from.getTime()) / 1000;
 	}
 
 	protected Date moveFromIfOutOfWorkTime(Date from, Date to, WorkTime workTime) {
 		Date startWorkTime = workTime.getStartWorkTime(from);
 		Date endWorkTime = workTime.getEndWorkTime(to);
-		int duration = (int) getAppointmentDuration(from, to);
+		int duration = (int) getAppointmentDurationInSeconds(from, to);
 
 		if (from.before(startWorkTime)) {
 			return startWorkTime;

@@ -82,23 +82,69 @@ public class MyopicPolicy extends SchedulingPolicy {
 	}
 
 	private double calculateWaitingCost(Date timeSlot, AppointmentRequest request, int appointmentLengthInMinutes) {
-		double costOfPatientWaiting = 0;
 		Date to = DateUtil.addSeconds(timeSlot, appointmentLengthInMinutes * 60);
 		Set<Appointment> conflicts = schedulingUtil.getConflictingAppointments(timeSlot, to,
 				request.getTreatmentTypes());
+		List<Appointment> conflictsList = new ArrayList<Appointment>(conflicts);
 		int n = conflicts.size() + 1;
 		double[] noShowProbabilities = new double[n];
 
 		determineNoShowProbabilities(noShowProbabilities);
 
 		int numberOfCombinations = (int) Math.pow(2, n);
-		double[][] waitTimes = new double[n][numberOfCombinations];
-		double[] waitTimesProbabilities = new double[n];
+		// double[][] waitTimes = new double[n][numberOfCombinations];
 		double[] combinationsProbabilities = new double[numberOfCombinations];
-
+		double[] averageWaitTimesForCombinations = new double[numberOfCombinations];
 		calculateCombinationProbabilities(n, noShowProbabilities, numberOfCombinations, combinationsProbabilities);
-	
-		return 0;
+		calculateWaitTimesForCombinations(conflictsList, n, numberOfCombinations, averageWaitTimesForCombinations);
+
+		double averageWaitTime = 0;
+		for (int i = 0; i < numberOfCombinations; i++) {
+			averageWaitTime += combinationsProbabilities[i] * averageWaitTimesForCombinations[i];
+		}
+
+		Date start = to;
+		Date nextFrom = DateUtil.addSeconds(timeSlot, (int) averageWaitTime);
+		Date nextTo = DateUtil.addSeconds(to, (int) averageWaitTime);
+		double costOfPatientWaiting = calculateDelayCostOfConflictingAppointments(start, nextFrom, nextTo,
+				request.getTreatmentTypes(), (int) averageWaitTime);
+		return costOfPatientWaiting + averageWaitTime;
+	}
+
+	private void calculateWaitTimesForCombinations(List<Appointment> conflictsList, int n, int numberOfCombinations,
+			double[] averageWaitTimesForCombinations) {
+		List<Appointment> choosenConflicts = new ArrayList<Appointment>();
+		for (int i = 0; i < numberOfCombinations; i++) {
+			BitSet bits = intToBits(i);
+			choosenConflicts.clear();
+			// if there is requested appointment in combination (binary number
+			// starting with 1)
+			if (bits.get(n - 1)) {
+				for (int j = 0; j < n - 1; j++) {
+					if (bits.get(j)) {
+						choosenConflicts.add(conflictsList.get(j));
+					}
+				}
+			}
+			if (choosenConflicts.isEmpty()) {
+				averageWaitTimesForCombinations[i] = 0;
+			} else if (choosenConflicts.size() == 1) {
+				averageWaitTimesForCombinations[i] = choosenConflicts.get(0).getDurationInSeconds();
+			} else {
+				double conflictingAppointmentLengthsSum = 0;
+				double maxConflictingAppointmentLength = 0;
+
+				for (Appointment appointment : choosenConflicts) {
+					double appointmentLength = appointment.getDurationInSeconds();
+					conflictingAppointmentLengthsSum += appointmentLength;
+					if (appointmentLength > maxConflictingAppointmentLength) {
+						maxConflictingAppointmentLength = appointmentLength;
+					}
+				}
+				averageWaitTimesForCombinations[i] = (maxConflictingAppointmentLength
+						+ conflictingAppointmentLengthsSum) / choosenConflicts.size();
+			}
+		}
 	}
 
 	private void calculateCombinationProbabilities(int n, double[] noShowProbabilities, int numberOfCombinations,
@@ -123,8 +169,21 @@ public class MyopicPolicy extends SchedulingPolicy {
 		}
 	}
 
-	private double calculateCostOfPatientWaiting(Date timeSlot, AppointmentRequest request) {
-		return 0;
+	private double calculateDelayCostOfConflictingAppointments(Date start, Date from, Date to, List<TreatmentType> treatmentTypes,
+			int delayInSeconds) {
+		Set<Appointment> conflicts = schedulingUtil.getConflictingAppointmentsStartingFrom(start, from, to, treatmentTypes);
+		double cost = conflicts.size() * delayInSeconds;
 
+		if (!conflicts.isEmpty()) {
+			for (Appointment conflict : conflicts) {
+				Date nextStart = conflict.getTo();
+				Date nextFrom = DateUtil.addSeconds(conflict.getFrom(), delayInSeconds);
+				Date nextTo = DateUtil.addSeconds(conflict.getTo(), delayInSeconds);
+				cost += calculateDelayCostOfConflictingAppointments(nextStart, nextFrom, nextTo,
+						conflict.getPlannedTreatmentTypes(), delayInSeconds);
+			}
+		}
+		return cost;
 	}
+
 }

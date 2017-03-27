@@ -82,7 +82,5 @@ public class ResourceTypeWithSkills extends ResourceType {
 		}
 		
 		return getSkills().containsAll(resourceType.getSkills());
-	}
-	
-	
+	}	
 }
