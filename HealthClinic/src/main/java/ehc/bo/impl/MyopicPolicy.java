@@ -2,7 +2,6 @@ package ehc.bo.impl;
 
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -14,14 +13,10 @@ import ehc.bo.Resource;
 import ehc.bo.SchedulingPolicy;
 import ehc.util.DateUtil;
 
-public class MyopicPolicy extends SchedulingPolicy {
+public class MyopicPolicy implements SchedulingPolicy {
 	private final double noShowProbability = 0.15;
-	private AppointmentDao appointmentDao = AppointmentDao.getInstance();
 	private SchedulingUtil schedulingUtil = new SchedulingUtil();
-
-	private double profit = 0;
-
-	// revenue - cost
+	private double profit = 0;	
 
 	@Override
 	public List<AppointmentProposal> getAppointmentProposals(AppointmentRequest request, SchedulingParameter param) {

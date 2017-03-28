@@ -10,7 +10,7 @@ import ehc.bo.Resource;
 import ehc.bo.SchedulingPolicy;
 import ehc.util.DateUtil;
 
-public class BasicPolicy extends SchedulingPolicy {
+public class BasicPolicy implements SchedulingPolicy {
 	private SchedulingUtil schedulingUtil = new SchedulingUtil();
 
 	@Override

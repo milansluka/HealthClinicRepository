@@ -9,10 +9,6 @@ import ehc.bo.impl.NurseDao;
 import ehc.bo.impl.PhysicianDao;
 import ehc.bo.impl.SchedulingParameter;
 
-public abstract class SchedulingPolicy {
-/*	protected PhysicianDao physicianDao = PhysicianDao.getInstance();
-	protected NurseDao nurseDao = NurseDao.getInstance();
-	protected DeviceDao deviceDao = DeviceDao.getInstance();*/
-		
+public interface SchedulingPolicy {
 	public abstract List<AppointmentProposal> getAppointmentProposals(AppointmentRequest request, SchedulingParameter param);	
 }
