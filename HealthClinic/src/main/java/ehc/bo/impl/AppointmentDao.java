@@ -84,4 +84,24 @@ public class AppointmentDao {
 		return results;
 	}
 	
+	
+	public List<Appointment> getAllIntersectingStartingAtAndBefore(Date from, Date to) {
+		Session session = HibernateUtil.getCurrentSession();
+		String hql = "FROM Appointment a WHERE a.from <= :from and a.to > :from";
+		Query query = session.createQuery(hql);
+		query.setParameter("from", from);
+		query.setParameter("to", to);
+		List results = query.list();
+		return results;
+	}
+	
+	public List<Appointment> getAllIntersectingStartingAfter(Date from, Date to) {
+		Session session = HibernateUtil.getCurrentSession();
+		String hql = "FROM Appointment a WHERE a.from > :from and a.from < :to";
+		Query query = session.createQuery(hql);
+		query.setParameter("from", from);
+		query.setParameter("to", to);
+		List results = query.list();
+		return results;
+	}	
 }

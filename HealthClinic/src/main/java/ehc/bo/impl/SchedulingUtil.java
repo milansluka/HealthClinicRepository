@@ -317,6 +317,10 @@ public class SchedulingUtil {
 	public long getAppointmentDurationInSeconds(Date from, Date to) {
 		return (to.getTime() - from.getTime()) / 1000;
 	}
+	
+	public long getDifferenceInSeconds(Date date1, Date date2) {
+		return Math.abs(date1.getTime() - date2.getTime()) / 1000;
+	}
 
 	protected Date moveFromIfOutOfWorkTime(Date from, Date to, WorkTime workTime) {
 		Date startWorkTime = workTime.getStartWorkTime(from);

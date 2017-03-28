@@ -56,9 +56,7 @@ public class GetAppointmentProposalsUsingMyopicPolicy extends RootTestCase {
 		AppointmentScheduler scheduler = new AppointmentScheduler(getWorkTime(), HealthPoint.DEFAULT_TIME_GRID_IN_MINUTES, new MyopicPolicy());
         List<AppointmentProposal> appointmentProposals = scheduler.getAppointmentProposals(request, param);
         AppointmentProposal appointmentProposal = appointmentProposals.get(0);
-        
-        
-          
+                
         HibernateUtil.commitTransaction();
 	}
 

@@ -36,6 +36,7 @@ public class Appointment extends BaseObject {
 	/* PatientBill patientBill; */
 	Appointment previous;
 	Appointment next;
+	//double averageExpectedDelay;
 
 	protected Appointment() {
 		super();
@@ -95,6 +96,18 @@ public class Appointment extends BaseObject {
 	public void setTo(Date to) {
 		this.to = to;
 	}
+	
+	
+/*	@Transient
+	public Date getDelayedFrom() {
+		return from;
+	}
+
+	@Transient
+	public Date getDelayedTo() {
+		return to;
+	}*/
+	
 
 	@OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL)
 	public AppointmentState getState() {
