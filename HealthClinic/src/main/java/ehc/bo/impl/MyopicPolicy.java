@@ -109,12 +109,15 @@ public class MyopicPolicy extends SchedulingPolicy {
 		for (int i = 0; i < numberOfCombinations; i++) {
 			averageWaitTime += combinationsProbabilities[i] * averageWaitTimesForCombinations[i];
 		}
-
-		Date start = to;
-		Date nextFrom = DateUtil.addSeconds(timeSlot, (int) averageWaitTime);
-		Date nextTo = DateUtil.addSeconds(to, (int) averageWaitTime);
-		double costOfPatientWaiting = calculateDelayCostOfConflictingAppointments(start, nextFrom, nextTo,
-				request.getTreatmentTypes(), (int) averageWaitTime);
+		double costOfPatientWaiting = 0;
+		for (AppointmentSchedulingInfo conflict : conflictsList) {
+			Date start = conflict.getTo();
+			Date nextFrom = DateUtil.addSeconds(conflict.getFrom(), (int) averageWaitTime);
+			Date nextTo = DateUtil.addSeconds(conflict.getTo(), (int) averageWaitTime);		
+			costOfPatientWaiting += calculateDelayCostOfConflictingAppointments(start, nextFrom, nextTo,
+					request.getTreatmentTypes(), (int) averageWaitTime);		
+		}
+		
 		return costOfPatientWaiting + averageWaitTime;
 	}
 
@@ -146,7 +149,6 @@ public class MyopicPolicy extends SchedulingPolicy {
 					averageWaitTimesForCombinations[i] = waitingTimesSum / choosenConflicts.size();
 				}
 			}
-		
 		}
 	}
 
@@ -189,5 +191,4 @@ public class MyopicPolicy extends SchedulingPolicy {
 		}
 		return cost;
 	}
-
 }
